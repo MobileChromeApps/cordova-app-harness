@@ -1,6 +1,7 @@
 #!/bin/bash
 
 if [[ $# -eq 0 || "$1" = "--help" ]]; then
+    echo "Use this script to create a Chrome ADT project"
     echo "Usage: $0 NewDirName"
     echo 'Options via variables:'
     echo '  PLATFORMS="android ios"'
@@ -9,14 +10,15 @@ if [[ $# -eq 0 || "$1" = "--help" ]]; then
     echo '  APP_ID="org.apache.AppHarness"'
     echo '  APP_NAME="CordovaAppHarness"'
     echo '  APP_VERSION="0.0.1"'
+    echo '  CCA="path/to/cca"'
     exit 1
 fi
 
 CORDOVA="${CORDOVA-cordova}"
 PLATFORMS="${PLATFORMS-android}"
-APP_ID=${APP_ID-org.apache.appharness}
-APP_NAME=${APP_NAME-CordovaAppHarness}
-APP_VERSION=${APP_VERSION-0.0.1}
+APP_ID=${APP_ID-org.chromium.ChromeADT}
+APP_NAME=${APP_NAME-Chrome ADT}
+APP_VERSION=${APP_VERSION-0.4.2}
 DIR_NAME="${1}"
 AH_PATH="$(cd $(dirname $0) && pwd)"
 extra_search_path="$PLUGIN_SEARCH_PATH"
@@ -24,8 +26,22 @@ PLUGIN_SEARCH_PATH="$(dirname "$AH_PATH")"
 if [[ -d $(dirname "$AH_PATH")/cordova-plugins ]]; then
     PLUGIN_SEARCH_PATH="$PLUGIN_SEARCH_PATH:$(dirname "$AH_PATH")/cordova-plugins"
 fi
+if [[ -d $(dirname "$AH_PATH")/mobile-chrome-apps/chrome-cordova/plugins ]]; then
+    PLUGIN_SEARCH_PATH="$PLUGIN_SEARCH_PATH:$(dirname "$AH_PATH")/mobile-chrome-apps/chrome-cordova/plugins"
+fi
 if [[ -n "$extra_search_path" ]]; then
     PLUGIN_SEARCH_PATH="${extra_search_path}:$PLUGIN_SEARCH_PATH"
+fi
+CCA="${CCA-cca}"
+
+if [[ -e "$CCA" ]]; then
+    CCA="$(cd $(dirname "$CCA") && pwd)/$(basename "$CCA")"
+else
+    if ! which "$CCA"; then
+        echo "Could not find cca executable."
+        echo "Make sure it's in your path or set the \$CCA variable to its location"
+        exit 1
+    fi
 fi
 
 "$CORDOVA" create "$DIR_NAME" "$APP_ID" "$APP_NAME" --link-to "$AH_PATH/www" || exit 1
@@ -59,6 +75,34 @@ echo Installing plugins.
 
 # To enable barcode scanning:
 # $CORDOVA plugin add https://github.com/wildabeast/BarcodeScanner.git # Optional
+
+if [[ $? != 0 ]]; then
+    echo "Plugin installation failed. Probably you need to set PLUGIN_SEARCH_PATH env variable so that it contains the plugin that failed to install."
+    exit 1
+fi
+
+# Using CCA here to get the right search path.
+echo "Installing Chromium plugins"
+"$CCA" plugin add \
+    org.chromium.bootstrap \
+    org.chromium.bootstrap \
+    org.chromium.navigation \
+    org.chromium.fileSystem \
+    org.chromium.i18n \
+    org.chromium.identity \
+    org.chromium.idle \
+    org.chromium.notifications \
+    org.chromium.power \
+    org.chromium.socket \
+    org.chromium.syncFileSystem \
+    org.chromium.FileChooser \
+    org.chromium.polyfill.blob_constructor \
+    org.chromium.polyfill.CustomEvent \
+    org.chromium.polyfill.xhr_features \
+    org.apache.cordova.keyboard \
+    org.apache.cordova.statusbar \
+    org.apache.cordova.network-information
+
 
 if [[ $? != 0 ]]; then
     echo "Plugin installation failed. Probably you need to set PLUGIN_SEARCH_PATH env variable so that it contains the plugin that failed to install."
