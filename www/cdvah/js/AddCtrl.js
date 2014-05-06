@@ -28,7 +28,7 @@
         } else {
             $scope.appData = {
                 appUrl: '',
-                installerType: 'serve'
+                installerType: 'crx'
             };
         }
 
