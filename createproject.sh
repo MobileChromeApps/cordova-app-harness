@@ -23,12 +23,17 @@ DIR_NAME="${1}"
 AH_PATH="$(cd $(dirname $0) && pwd)"
 extra_search_path="$PLUGIN_SEARCH_PATH"
 PLUGIN_SEARCH_PATH="$(dirname "$AH_PATH")"
-if [[ -d $(dirname "$AH_PATH")/cordova-plugins ]]; then
-    PLUGIN_SEARCH_PATH="$PLUGIN_SEARCH_PATH:$(dirname "$AH_PATH")/cordova-plugins"
-fi
-if [[ -d $(dirname "$AH_PATH")/mobile-chrome-apps/chrome-cordova/plugins ]]; then
-    PLUGIN_SEARCH_PATH="$PLUGIN_SEARCH_PATH:$(dirname "$AH_PATH")/mobile-chrome-apps/chrome-cordova/plugins"
-fi
+
+function AddSearchPathIfExists() {
+    if [[ -d "$1" ]]; then
+        PLUGIN_SEARCH_PATH="$PLUGIN_SEARCH_PATH:$1"
+    fi
+}
+AddSearchPathIfExists "$(dirname "$AH_PATH")/cordova"
+AddSearchPathIfExists "$(dirname "$AH_PATH")/cordova/cordova-plugins"
+AddSearchPathIfExists "$(dirname "$AH_PATH")/cordova-plugins"
+AddSearchPathIfExists "$(dirname "$AH_PATH")/mobile-chrome-apps/chrome-cordova/plugins"
+
 if [[ -n "$extra_search_path" ]]; then
     PLUGIN_SEARCH_PATH="${extra_search_path}:$PLUGIN_SEARCH_PATH"
 fi
@@ -85,7 +90,6 @@ fi
 # Using CCA here to get the right search path.
 echo "Installing Chromium plugins"
 "$CCA" plugin add \
-    org.chromium.bootstrap \
     org.chromium.bootstrap \
     org.chromium.navigation \
     org.chromium.fileSystem \
