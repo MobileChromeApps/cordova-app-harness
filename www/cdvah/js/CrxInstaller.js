@@ -93,11 +93,14 @@
             var platformConfig = location.pathname.replace(/\/[^\/]*$/, '/crx_files/config.' + platformId + '.xml');
             var targetConfig = installPath + '/config.xml';
 
-            // The filename doesn't matter, but it needs to end with .crx for the zip plugin to unpack
-            // it properly. So we always set the filename to package.crx.
-            var crxFile = installPath + '/package.crx';
+            var crxFile = this.url;
+            var p = $q.when();
+            if (!/^file:/.exec(this.url)) {
+                crxFile = installPath + '/package.crx';
+                p = ResourcesLoader.downloadFromUrl(this.url, crxFile);
+            }
 
-            return ResourcesLoader.downloadFromUrl(this.url, crxFile).then(function() {
+            return p.then(function() {
                 return ResourcesLoader.extractZipFile(crxFile, installPath + '/www');
             }).then(function() {
                 // Copy in the config.<platform>.xml file from the harness.
