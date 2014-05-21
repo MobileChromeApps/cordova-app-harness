@@ -72,39 +72,5 @@ For more info:
 
 A server runs within the app that enables remote control functionality.
 
-## Port Forwarding (Android)
-
-If you are not on the same network, you can use adb to port forward:
-
-    adb forward tcp:2424 tcp:2424
-
-And also use Chrome DevTool's [Reverse Port Forwarding](https://developers.google.com/chrome-developer-tools/docs/remote-debugging#reverse-port-forwarding):
-
-    Map 8000 -> localhost:8000
-
-## Commands
-
-### /push
-
-Add or update an app's settings, and then update & launch:
-
-    curl -X POST http://$IP_ADDRESS:2424/push?type=serve&name=com.example.YourApp&url=http://$SERVE_HOST_ADDRESS:8000
-
-### /menu
-
-Show in-app overlay menu.
-
-    curl -X POST http://$IP_ADDRESS:2424/menu
-
-### /exec
-
-Executes a JS snippet:
-
-    curl -X POST http://$IP_ADDRESS:2424/exec?code='alert(1)'
-
-### /info
-
-Returns JSON of server info / app state
-
-    curl http://$IP_ADDRESS:2424/info
+Use [harness-push/harness-push.js](harness-push/README.md) to send commands to the App Harness.
 

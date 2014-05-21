@@ -1,0 +1,33 @@
+{
+  "name": "harness-push",
+  "version": "0.0.1",
+  "description": "Command-line utility for communicating with Cordova App Harness.",
+  "main": "push.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "Apache 2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://git-wip-us.apache.org/repos/asf/cordova-app-harness.git"
+  },
+  "bugs": {
+    "url": "https://issues.apache.org/jira/browse/CB",
+    "email": "dev@cordova.apache.org"
+  },
+  "keywords": [
+    "cordova",
+    "cordova-app-harness"
+  ],
+  "bin": {
+    "harness-push": "./harness-push.js"
+  },
+  "dependencies": {
+    "jszip": "~2.1",
+    "nopt": "~2.2",
+    "q": "~0.9",
+    "request": "~2.34",
+    "shelljs": "0.1.x"
+  }
+}
