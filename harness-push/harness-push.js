@@ -26,7 +26,10 @@ var fs = require('fs'),
     request = require('request'),
     nopt = require('nopt'),
     shelljs = require('shelljs'),
-    JSZip = require('jszip');
+    JSZip = require('jszip'),
+    temp = require('temp');
+
+temp.track();
 
 var IGNORE_PATH_FOR_PUSH_REGEXP = /www\/(?:plugins\/|cordova\.js)/;
 
@@ -77,6 +80,53 @@ function discoverAppId(dir) {
 }
 
 exports.push = function(target, dir, pretend) {
+    var manifestPath = path.join(dir, 'manifest.json');
+    if (!fs.existsSync(manifestPath)) {
+        return pushCordovaApp(target, dir, pretend);
+    }
+    return pushChromeApp(target, dir, pretend);
+};
+
+function createChromeConfigXml(appId, manifest) {
+    var configTemplate = fs.readFileSync(path.join(__dirname, 'config.xml.template'), 'utf8');
+    configTemplate = configTemplate
+        .replace(/__APP_NAME__/, (manifest.name) || 'Untitled')
+        .replace(/__APP_PACKAGE_ID__/, appId)
+        .replace(/__APP_VERSION__/, (manifest.version) || '0.0.1')
+        .replace(/__DESCRIPTION__/, (manifest.description) || 'Missing description')
+        .replace(/__AUTHOR__/, (manifest.author) || 'Missing author');
+    var info = temp.openSync('cca-config.xml');
+    fs.writeSync(info.fd, configTemplate);
+    fs.closeSync(info.fd);
+    return info.path;
+}
+
+function pushChromeApp(target, dir, pretend) {
+    // TODO: Share code with cca.js here.
+    var manifestPath = path.join(dir, 'manifest.json');
+    var manifestMobilePath = path.join(dir, 'manifest.mobile.json');
+    // jshint evil:true
+    var manifest = eval('(' + fs.readFileSync(manifestPath, 'utf8') + ')');
+    var manifestMobile = fs.existsSync(manifestMobilePath) ? eval('(' + fs.readFileSync(manifestMobilePath, 'utf8') + ')') : {};
+    // jshint evil:false
+
+    var appId = manifestMobile['packageId'] || manifest['packageId'] || 'com.company.' + (manifest.name.replace(/[^a-zA-Z]/g, '') || 'YourApp');
+    var appType = 'chrome';
+
+    var configXmlPath = createChromeConfigXml(appId, manifest);
+
+    return exports.assetmanifest(target, appId)
+    .then(function(result) {
+        var existingAssetManifest = result.body['assetManifest'];
+        if (existingAssetManifest) {
+            return doFileSync(target, appId, appType, dir, configXmlPath, existingAssetManifest, pretend);
+        }
+        // TODO: It might be faster to use Zip even when some files exist.
+        return doZipPush(target, appId, appType, dir, configXmlPath);
+    });
+}
+
+function pushCordovaApp(target, dir, pretend) {
     var appId = discoverAppId(dir);
     var appType = 'cordova';
 

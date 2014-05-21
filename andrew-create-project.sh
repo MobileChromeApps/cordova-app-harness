@@ -1,3 +1,5 @@
 #!/bin/bash
 export PLUGIN_SEARCH_PATH=/Users/agrieve/git/cordova:/Users/agrieve/git/cordova/cordova-plugins
-./createproject.sh "$@"
+export PLATFORMS="android ios"
+rm -rf CCAHarness
+./createproject.sh CCAHarness

@@ -80,21 +80,51 @@
     }
 
     /* global myApp */
-    myApp.run(['$q', 'Installer', 'AppsService', 'ResourcesLoader', 'urlCleanup', function($q, Installer, AppsService, ResourcesLoader, urlCleanup){
+    myApp.factory('CrxInstaller', ['$q', 'Installer', 'AppsService', 'ResourcesLoader', function($q, Installer, AppsService, ResourcesLoader) {
 
-        var platformId = cordova.require('cordova/platform').id;
-
-        function CrxInstaller(url, appId) {
-            Installer.call(this, url, appId);
-        }
-
+        function CrxInstaller() {}
         CrxInstaller.prototype = Object.create(Installer.prototype);
+        CrxInstaller.prototype.constructor = CrxInstaller;
+        CrxInstaller.type = 'chrome';
 
-        CrxInstaller.prototype.type = 'crx';
+        CrxInstaller.prototype.initFromJson = function(json) {
+            var self = this;
+            return Installer.prototype.initFromJson.call(this, json)
+            .then(function() {
+                return self.readManifest();
+            }).then(function() {
+                return self;
+            }, function(e) {
+                console.warn('Deleting broken app: ' + json['installPath']);
+                ResourcesLoader.delete(json['installPath']);
+                throw e;
+            });
+        };
+
+        CrxInstaller.prototype.onFileAdded = function(path, etag) {
+            var self = this;
+            return $q.when(Installer.prototype.onFileAdded.call(this, path, etag))
+            .then(function() {
+                if (path == 'www/manifest.json') {
+                    return self.readManifest();
+                }
+            });
+        };
+
+        CrxInstaller.prototype.readManifest = function() {
+            var self = this;
+            return this.directoryManager.getAssetManifest()
+            .then(function(assetManifest) {
+                return self.updateCordovaPluginsFile(assetManifest['www/manifest.json']);
+            });
+        };
 
         CrxInstaller.prototype.getPluginMetadata = function() {
-            return ResourcesLoader.readJSONFileContents(this.installPath + '/www/manifest.json')
-            .then(function(manifestJson) {
+            return ResourcesLoader.readFileContents(this.directoryManager.rootURL + 'www/manifest.json')
+            .then(function(manifestData) {
+                // jshint evil:true
+                var manifestJson = eval('(' + manifestData + ')');
+                // jshint evil:false
                 var pluginIds = extractPluginsFromManifest(manifestJson);
                 var harnessPluginMetadata = cordova.require('cordova/plugin_list').metadata;
                 var ret = {};
@@ -106,37 +136,10 @@
             });
         };
 
-        CrxInstaller.prototype.doUpdateApp = function() {
-            var installPath = this.installPath;
-            var platformConfig = location.pathname.replace(/\/[^\/]*$/, '/crx_files/config.' + platformId + '.xml');
-            var targetConfig = installPath + '/config.xml';
+        return CrxInstaller;
+    }]);
 
-            var crxFile = this.url;
-            var p = $q.when();
-            if (!/^file:/.exec(this.url)) {
-                crxFile = installPath + '/package.crx';
-                p = ResourcesLoader.downloadFromUrl(this.url, crxFile);
-            }
-
-            return p.then(function() {
-                return ResourcesLoader.extractZipFile(crxFile, installPath + '/www');
-            }).then(function() {
-                // Copy in the config.<platform>.xml file from the harness.
-                // TODO: We should be constructing this based on installed plugins.
-                return ResourcesLoader.downloadFromUrl(platformConfig, targetConfig);
-            });
-        };
-
-        AppsService.registerInstallerFactory({
-            type: 'crx',
-            createFromUrl: function(url, /*optional*/appId) {
-                url = urlCleanup(url);
-                return $q.when(new CrxInstaller(url, appId || 'New Chrome App'));
-            },
-
-            createFromJson: function(url, appId) {
-                return new CrxInstaller(url, appId);
-            }
-        });
+    myApp.run(['CrxInstaller', 'AppsService', function(CrxInstaller, AppsService) {
+        AppsService.registerInstallerFactory(CrxInstaller);
     }]);
 })();
