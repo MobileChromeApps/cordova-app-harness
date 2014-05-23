@@ -19,7 +19,7 @@
     "harness-push": "./harness-push.js"
   },
   "dependencies": {
-    "chrome-harness-client": "~0.0.x",
+    "chrome-harness-client": "~0.0",
     "nopt": "~2.2"
   }
 }
