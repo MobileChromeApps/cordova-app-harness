@@ -20,11 +20,11 @@ Example of pushing:
 
 ## Repository Initialization
 
-   npm install
-   ( cd harness-push && npm install )
-   ( cd harness-push/node_modules/chrome-harness-client && npm install )
-   npm link cca
-   ./node_modules/gulp/bin/gulp.js build-dev
+    npm install
+    ( cd harness-push && npm install )
+    ( cd harness-push/node_modules/chrome-harness-client && npm install )
+    npm link cca
+    ./node_modules/gulp/bin/gulp.js build-dev
 
 ## Creating a Project
 
