@@ -14,7 +14,7 @@ gulp.task('default', ['lint', 'webpack:build-dev'], function() {
       'www/**/*',
       'webpack.config.js',
       //'node_modules/**/*', // disabled because of https://github.com/gruntjs/grunt-contrib-watch#how-do-i-fix-the-error-emfile-too-many-opened-files
-    ], ['webpack:build-dev']);
+    ], ['lint', 'webpack:build-dev']);
 });
 
 gulp.task('build-dev', ['lint', 'webpack:build-dev']);
