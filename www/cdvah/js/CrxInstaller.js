@@ -18,6 +18,7 @@
 */
 (function(){
     'use strict';
+    /* global cca */
 
     // The only things that matters here at the moment
     // are the appId and <content>.

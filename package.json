@@ -15,7 +15,8 @@
     "url": "https://github.com/MobileChromeApps/chrome-app-harness/issues"
   },
   "homepage": "https://github.com/MobileChromeApps/chrome-app-harness",
-  "dependencies": {
+  "devDependencies": {
+    "gulp-jshint": "~1.6",
     "gulp": "latest",
     "gulp-util": "latest",
     "webpack": "latest"
