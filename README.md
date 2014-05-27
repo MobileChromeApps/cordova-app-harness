@@ -13,15 +13,16 @@ Pre-built APKs are available [here](https://github.com/MobileChromeApps/harness/
 2. Push your app to it via the harness-push tool
 3. Use two-finger double-tap to bring up in-app menu.
 
-## Updating from cordova-app-harness
+## Repository Initialization
 
-    git checkout upstream
-    git pull /path/to/cordova-app-harness master
-    git checkout master
-    git merge upstream
-    git push origin master upstream
+   npm install
+   ( cd harness-push && npm install )
+   ( cd harness-push/node_modules/chrome-harness-client && npm install )
+   npm link cca
+   ./node_modules/gulp/bin/gulp.js build-dev
 
 ## Creating a Project
+
 Use `createproject.sh` to create a project. Example invocation:
 
     PLATFORMS="android ios" ./createproject.sh NewProject
@@ -29,6 +30,14 @@ Use `createproject.sh` to create a project. Example invocation:
 For more info:
 
     ./createproject.sh --help
+
+## Updating from cordova-app-harness
+
+    git checkout upstream
+    git pull /path/to/cordova-app-harness master
+    git checkout master
+    git merge upstream
+    git push origin master upstream
 
 ### Cutting a Release
 
