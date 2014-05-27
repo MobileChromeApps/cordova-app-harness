@@ -77,6 +77,17 @@ set -x
 $CORDOVA platform add $PLATFORMS || exit 1
 set +x
 
+if [[ "$PLATFORMS" = *android* ]]; then
+    cp "$AH_PATH"/icons/android/icon.png platforms/android/res/drawable
+    cp "$AH_PATH"/icons/android/icon-ldpi.png platforms/android/res/drawable-ldpi
+    cp "$AH_PATH"/icons/android/icon-mdpi.png platforms/android/res/drawable-mdpi
+    cp "$AH_PATH"/icons/android/icon-hdpi.png platforms/android/res/drawable-hdpi
+    cp "$AH_PATH"/icons/android/icon-xdpi.png platforms/android/res/drawable-xdpi
+fi
+if [[ "$PLATFORMS" = *ios* ]]; then
+    cp -r "$AH_PATH"/icons/ios/* platforms/ios/*/Resources/icons
+fi
+
 # if [[ $PLATFORMS = *ios* ]]; then
     # ../../cordova-ios/bin/update_cordova_subproject platforms/ios/CordovaAppHarness.xcodeproj
 # fi
