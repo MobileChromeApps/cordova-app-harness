@@ -1,6 +1,6 @@
 {
   "name": "chrome-harness-push",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Command-line utility for communicating with Chrome Dev Harness.",
   "author": "The Chrome Team",
   "license": "Apache 2.0",
@@ -16,7 +16,7 @@
     "harness"
   ],
   "bin": {
-    "harness-push": "./harness-push.js"
+    "chrome-harness-push": "./harness-push.js"
   },
   "dependencies": {
     "chrome-harness-client": "~0.0",
