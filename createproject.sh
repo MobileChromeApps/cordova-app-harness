@@ -78,11 +78,11 @@ $CORDOVA platform add $PLATFORMS || exit 1
 set +x
 
 if [[ "$PLATFORMS" = *android* ]]; then
-    cp "$AH_PATH"/icons/android/icon.png platforms/android/res/drawable
-    cp "$AH_PATH"/icons/android/icon-ldpi.png platforms/android/res/drawable-ldpi
-    cp "$AH_PATH"/icons/android/icon-mdpi.png platforms/android/res/drawable-mdpi
-    cp "$AH_PATH"/icons/android/icon-hdpi.png platforms/android/res/drawable-hdpi
-    cp "$AH_PATH"/icons/android/icon-xdpi.png platforms/android/res/drawable-xdpi
+    cp "$AH_PATH"/icons/android/icon.png platforms/android/res/drawable/icon.png
+    cp "$AH_PATH"/icons/android/icon-ldpi.png platforms/android/res/drawable-ldpi/icon.png
+    cp "$AH_PATH"/icons/android/icon-mdpi.png platforms/android/res/drawable-mdpi/icon.png
+    cp "$AH_PATH"/icons/android/icon-hdpi.png platforms/android/res/drawable-hdpi/icon.png
+    cp "$AH_PATH"/icons/android/icon-xdpi.png platforms/android/res/drawable-xhdpi/icon.png
 fi
 if [[ "$PLATFORMS" = *ios* ]]; then
     cp -r "$AH_PATH"/icons/ios/* platforms/ios/*/Resources/icons
