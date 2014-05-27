@@ -18,6 +18,21 @@
 */
 (function(){
     'use strict';
+
+    // The only things that matters here at the moment
+    // are the appId and <content>.
+    var CONFIG_XML_TEMPLATE = '<?xml version="1.0" encoding="UTF-8"?>\n' +
+        '<widget id = "__APP_PACKAGE_ID__" version = "__APP_VERSION__">\n' +
+        '<description>__DESCRIPTION__</description>\n' +
+        '<author>__AUTHOR__</author>\n' +
+        '<preference name="KeyboardShrinksView" value="true" />\n' +
+        '<preference name="StatusBarOverlaysWebView" value="false" />\n' +
+        '<preference name="StatusBarBackgroundColor" value="#000000" />\n' +
+        '<preference name="iosPersistentFileLocation" value="Library" />\n' +
+        '<preference name="AndroidPersistentFileLocation" value="Internal" />\n' +
+        '<content src="plugins/org.chromium.bootstrap/chromeapp.html" />\n' +
+        '</widget>\n';
+
     // TODO: put these constants into an npm module.
     // TODO: Move CRX support into MobileChromeApps/harness.
     var DEFAULT_PLUGINS = [
@@ -79,10 +94,23 @@
         return DEFAULT_PLUGINS.concat(plugins);
     }
 
+    function generateConfigXmlData(appId, manifest) {
+        return CONFIG_XML_TEMPLATE
+            .replace(/__APP_NAME__/, (manifest.name) || 'Untitled')
+            .replace(/__APP_PACKAGE_ID__/, appId)
+            .replace(/__APP_VERSION__/, (manifest.version) || '0.0.1')
+            .replace(/__DESCRIPTION__/, (manifest.description) || 'Missing description')
+            .replace(/__AUTHOR__/, (manifest.author) || 'Missing author');
+    }
+
+
     /* global myApp */
     myApp.factory('CrxInstaller', ['$q', 'Installer', 'AppsService', 'ResourcesLoader', function($q, Installer, AppsService, ResourcesLoader) {
 
-        function CrxInstaller() {}
+        function CrxInstaller() {
+            this.manifestJson_ = null;
+            this.manifestMobileJson_ = null;
+        }
         CrxInstaller.prototype = Object.create(Installer.prototype);
         CrxInstaller.prototype.constructor = CrxInstaller;
         CrxInstaller.type = 'chrome';
@@ -91,7 +119,9 @@
             var self = this;
             return Installer.prototype.initFromJson.call(this, json)
             .then(function() {
-                return self.readManifest();
+                return self.readManifest_();
+            }).then(function() {
+                return self.updateDerivedFiles();
             }).then(function() {
                 return self;
             }, function(e) {
@@ -105,35 +135,53 @@
             var self = this;
             return $q.when(Installer.prototype.onFileAdded.call(this, path, etag))
             .then(function() {
-                if (path == 'www/manifest.json') {
-                    return self.readManifest();
+                if (path == 'www/manifest.json' || (path == 'www/manifest.mobile.json' && self.manifestJson_)) {
+                    return self.readManifest_()
+                    .then(function() {
+                        return self.updateDerivedFiles();
+                    });
                 }
             });
         };
 
-        CrxInstaller.prototype.readManifest = function() {
+        CrxInstaller.prototype.readManifest_ = function() {
             var self = this;
-            return this.directoryManager.getAssetManifest()
-            .then(function(assetManifest) {
-                return self.updateCordovaPluginsFile(assetManifest['www/manifest.json']);
+            return ResourcesLoader.readFileContents(this.directoryManager.rootURL + 'www/manifest.json')
+            .then(function(manifestData) {
+                // jshint evil:true
+                self.manifestJson_ = eval('(' + manifestData + ')');
+                // jshint evil:false
+                return ResourcesLoader.readFileContents(self.directoryManager.rootURL + 'www/manifest.mobile.json')
+                .then(function(manifestMobileData) {
+                    // jshint evil:true
+                    self.manifestMobileJson_ = eval('(' + manifestMobileData + ')');
+                    // jshint evil:false
+                    // TODO: Should we update App ID if this happens?
+                    // Unlikely that this *can* happen unless the request has ?appId=oldId
+                    // self.appId = self.manifestMobileJson_['packageId'] || self.manifestJson_['packageId'] || self.appId;
+                }, function() {});
+            });
+        };
+
+        CrxInstaller.prototype.updateDerivedFiles = function() {
+            var self = this;
+            var contents = generateConfigXmlData(this.appId, this.manifestJson_);
+            var combinedEtag = this.directoryManager.getAssetEtag('www/manifest.json') + this.directoryManager.getAssetEtag('www/manifest.mobile.json');
+            return this.directoryManager.writeFile(contents, 'config.xml', combinedEtag)
+            .then(function() {
+                return self.updateCordovaPluginsFile(self.directoryManager.getAssetEtag('www/manifest.json'));
             });
         };
 
         CrxInstaller.prototype.getPluginMetadata = function() {
-            return ResourcesLoader.readFileContents(this.directoryManager.rootURL + 'www/manifest.json')
-            .then(function(manifestData) {
-                // jshint evil:true
-                var manifestJson = eval('(' + manifestData + ')');
-                // jshint evil:false
-                var pluginIds = extractPluginsFromManifest(manifestJson);
-                var harnessPluginMetadata = cordova.require('cordova/plugin_list').metadata;
-                var ret = {};
-                // Make all versions match what is installed.
-                for (var i = 0; i < pluginIds.length; ++i) {
-                    ret[pluginIds[i]] = harnessPluginMetadata[pluginIds[i]] || '0';
-                }
-                return ret;
-            });
+            var pluginIds = extractPluginsFromManifest(this.manifestJson_);
+            var harnessPluginMetadata = cordova.require('cordova/plugin_list').metadata;
+            var ret = {};
+            // Make all versions match what is installed.
+            for (var i = 0; i < pluginIds.length; ++i) {
+                ret[pluginIds[i]] = harnessPluginMetadata[pluginIds[i]] || '0';
+            }
+            return ret;
         };
 
         return CrxInstaller;
