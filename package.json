@@ -1,0 +1,23 @@
+{
+  "name": "chrome-app-harness",
+  "version": "0.0.1",
+  "description": "The Chrome Apps Developer Tool (\"Chrome ADT\" for short) is a distribution of [Apache Cordova App Harness](https://git-wip-us.apache.org/repos/asf/cordova-app-harness.git) that can run Chrome Apps. It is based on the plugins from the [cca](https://github.com/MobileChomeApps/mobile-chrome-apps) toolkit.",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/MobileChromeApps/chrome-app-harness.git"
+  },
+  "author": "",
+  "license": "Apache version 2.0",
+  "bugs": {
+    "url": "https://github.com/MobileChromeApps/chrome-app-harness/issues"
+  },
+  "homepage": "https://github.com/MobileChromeApps/chrome-app-harness",
+  "dependencies": {
+    "gulp": "latest",
+    "gulp-util": "latest",
+    "webpack": "latest"
+  }
+}
