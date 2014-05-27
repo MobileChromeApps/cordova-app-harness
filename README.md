@@ -13,6 +13,11 @@ Pre-built APKs are available [here](https://github.com/MobileChromeApps/harness/
 2. Push your app to it via the harness-push tool
 3. Use two-finger double-tap to bring up in-app menu.
 
+Example of pushing:
+
+    npm install -g chrome-harness-push
+    chrome-harness-push push .
+
 ## Repository Initialization
 
    npm install
