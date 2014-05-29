@@ -62,7 +62,7 @@
 
         $scope.removeApp = function(app, event) {
             event.stopPropagation();
-            var shouldUninstall = confirm('Are you sure you want to uninstall ' + app.appId + '?');
+            var shouldUninstall = confirm('Are you sure you want to remove ' + app.appId + '?');
             if(shouldUninstall) {
                 return AppsService.uninstallApp(app)
                 .then(null, function(error) {
