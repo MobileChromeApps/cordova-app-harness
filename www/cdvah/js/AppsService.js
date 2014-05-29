@@ -19,7 +19,7 @@
 (function() {
     'use strict';
     /* global myApp */
-    myApp.factory('AppsService', ['$q', 'ResourcesLoader', 'INSTALL_DIRECTORY', 'APPS_JSON', 'notifier', 'AppHarnessUI', function($q, ResourcesLoader, INSTALL_DIRECTORY, APPS_JSON, notifier, AppHarnessUI) {
+    myApp.factory('AppsService', ['$q', '$location', 'ResourcesLoader', 'INSTALL_DIRECTORY', 'APPS_JSON', 'notifier', 'AppHarnessUI', function($q, $location, ResourcesLoader, INSTALL_DIRECTORY, APPS_JSON, notifier, AppHarnessUI) {
         // Map of type -> installer.
         var _installerFactories = Object.create(null);
         // Array of installer objects.
@@ -95,6 +95,7 @@
             return ResourcesLoader.writeFileContents(APPS_JSON, stringContents);
         }
 
+<<<<<<< HEAD
         AppHarnessUI.setEventHandler(function(eventName) {
             console.log('Got event from UI: ' + eventName);
             if (eventName == 'showMenu') {
@@ -120,6 +121,8 @@
             return $q.when();
         }
 
+=======
+>>>>>>> upstream
         var AppsService = {
             // return promise with the array of apps
             getAppList : function() {
@@ -172,8 +175,8 @@
             quitApp : function() {
                 if (activeInstaller) {
                     activeInstaller.unlaunch();
-                    AppHarnessUI.destroy();
                     activeInstaller = null;
+                    return AppHarnessUI.destroy();
                 }
                 return $q.when();
             },
@@ -192,6 +195,8 @@
                         return AppHarnessUI.create(launchUrl);
                     }, function() {
                         throw new Error('Start file does not exist: ' + launchUrl.replace(/.*?\/www\//, 'www/'));
+                    }).then(function() {
+                        $location.path('/inappmenu');
                     });
                 });
             },
@@ -212,19 +217,27 @@
             },
 
             uninstallAllApps : function() {
-                var deletePromises = [];
-                for (var i = 0; i < _installers.length; ++i) {
-                    deletePromises.push(AppsService.uninstallApp(_installers[i]));
-                }
-                return $q.all(deletePromises);
+                this.quitApp()
+                .then(function() {
+                    var deletePromises = [];
+                    for (var i = 0; i < _installers.length; ++i) {
+                        deletePromises.push(AppsService.uninstallApp(_installers[i]));
+                    }
+                    return $q.all(deletePromises);
+                });
             },
 
             uninstallApp : function(installer) {
+                var ret = $q.when();
                 if (lastAccessedInstaller == installer) {
                     lastAccessedInstaller = null;
                 }
-                return installer.deleteFiles()
-                .then(function() {
+                if (installer == activeInstaller) {
+                    ret = this.quitApp();
+                }
+                return ret.then(function() {
+                    return installer.deleteFiles();
+                }).then(function() {
                     _installers.splice(_installers.indexOf(installer), 1);
                     return writeAppsJson();
                 });
