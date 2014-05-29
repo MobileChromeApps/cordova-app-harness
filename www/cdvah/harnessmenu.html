@@ -19,7 +19,7 @@
 -->
 <html>
     <head>
-        <title>Chrome ADT v0.4.2</title>
+        <meta name="viewport" content="width=device-width, user-scalable=no">
         <script type="text/javascript" src="../cordova.js"></script>
         <script type="text/javascript" src="js/libs/angular.js"></script>
         <script type="text/javascript" src="js/libs/angular-route.js"></script>
@@ -39,20 +39,12 @@
         <script type="text/javascript" src="js/Notify.js"></script>
         <script type="text/javascript" src="js/HttpServer.js"></script>
         <script type="text/javascript" src="js/HarnessServer.js"></script>
-
         <script type="text/javascript" src="../dist/cca.bundle.js"></script>
-        <link rel="stylesheet" type="text/css" href="css/topcoat-mobile-light.min.css" />
         <link rel="stylesheet" type="text/css" href="css/style.css" />
     </head>
     <body ng-cloak>
-        <div class="topcoat-navigation-bar">
-            <div class="topcoat-navigation-bar__item center full">
-                <h1 class="topcoat-navigation-bar__title">{{ appTitle }} v{{ appVersion }}</h1>
-            </div>
-        </div>
-
+        <div class="title">{{appTitle}} <span class="title-version">v{{appVersion}}</span></div>
         <cdvah-notify></cdvah-notify>
-
         <div ng-view></div>
     </body>
 </html>

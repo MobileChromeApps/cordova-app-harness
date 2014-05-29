@@ -16,23 +16,231 @@
  * specific language governing permissions and limitations
  * under the License.
 */
-.listen {
-    padding: 2px 20px;
+
+@font-face {
+    font-family: 'Roboto Condensed';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Roboto Condensed Regular'), local('RobotoCondensed-Regular'), url(Zd2E9abXLFGSr9G3YK2MsNxB8OB85xaNTJvVSB9YUjQ.woff) format('woff');
 }
 
-.plugin-list-item {
-    padding-top: 0.2rem;
-    padding-bottom: 0.2rem;
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
 }
 
-.buttons {
-    margin: 15px;
+img {
+    border: none;
+    margin: 0;
+}
+
+a:link, a:visited, a:hover, a:active {
+    text-decoration:none;
+    color: #fff;
+}
+
+html {
+    padding: 20px 8px 8px 8px;
+    background: #222;
+    color: #ddd;
+    font-family: "Roboto Condensed";
+    font-size: 100%;
+    text-align: center;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    white-space: nowrap;
+    height: 100%;
+    position: relative;
+}
+
+body {
+    height: 100%;
+    position: relative;
+    margin: 0;
+}
+
+@media all and (max-width: 500px) {
+    html {
+        font-size: 10pt;
+    }
+}
+
+.title {
+    font-size: 2rem;
+    margin-bottom: 19px;
+}
+
+.title-version {
+    font-size: .6em;
+}
+
+.listening-container {
+    margin-bottom: 10pt;
+    font-size: 1.2rem;
+}
+
+.listening-ip {
+    color: #AAA;
+    margin: 0 3pt;
+}
+
+.listening-error {
+    color: #E00;
+}
+
+.listening-port {
+    color: #0A0;
+}
+
+.app-container {
+    border: 1px solid #555;
+    border-radius: 2px;
+    text-align: left;
+    display: inline-block;
+    position: relative;
+    padding: 1rem;
+    background: #444;
+    margin-top: 20%;
+    width: 80%;
+}
+
+@media all and (max-width: 500px) {
+    .app-container {
+        width: 90%;
+    }
+}
+
+.app-empty-message {
+    text-align: center;
+    font-size: 1.5rem;
+    padding: 1rem;
+    margin-top: 20%;
+    white-space: normal;
+}
+
+.app-button-x {
+    position: absolute;
+    top: -1.2rem;
+    cursor:pointer;
+    color: #fff;
+    border-radius: 1.2rem;
+    background: #D13D3D;
+    display: inline-block;
+    padding: 1.2rem;
+    left: -1.2rem;
+}
+
+.app-button-x::after {
+    content: "\d7";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    line-height: 2.2rem;
+    font-size: 2rem;
+    text-align: center;
+}
+
+.app-container-body {
+    line-height: 80px;
+    position: relative;
+    margin-bottom: .5rem;
+}
+
+.app-icon-container {
+    display: inline-block;
+}
+
+.app-icon {
+    width: 64px;
+    height: 64px;
+    line-height: 64px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.app-icon-missing {
+    text-align: center;
+    white-space: normal;
+    border: 1px solid #666;
+}
+
+@media all and (max-width: 500px) {
+    .app-icon {
+        width: 48px;
+        height: 48px;
+        line-height: 48px;
+    }
+}
+
+.app-text-container-1 {
+    display: inline-block;
+    line-height: 90px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    position: absolute;
+    right: 0px;
+    left: 72px;
+    top: -8px;
+    bottom: 0;
+}
+
+@media all and (max-width: 500px) {
+    .app-text-container-1 {
+        left: 58px;
+    }
+}
+
+.app-text-container-2 {
+    line-height: 1.5rem;
+    vertical-align: middle;
+    display: inline-block;
+}
+.app-title {
+    font-size: 1.3rem;
+    line-height: 2rem;
+}
+
+.app-version {
+}
+
+.app-last-updated {
+    color: #ccc;
+}
+
+.app-plugin-status {
+    color: #ccc;
+}
+
+.app-button-container {
+    text-align: center;
+}
+
+.app-button {
+    background-color: #c32;
+    border:1px solid #d02718;
+    display:inline-block;
+    color: #ddd;
+    font-size: 15px;
+    font-weight:bold;
+    padding: 4px 12px;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+.app-button:active {
+    background-color: #a32;
+}
+
+.footer {
+    position: absolute;
+    bottom: 2.2rem;
+    left: 0;
+    right: 0;
 }
 
 .notification-container {
     margin: 0;
     padding: 0;
-
     position: fixed;
     bottom: 20px;
     left: 0px;
@@ -43,9 +251,9 @@
 .notification {
     border: 1px solid black;
     border-radius: 10px;
-
     margin: 0 20px;
     padding: 10px 20px;
+    color: #000;
 }
 
 .notification-success {

@@ -20,12 +20,15 @@
     'use strict';
     /* global myApp */
     myApp.controller('ListCtrl', ['$location', 'notifier', '$scope', '$routeParams', '$q', 'AppsService', 'HarnessServer', function ($location, notifier, $scope, $routeParams, $q, AppsService, HarnessServer) {
-        $scope.appList = [];
+        $scope.app = null;
+        $scope.ipAddresses = null;
+        $scope.port = null;
 
         function initialise() {
             $scope.$on('$destroy', function() {
                 AppsService.onAppListChange = null;
             });
+            $scope.port = 2424;
             AppsService.onAppListChange = loadAppsList;
             return loadAppsList()
             .then(function() {
@@ -33,25 +36,17 @@
             }).then(function() {
                 return HarnessServer.getListenAddress()
                 .then(function(value) {
-                    $scope.ipAddress = value;
+                    $scope.ipAddresses = value.split(', ');
                 });
             }, function() {
-                $scope.ipAddress = 'Failed to start server';
+                $scope.ipAddresses = [];
             });
         }
 
         function loadAppsList() {
             return AppsService.getAppList()
-            .then(function(newAppsList){
-                newAppsList.sort(function(a, b){
-                    if (a.appId < b.appId) {
-                        return -1;
-                    } else if(a.appId > b.appId) {
-                        return 1;
-                    }
-                    return 0;
-                });
-                $scope.appList = newAppsList;
+            .then(function(){
+                $scope.app = AppsService.getLastAccessedApp();
             }, function(error){
                 notifier.error(error);
             });

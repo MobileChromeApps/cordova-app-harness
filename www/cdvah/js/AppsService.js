@@ -26,6 +26,7 @@
         var _installers = null;
         // The app that is currently running.
         var activeInstaller = null;
+        var lastAccessedInstaller = null;
 
         function readAppsJson() {
             var deferred = $q.defer();
@@ -65,6 +66,9 @@
                         _installers.push(app);
                         return next();
                     }, next);
+                })
+                .then(function() {
+                    lastAccessedInstaller = _installers.filter(function(x) { return x.appId === json['lastAccessedAppId']; })[0] || null;
                 });
             });
         }
@@ -72,6 +76,7 @@
         function createAppsJson() {
             var appsJson = {
                 'fileVersion': 1,
+                'lastAccessedAppId': lastAccessedInstaller ? lastAccessedInstaller.appId : null,
                 'appList': []
             };
             for (var i = 0; i < _installers.length; ++i) {
@@ -107,6 +112,14 @@
             }
         });
 
+        function updateLastAccessed(app) {
+            if (lastAccessedInstaller != app) {
+                lastAccessedInstaller = app;
+                return writeAppsJson();
+            }
+            return $q.when();
+        }
+
         var AppsService = {
             // return promise with the array of apps
             getAppList : function() {
@@ -114,6 +127,10 @@
                 .then(function() {
                     return _installers.slice();
                 });
+            },
+
+            getLastAccessedApp: function() {
+                return lastAccessedInstaller;
             },
 
             getActiveApp: function() {
@@ -137,6 +154,12 @@
                         });
                     }
                     if (matches.length > 0) {
+                        if (appType) {
+                            return updateLastAccessed(matches[0])
+                            .then(function() {
+                                return matches[0];
+                            });
+                        }
                         return matches[0];
                     }
                     if (appType) {
@@ -159,6 +182,8 @@
                 return AppsService.quitApp()
                 .then(function() {
                     activeInstaller = installer;
+                    return updateLastAccessed(installer);
+                }).then(function() {
                     return installer.launch();
                 }).then(function(launchUrl) {
                     // Don't just use ResourcesLoader.doesFileExist because remaps might make it exist.
@@ -178,6 +203,7 @@
                     return new Ctor().init(installPath, appId);
                 }).then(function(installer) {
                     _installers.push(installer);
+                    lastAccessedInstaller = installer;
                     return writeAppsJson()
                     .then(function() {
                         return installer;
@@ -194,6 +220,9 @@
             },
 
             uninstallApp : function(installer) {
+                if (lastAccessedInstaller == installer) {
+                    lastAccessedInstaller = null;
+                }
                 return installer.deleteFiles()
                 .then(function() {
                     _installers.splice(_installers.indexOf(installer), 1);

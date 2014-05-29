@@ -24,6 +24,7 @@
     // are the appId and <content>.
     var CONFIG_XML_TEMPLATE = '<?xml version="1.0" encoding="UTF-8"?>\n' +
         '<widget id = "__APP_PACKAGE_ID__" version = "__APP_VERSION__">\n' +
+        '<name>__APP_NAME__</name>\n' +
         '<description>__DESCRIPTION__</description>\n' +
         '<author>__AUTHOR__</author>\n' +
         '<preference name="KeyboardShrinksView" value="true" />\n' +
@@ -31,17 +32,29 @@
         '<preference name="StatusBarBackgroundColor" value="#000000" />\n' +
         '<preference name="iosPersistentFileLocation" value="Library" />\n' +
         '<preference name="AndroidPersistentFileLocation" value="Internal" />\n' +
+        '<icon src="__ICON_SRC__" />\n' +
         '<content src="plugins/org.chromium.bootstrap/chromeapp.html" />\n' +
         '</widget>\n';
 
 
     function generateConfigXmlData(appId, manifest) {
+        var iconSrc = '';
+        var iconSize = 0;
+        if (typeof manifest.icons == 'object') {
+            for (var size in manifest.icons) {
+                if (+size > iconSize) {
+                    iconSize = +size;
+                    iconSrc = 'www/' + manifest.icons[size];
+                }
+            }
+        }
         return CONFIG_XML_TEMPLATE
-            .replace(/__APP_NAME__/, (manifest.name) || 'Untitled')
+            .replace(/__APP_NAME__/, manifest.name || appId)
             .replace(/__APP_PACKAGE_ID__/, appId)
-            .replace(/__APP_VERSION__/, (manifest.version) || '0.0.1')
-            .replace(/__DESCRIPTION__/, (manifest.description) || 'Missing description')
-            .replace(/__AUTHOR__/, (manifest.author) || 'Missing author');
+            .replace(/__APP_VERSION__/, manifest.version || '0.0.1')
+            .replace(/__DESCRIPTION__/, manifest.description || 'Missing description')
+            .replace(/__AUTHOR__/, manifest.author || 'Missing author')
+            .replace(/__ICON_SRC__/, iconSrc);
     }
 
     /* global myApp */
