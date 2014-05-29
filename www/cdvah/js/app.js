@@ -33,15 +33,11 @@ myApp.config(['$routeProvider', function($routeProvider){
     });
 }]);
 
-myApp.factory('urlCleanup', function() {
-    return function(url) {
-        url = url.replace(/\/$/, '').replace(new RegExp(cordova.platformId + '$'), '').replace(/\/$/, '');
-        if (!/^(file|http|https)+:/.test(url)) {
-            url = 'http://' + url;
-        }
-        return url;
-    };
-});
+myApp.run(['$rootScope', 'APP_NAME', 'APP_VERSION', function($rootScope, APP_NAME, APP_VERSION){
+    $rootScope.appTitle = APP_NAME;
+    $rootScope.appVersion = APP_VERSION;
+    document.title = APP_NAME + ' v' + APP_VERSION;
+}]);
 
 document.addEventListener('deviceready', function() {
     myApp.value('INSTALL_DIRECTORY', cordova.file.dataDirectory + 'apps/');
