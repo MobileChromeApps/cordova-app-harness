@@ -2,5 +2,5 @@
 harness-push/node_modules/*
 !harness-push/node_modules/chrome-harness-client
 harness-push/node_modules/chrome-harness-client/node_modules
-www/dist
+www/cdvah/generated
 node_modules/

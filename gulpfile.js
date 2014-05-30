@@ -22,7 +22,7 @@ gulp.task('build-dev', ['lint', 'webpack:build-dev']);
 gulp.task('build', ['lint', 'webpack:build']);
 
 gulp.task('lint:app', function() {
-  return gulp.src(['www/**/*.js', '!www/cdvah/js/libs/*.js', '!www/dist/*.js'])
+  return gulp.src(['www/**/*.js', '!www/cdvah/js/libs/*.js', '!www/cdvah/generated/*.js'])
     .pipe(jshint())
     .pipe(jshint.reporter('default'))
     .pipe(jshint.reporter('fail'));
