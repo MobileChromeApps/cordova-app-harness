@@ -32,15 +32,15 @@
             AppsService.onAppListChange = loadAppsList;
 
             AppHarnessUI.setEventHandler(function(eventName) {
-                $scope.$apply(function() {
-                    if (eventName == 'showMenu') { // two-finger double tap
-                        return AppHarnessUI.setVisible(false);
-                    } else if (eventName == 'destroyed') {
-                        return loadAppsList();
-                    } else {
-                        console.warn('Unknown message from AppHarnessUI: ' + eventName);
-                    }
-                });
+                if (eventName == 'showMenu') { // two-finger double tap
+                    return AppHarnessUI.setVisible(false);
+                } else if (eventName == 'hideMenu') {
+                    return AppHarnessUI.setVisible(true);
+                } else if (eventName == 'destroyed') {
+                    return loadAppsList();
+                } else {
+                    console.warn('Unknown message from AppHarnessUI: ' + eventName);
+                }
             });
 
             return loadAppsList()
