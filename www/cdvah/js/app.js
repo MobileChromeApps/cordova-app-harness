@@ -27,10 +27,6 @@ myApp.config(['$routeProvider', function($routeProvider){
         templateUrl: 'views/list.html',
         controller: 'ListCtrl'
     });
-    $routeProvider.when('/inappmenu', {
-        templateUrl: 'views/inappmenu.html',
-        controller: 'InAppMenuCtrl'
-    });
     $routeProvider.when('/details/:index', {
         templateUrl: 'views/details.html',
         controller: 'DetailsCtrl'

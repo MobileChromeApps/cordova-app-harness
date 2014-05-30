@@ -19,7 +19,7 @@
 (function(){
     'use strict';
     /* global myApp */
-    myApp.controller('ListCtrl', ['$location', 'notifier', '$scope', '$routeParams', '$q', 'AppsService', 'HarnessServer', function ($location, notifier, $scope, $routeParams, $q, AppsService, HarnessServer) {
+    myApp.controller('ListCtrl', ['$location', 'notifier', '$scope', '$routeParams', '$q', 'AppsService', 'HarnessServer', 'AppHarnessUI', function ($location, notifier, $scope, $routeParams, $q, AppsService, HarnessServer, AppHarnessUI) {
         $scope.app = null;
         $scope.ipAddresses = null;
         $scope.port = null;
@@ -30,6 +30,19 @@
             });
             $scope.port = 2424;
             AppsService.onAppListChange = loadAppsList;
+
+            AppHarnessUI.setEventHandler(function(eventName) {
+                $scope.$apply(function() {
+                    if (eventName == 'showMenu') { // two-finger double tap
+                        return AppHarnessUI.setVisible(false);
+                    } else if (eventName == 'destroyed') {
+                        return loadAppsList();
+                    } else {
+                        console.warn('Unknown message from AppHarnessUI: ' + eventName);
+                    }
+                });
+            });
+
             return loadAppsList()
             .then(function() {
                 return HarnessServer.start();
@@ -47,28 +60,30 @@
             return AppsService.getAppList()
             .then(function(){
                 $scope.app = AppsService.getLastAccessedApp();
+                $scope.isRunning = !!AppsService.getActiveApp();
             }, function(error){
                 notifier.error(error);
             });
         }
 
-        $scope.launchApp = function(app, event){
-            event.stopPropagation();
+        $scope.launchApp = function(app){
             return AppsService.launchApp(app)
             .then(null, function(error){
                 notifier.error(error);
             });
         };
 
-        $scope.removeApp = function(app, event) {
-            event.stopPropagation();
-            var shouldUninstall = confirm('Are you sure you want to remove ' + app.appId + '?');
-            if(shouldUninstall) {
-                return AppsService.uninstallApp(app)
-                .then(null, function(error) {
-                    notifier.error(error);
-                });
-            }
+        $scope.resumeApp = function(){
+            return AppHarnessUI.setVisible(true);
+        };
+
+        $scope.stopApp = function(){
+            return AppsService.quitApp();
+        };
+
+        $scope.removeApp = function() {
+            // Uninstall all apps, since we only show the latest one, this most closely matches their intention.
+            return AppsService.uninstallAllApps();
         };
 
         $scope.showDetails = function(index) {

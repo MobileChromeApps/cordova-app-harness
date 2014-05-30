@@ -45,7 +45,11 @@
       </div>
     </div>
   </div>
-  <div class="app-button-container"><button class="app-button" ng-click="launchApp(app, $event)">Launch</button></div>
+  <div class="app-button-container">
+    <button class="app-button" ng-show="!isRunning" ng-click="launchApp(app)">Launch</button>
+    <button class="app-button" ng-show="isRunning" ng-click="resumeApp()">Resume</button>
+    <button class="app-button" ng-show="isRunning" ng-click="stopApp()">Stop</button>
+  </div>
 </div>
 <div class="footer">
   <a href="#">About {{appTitle}}</a>

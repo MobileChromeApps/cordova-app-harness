@@ -19,7 +19,7 @@
 (function() {
     'use strict';
     /* global myApp */
-    myApp.factory('AppsService', ['$q', '$location', 'ResourcesLoader', 'INSTALL_DIRECTORY', 'APPS_JSON', 'notifier', 'AppHarnessUI', function($q, $location, ResourcesLoader, INSTALL_DIRECTORY, APPS_JSON, notifier, AppHarnessUI) {
+    myApp.factory('AppsService', ['$q', 'ResourcesLoader', 'INSTALL_DIRECTORY', 'APPS_JSON', 'notifier', 'AppHarnessUI', function($q, ResourcesLoader, INSTALL_DIRECTORY, APPS_JSON, notifier, AppHarnessUI) {
         // Map of type -> installer.
         var _installerFactories = Object.create(null);
         // Array of installer objects.
@@ -95,24 +95,6 @@
             return ResourcesLoader.writeFileContents(APPS_JSON, stringContents);
         }
 
-<<<<<<< HEAD
-        AppHarnessUI.setEventHandler(function(eventName) {
-            console.log('Got event from UI: ' + eventName);
-            if (eventName == 'showMenu') {
-                AppHarnessUI.createOverlay();
-            } else if (eventName == 'hideMenu') {
-                AppHarnessUI.destroyOverlay();
-            } else if (eventName == 'restartApp') {
-                // TODO: Restart in place?
-                AppsService.launchApp(activeInstaller)
-                .then(null, notifier.error);
-            } else if (eventName == 'quitApp') {
-                AppsService.quitApp();
-            } else {
-                console.warn('Unknown message from AppHarnessUI: ' + eventName);
-            }
-        });
-
         function updateLastAccessed(app) {
             if (lastAccessedInstaller != app) {
                 lastAccessedInstaller = app;
@@ -121,8 +103,6 @@
             return $q.when();
         }
 
-=======
->>>>>>> upstream
         var AppsService = {
             // return promise with the array of apps
             getAppList : function() {
@@ -196,7 +176,9 @@
                     }, function() {
                         throw new Error('Start file does not exist: ' + launchUrl.replace(/.*?\/www\//, 'www/'));
                     }).then(function() {
-                        $location.path('/inappmenu');
+                        if (AppsService.onAppListChange) {
+                            AppsService.onAppListChange();
+                        }
                     });
                 });
             },
