@@ -33,7 +33,7 @@
     <div class="app-text-container-1">
       <div class="app-text-container-2">
         <div class="app-title">{{app.appName || app.appId}} <span class="app-version">{{app.version}}</span></div>
-        <div class="app-last-updated" ng-show="app.updatingStatus === null">Last updated: {{app.lastUpdated || 'never'}}</div>
+        <div class="app-last-updated" ng-show="app.updatingStatus === null">Last updated: <span am-time-ago="app.lastUpdated"></span></div>
         <div class="app-last-updated" ng-show="app.updatingStatus !== null">Update in progress: {{app.updatingStatus}}%</div>
         <div class="app-plugin-status">Plugins:
             <span>{{app.plugins.all.length}} total</span><span ng-show="app.plugins.missing.length || app.plugins.older.length || app.plugins.newer.length">, </span>

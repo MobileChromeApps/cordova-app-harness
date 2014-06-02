@@ -17,7 +17,7 @@
  * under the License.
 */
 
-var myApp = angular.module('ChromeAppHarness', ['ngRoute']);
+var myApp = angular.module('ChromeAppHarness', ['ngRoute', 'angularMoment']);
 
 myApp.value('APP_NAME', 'Chrome App Harness');
 myApp.value('APP_VERSION', '0.5');
