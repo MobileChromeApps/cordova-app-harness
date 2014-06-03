@@ -130,7 +130,7 @@ echo "Installing Chromium plugins"
     org.chromium.polyfill.blob_constructor \
     org.chromium.polyfill.CustomEvent \
     org.chromium.polyfill.xhr_features \
-    org.apache.cordova.keyboard \
+    org.apache.cordova.labs.keyboard \
     org.apache.cordova.statusbar \
     org.apache.cordova.network-information
 
