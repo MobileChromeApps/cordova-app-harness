@@ -47,10 +47,16 @@
             .then(function() {
                 return HarnessServer.start();
             }).then(function() {
-                return HarnessServer.getListenAddress()
-                .then(function(value) {
-                    $scope.ipAddresses = value.split(', ');
-                });
+                var getInfoCallback = function() {
+                    HarnessServer.getListenAddress(/* skipCache */ true)
+                    .then(function(value) {
+                        $scope.ipAddresses = value ? value.split(', ') : [];
+                    });
+                };
+
+                // When getInfo is called, the callback is retained and called every time network info changes.
+                // The callback updates the IP.
+                navigator.connection.getInfo(getInfoCallback);
             }, function() {
                 $scope.ipAddresses = [];
             });
