@@ -51,7 +51,7 @@ For more info:
 -Build apk
   - `cd CCAHarness && ../buildharness.sh`
 - Tag release
-  - `git tag -am "Tagged vX.X.X-alpha" vX.X.X-alpha`
+  - `git tag -am "Tagged v0.5.1" chrome-app-harness-0.5.1`
   - `git push origin master --tags`
 - Upload apk to GitHub's releases page
   - Attach the apk
