@@ -46,7 +46,7 @@ For more info:
 
 ### Cutting a Release
 
-- Update the version in `config.xml` and `app.js`
+- Update the version in `createproject.sh` and `app.js`
   - `vim config.xml www/cdvah/js/app.js`
 -Build apk
   - `cd CCAHarness && ../buildharness.sh`

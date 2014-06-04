@@ -78,14 +78,20 @@ $CORDOVA platform add $PLATFORMS || exit 1
 set +x
 
 if [[ "$PLATFORMS" = *android* ]]; then
-    cp "$AH_PATH"/icons/android/icon.png platforms/android/res/drawable/icon.png
-    cp "$AH_PATH"/icons/android/icon-ldpi.png platforms/android/res/drawable-ldpi/icon.png
-    cp "$AH_PATH"/icons/android/icon-mdpi.png platforms/android/res/drawable-mdpi/icon.png
-    cp "$AH_PATH"/icons/android/icon-hdpi.png platforms/android/res/drawable-hdpi/icon.png
-    cp "$AH_PATH"/icons/android/icon-xdpi.png platforms/android/res/drawable-xhdpi/icon.png
+    cp "$AH_PATH"/template-overrides/icons/android/icon.png platforms/android/res/drawable/icon.png
+    cp "$AH_PATH"/template-overrides/icons/android/icon-ldpi.png platforms/android/res/drawable-ldpi/icon.png
+    cp "$AH_PATH"/template-overrides/icons/android/icon-mdpi.png platforms/android/res/drawable-mdpi/icon.png
+    cp "$AH_PATH"/template-overrides/icons/android/icon-hdpi.png platforms/android/res/drawable-hdpi/icon.png
+    cp "$AH_PATH"/template-overrides/icons/android/icon-xdpi.png platforms/android/res/drawable-xhdpi/icon.png
+
+    # TODO: Won't be necessary once we move to 3.6.0. It adds launcher_name.
+    cp "$AH_PATH"/template-overrides/AndroidManifest.xml platforms/android/AndroidManifest.xml
+    cp "$AH_PATH"/template-overrides/strings.xml platforms/android/res/values/strings.xml
 fi
 if [[ "$PLATFORMS" = *ios* ]]; then
-    cp -r "$AH_PATH"/icons/ios/* platforms/ios/*/Resources/icons
+    cp -r "$AH_PATH"/template-overrides/icons/ios/* platforms/ios/*/Resources/icons
+    # Set CFBundleName to "App Harness" instead of "Chrome App Harness".
+    cp "$AH_PATH"/template-overrides/Info.plist platforms/ios/*/*-Info.plist
 fi
 
 # if [[ $PLATFORMS = *ios* ]]; then
