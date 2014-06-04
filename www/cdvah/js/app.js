@@ -20,7 +20,7 @@
 var myApp = angular.module('ChromeAppHarness', ['ngRoute', 'angularMoment']);
 
 myApp.value('APP_NAME', 'Chrome App Harness');
-myApp.value('APP_VERSION', '0.5');
+myApp.value('APP_VERSION', '0.5.1');
 
 myApp.config(['$routeProvider', function($routeProvider){
     $routeProvider.when('/', {

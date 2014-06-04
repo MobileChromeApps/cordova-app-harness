@@ -32,9 +32,9 @@ fi
 
 CORDOVA="${CORDOVA-cordova}"
 PLATFORMS="${PLATFORMS-android}"
-APP_ID=${APP_ID-org.chromium.ChromeADT}
-APP_NAME=${APP_NAME-Chrome ADT}
-APP_VERSION=${APP_VERSION-0.5.0}
+APP_ID=${APP_ID-org.chromium.appharness}
+APP_NAME=${APP_NAME-Chrome App Harness}
+APP_VERSION=${APP_VERSION-0.5.1}
 DIR_NAME="${1}"
 AH_PATH="$(cd $(dirname $0) && pwd)"
 extra_search_path="$PLUGIN_SEARCH_PATH"
