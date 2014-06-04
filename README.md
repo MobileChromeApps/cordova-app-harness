@@ -48,7 +48,8 @@ For more info:
 
 - Update the version in `createproject.sh` and `app.js`
   - `vim config.xml www/cdvah/js/app.js`
--Build apk
+- Build apk
+  - `./createproject.sh CCAHarness --allplugins`
   - `cd CCAHarness && ../buildharness.sh`
 - Tag release
   - `git tag -am "Tagged v0.5.1" chrome-app-harness-0.5.1`
