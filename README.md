@@ -47,7 +47,7 @@ For more info:
 ### Cutting a Release
 
 - Update the version in `createproject.sh` and `app.js`
-  - `vim config.xml www/cdvah/js/app.js`
+  - `vim createproject.sh www/cdvah/js/app.js`
 - Build apk
   - `./createproject.sh CCAHarness --allplugins`
   - `cd CCAHarness && ../buildharness.sh`
@@ -57,6 +57,8 @@ For more info:
 - Upload apk to GitHub's releases page
   - Attach the apk
   - Write *short* release notes (download link should be visible without scrolling).
+- Update the version with `-dev`
+  - `vim createproject.sh www/cdvah/js/app.js`
 
 ## Major Unimplemented Features
 * Applying app settings (DisallowOverscroll, etc)
