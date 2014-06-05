@@ -3,10 +3,10 @@
 The Chrome Apps Developer Tool ("Chrome ADT" for short) is a distribution of
 [Apache Cordova App Harness](https://git-wip-us.apache.org/repos/asf/cordova-app-harness.git)
 that can run Chrome Apps. It is based on the plugins from the
-[cca](https://github.com/MobileChomeApps/mobile-chrome-apps) toolkit.
+[cca](https://github.com/MobileChromeApps/mobile-chrome-apps) toolkit.
 
 ## Use a Pre-built APK
-Pre-built APKs are available [here](https://github.com/MobileChromeApps/harness/releases).
+Pre-built APKs are available [here](https://github.com/MobileChromeApps/chrome-app-harness/releases).
 
 # How to use it:
 1. Run the app on a device or simulator
