@@ -27,6 +27,7 @@ if [[ $# -eq 0 || "$1" = "--help" ]]; then
     echo '  APP_NAME="CordovaAppHarness"'
     echo '  APP_VERSION="0.0.1"'
     echo '  CCA="path/to/cca"'
+    echo '  ANDROID_PATH="path/to/cordova-android"'
     exit 1
 fi
 
@@ -39,6 +40,7 @@ DIR_NAME="${1}"
 AH_PATH="$(cd $(dirname $0) && pwd)"
 extra_search_path="$PLUGIN_SEARCH_PATH"
 PLUGIN_SEARCH_PATH="$(dirname "$AH_PATH")"
+CA_PATH="$ANDROID_PATH"
 
 function AddSearchPathIfExists() {
     if [[ -d "$1" ]]; then
@@ -49,6 +51,7 @@ AddSearchPathIfExists "$(dirname "$AH_PATH")/cordova"
 AddSearchPathIfExists "$(dirname "$AH_PATH")/cordova/cordova-plugins"
 AddSearchPathIfExists "$(dirname "$AH_PATH")/cordova-plugins"
 AddSearchPathIfExists "$(dirname "$AH_PATH")/mobile-chrome-apps/chrome-cordova/plugins"
+
 
 if [[ -n "$extra_search_path" ]]; then
     PLUGIN_SEARCH_PATH="${extra_search_path}:$PLUGIN_SEARCH_PATH"
@@ -72,6 +75,11 @@ perl -i -pe "s/{ID}/$APP_ID/g" config.xml || exit 1
 perl -i -pe "s/{NAME}/$APP_NAME/g" config.xml || exit 1
 perl -i -pe "s/{VERSION}/$APP_VERSION/g" config.xml || exit 1
 
+if [[ -n "$CA_PATH" ]]; then
+  CJS1='{"lib": {"android": {"uri": "'
+  CJS2='", "version": "4.0.x" , "id": "cordova-android-4"}}}'
+  echo $CJS1$CA_PATH$CJS2 > .cordova/config.json
+fi
 
 set -x
 $CORDOVA platform add $PLATFORMS || exit 1
@@ -162,7 +170,8 @@ echo "Installing Chromium plugins"
     org.chromium.polyfill.xhr_features \
     org.apache.cordova.labs.keyboard \
     org.apache.cordova.statusbar \
-    org.apache.cordova.network-information
+    org.apache.cordova.network-information \
+    --searchpath="$PLUGIN_SEARCH_PATH"
 
 
 if [[ $? != 0 ]]; then

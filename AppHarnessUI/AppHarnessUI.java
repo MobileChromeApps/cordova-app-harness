@@ -21,17 +21,20 @@ package org.apache.appharness;
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaActivity;
 import org.apache.cordova.CordovaArgs;
-import org.apache.cordova.CordovaChromeClient;
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CordovaWebView;
-import org.apache.cordova.CordovaWebViewClient;
-import org.apache.cordova.IceCreamCordovaWebViewClient;
 import org.apache.cordova.LinearLayoutSoftKeyboardDetect;
 import org.apache.cordova.PluginResult;
 import org.json.JSONException;
 
+import org.apache.cordova.engine.crosswalk.XWalkCordovaWebView;
+import org.apache.cordova.engine.crosswalk.XWalkCordovaWebViewClient;
+import org.apache.cordova.engine.crosswalk.XWalkCordovaChromeClient;
+import org.xwalk.core.XWalkView;
+
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.util.Log;
@@ -104,7 +107,7 @@ public class AppHarnessUI extends CordovaPlugin {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
                 slaveWebView.loadUrl("javascript:" + code);
             } else {
-                slaveWebView.evaluateJavascript(code, null);
+                slaveWebView.getView().evaluateJavascript(code, null);
             }
         }
         callbackContext.success();
@@ -119,7 +122,7 @@ public class AppHarnessUI extends CordovaPlugin {
             slaveWebView = new CustomCordovaWebView(activity);
             initWebView(slaveWebView);
             if (activity.getBooleanProperty("DisallowOverscroll", false)) {
-                slaveWebView.setOverScrollMode(CordovaWebView.OVER_SCROLL_NEVER);
+                slaveWebView.setOverScrollMode(View.OVER_SCROLL_NEVER);
             }
             slaveWebView.loadUrl(url);
             View newView = (View)slaveWebView.getParent();
@@ -137,7 +140,7 @@ public class AppHarnessUI extends CordovaPlugin {
             Log.w(LOG_TAG, "destroy: already destroyed");
         } else {
             contentView.removeView((View)slaveWebView.getParent());
-            slaveWebView.destroy();
+//            slaveWebView.destroy();
             origMainView.requestFocus();
             slaveWebView = null;
             slaveVisible = false;
@@ -159,7 +162,7 @@ public class AppHarnessUI extends CordovaPlugin {
             Log.w(LOG_TAG, "setSlaveVisible: slave not created");
         } else {
             slaveVisible = value;
-            ViewPropertyAnimator anim = slaveWebView.animate();
+            ViewPropertyAnimator anim = slaveWebView.getView().animate();
             // Note: Pivot is set in onSizeChanged.
             if (value) {
                 anim.scaleX(1.0f).scaleY(1.0f);
@@ -168,7 +171,7 @@ public class AppHarnessUI extends CordovaPlugin {
                 anim.scaleX(.25f).scaleY(.25f);
                 origMainView.requestFocus();
             }
-            slaveWebView.stealTapEvents = !value;
+            slaveWebView.SetStealTapEvents( !value);
             anim.setDuration(300).setInterpolator(new DecelerateInterpolator(2.0f)).start();
         }
         if (callbackContext != null) {
@@ -189,18 +192,15 @@ public class AppHarnessUI extends CordovaPlugin {
 //        layoutView.setBackground(origRootView.getBackground());
         layoutView.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, Gravity.BOTTOM | Gravity.LEFT));
 
-        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
-            newWebView.setWebViewClient(new CordovaWebViewClient(cordova, newWebView));
-        } else {
-            newWebView.setWebViewClient(new IceCreamCordovaWebViewClient(cordova, newWebView));
-        }
-        newWebView.setWebChromeClient(new CordovaChromeClient(cordova, newWebView));
+        newWebView.setWebViewClient(new XWalkCordovaWebViewClient(cordova, newWebView));
+        newWebView.setWebChromeClient(new XWalkCordovaChromeClient(cordova, newWebView));
 
         newWebView.setLayoutParams(new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 1.0F));
-        layoutView.addView(newWebView);
+        layoutView.addView(newWebView.getView());
+        newWebView.getView().setVisibility(View.VISIBLE);
     }
 
     // Based on: http://stackoverflow.com/questions/12414680/how-to-implement-a-two-finger-double-click-in-android
@@ -243,12 +243,25 @@ public class AppHarnessUI extends CordovaPlugin {
 
     }
 
-    private class CustomCordovaWebView extends CordovaWebView {
+    private class CustomCordovaWebView extends XWalkCordovaWebView{
+        public CustomCordovaWebView(Context context) {
+            super(context);
+        }
+        @Override
+        public XWalkView makeXWalkView(Context context) {
+            return new CustomXwalkView(context);
+        }
+        public void SetStealTapEvents(boolean value){
+            ((CustomXwalkView)getView()).stealTapEvents=value;
+        }
+    }
+
+    private class CustomXwalkView extends XWalkView{
         TwoFingerDoubleTapGestureDetector twoFingerTapDetector;
         boolean stealTapEvents;
 
-        public CustomCordovaWebView(Context context) {
-            super(context);
+        public CustomXwalkView(Context context) {
+            super(context, (Activity)null);
             twoFingerTapDetector = new TwoFingerDoubleTapGestureDetector();
         }
 
@@ -260,8 +273,18 @@ public class AppHarnessUI extends CordovaPlugin {
                 }
                 return true;
             }
-            twoFingerTapDetector.onTouchEvent(e);
             return super.onTouchEvent(e);
+        }
+        @Override
+        public boolean onInterceptTouchEvent(MotionEvent e) {
+            if (stealTapEvents) {
+                if (e.getAction() == MotionEvent.ACTION_UP) {
+                    sendEvent("hideMenu");
+                }
+                return true;
+            }
+            twoFingerTapDetector.onTouchEvent(e);
+            return super.onInterceptTouchEvent(e);
         }
 
         @SuppressLint("NewApi")
