@@ -301,7 +301,7 @@
                 'cordovaVer': cordova.version,
                 'protocolVer': PROTOCOL_VER,
                 'harnessVer': APP_VERSION,
-                'supportedAppTypes': ['cordova'],
+                'supportedAppTypes': ['chrome', 'cordova'],
                 'userAgent': navigator.userAgent,
                 'activeAppId': activeApp && activeApp.appId,
                 'appList': AppsService.getAppListAsJson()
