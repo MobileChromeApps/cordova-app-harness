@@ -56,15 +56,6 @@ Use `createproject.sh` to create a project. Example invocation:
     export PLUGIN_SEARCH_PATH="/Users/foo/mobile-chrome-apps/chrome-cordova/plugins"
     PLATFORMS="android ios" ./createproject.sh NewProject
 
-    cd newharness/
-    cordova plugin add ../cordova-crosswalk-engine
-
-    add to platforms/android/project.properties
-    android.library.reference.2=../../plugins/org.apache.cordova.engine.crosswalk/libs/xwalk_core_library
-
-    edit to top-level config.xml to add the preference:
-      <preference name="webView" value="org.apache.cordova.AndroidWebView" />
-    
 For more info:
 
     ./createproject.sh --help

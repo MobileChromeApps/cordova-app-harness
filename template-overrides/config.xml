@@ -21,4 +21,5 @@
     <name>{NAME}</name>
     <content src="cdvah/harnessmenu.html" />
     <access origin="*" />
+    <preference name="webView" value="org.apache.cordova.AndroidWebView" />
 </widget>

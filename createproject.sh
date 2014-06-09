@@ -26,7 +26,6 @@ if [[ $# -eq 0 || "$1" = "--help" ]]; then
     echo '  APP_ID="org.apache.AppHarness"'
     echo '  APP_NAME="CordovaAppHarness"'
     echo '  APP_VERSION="0.0.1"'
-    echo '  CCA="path/to/cca"'
     echo '  ANDROID_PATH="path/to/cordova-android"'
     exit 1
 fi
@@ -52,20 +51,22 @@ AddSearchPathIfExists "$(dirname "$AH_PATH")/cordova/cordova-plugins"
 AddSearchPathIfExists "$(dirname "$AH_PATH")/cordova-plugins"
 AddSearchPathIfExists "$(dirname "$AH_PATH")/mobile-chrome-apps/chrome-cordova/plugins"
 
+CCA_PATH=$(which cca)
+if [[ -n "$CCA_PATH" ]]; then
+    while [[ -L "$CCA_PATH" ]]; do
+        NEW_CCA_PATH=$(readlink "$CCA_PATH")
+        if [[ "/*" != "$NEW_CCA_PATH" ]]; then
+            NEW_CCA_PATH=$( cd $(dirname "$CCA_PATH") && cd $(dirname "$NEW_CCA_PATH") && echo $(pwd)/$(basename "$NEW_CCA_PATH") )
+        fi
+        CCA_PATH="$NEW_CCA_PATH"
+    done
+    AddSearchPathIfExists "$(dirname $(dirname "$CCA_PATH"))/chrome-cordova/plugins"
+    AddSearchPathIfExists "$(dirname $(dirname "$CCA_PATH"))/cordova"
+fi
+
 
 if [[ -n "$extra_search_path" ]]; then
     PLUGIN_SEARCH_PATH="${extra_search_path}:$PLUGIN_SEARCH_PATH"
-fi
-CCA="${CCA-cca}"
-
-if [[ -e "$CCA" ]]; then
-    CCA="$(cd $(dirname "$CCA") && pwd)/$(basename "$CCA")"
-else
-    if ! which "$CCA"; then
-        echo "Could not find cca executable."
-        echo "Make sure it's in your path or set the \$CCA variable to its location"
-        exit 1
-    fi
 fi
 
 "$CORDOVA" create "$DIR_NAME" "$APP_ID" "$APP_NAME" --link-to "$AH_PATH/www" || exit 1
@@ -87,7 +88,7 @@ set +x
 
 if [[ "$PLATFORMS" = *android* ]]; then
     cp "$AH_PATH"/template-overrides/icons/android/icon.png platforms/android/res/drawable/icon.png
-    cp "$AH_PATH"/template-overrides/icons/android/icon-ldpi.png platforms/android/res/drawable-ldpi/icon.png
+    rm platforms/android/res/drawable-ldpi/icon.png
     cp "$AH_PATH"/template-overrides/icons/android/icon-mdpi.png platforms/android/res/drawable-mdpi/icon.png
     cp "$AH_PATH"/template-overrides/icons/android/icon-hdpi.png platforms/android/res/drawable-hdpi/icon.png
     cp "$AH_PATH"/template-overrides/icons/android/icon-xdpi.png platforms/android/res/drawable-xhdpi/icon.png
@@ -117,7 +118,8 @@ echo Installing plugins.
     org.apache.cordova.device \
     org.chromium.socket \
     org.chromium.zip \
-    --searchpath="$PLUGIN_SEARCH_PATH"
+    --searchpath="$PLUGIN_SEARCH_PATH" \
+    --noregistry
 
 if [[ "$2" = "--allplugins" ]]; then
 "$CORDOVA" plugin add \
@@ -138,7 +140,8 @@ if [[ "$2" = "--allplugins" ]]; then
     org.apache.cordova.splashscreen \
     org.apache.cordova.statusbar \
     org.apache.cordova.vibration \
-    --searchpath="$PLUGIN_SEARCH_PATH"
+    --searchpath="$PLUGIN_SEARCH_PATH" \
+    --noregistry
     # Skipped core plugins:
     # org.apache.cordova.console
 fi
@@ -153,7 +156,7 @@ fi
 
 # Using CCA here to get the right search path.
 echo "Installing Chromium plugins"
-"$CCA" plugin add \
+cordova plugin add \
     org.chromium.bootstrap \
     org.chromium.navigation \
     org.chromium.fileSystem \
@@ -171,13 +174,26 @@ echo "Installing Chromium plugins"
     org.apache.cordova.labs.keyboard \
     org.apache.cordova.statusbar \
     org.apache.cordova.network-information \
-    --searchpath="$PLUGIN_SEARCH_PATH"
-
+    --searchpath="$PLUGIN_SEARCH_PATH" \
+    --noregistry
 
 if [[ $? != 0 ]]; then
     echo "Plugin installation failed. Probably you need to set PLUGIN_SEARCH_PATH env variable so that it contains the plugin that failed to install."
     exit 1
 fi
+
+echo "Installing Crosswalk"
+cordova plugin add org.apache.cordova.engine.crosswalk \
+    --searchpath="$PLUGIN_SEARCH_PATH" \
+    --noregistry
+
+if [[ $? != 0 ]]; then
+    echo "Plugin installation failed. Probably you need to set PLUGIN_SEARCH_PATH env variable so that it contains the plugin that failed to install."
+    exit 1
+fi
+
+# TODO: Add an option for installing grunt
+exit 0
 
 echo '
 var cordova = require("../../cordova-cli/cordova");
@@ -206,7 +222,5 @@ module.exports = function(grunt) {
 
 mkdir node_modules
 
-# TODO: Add an option for installing grunt
-exit 0
 npm install grunt grunt-contrib-watch || exit 1
 
