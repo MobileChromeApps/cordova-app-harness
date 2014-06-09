@@ -31,6 +31,7 @@ import org.apache.cordova.engine.crosswalk.XWalkCordovaWebView;
 import org.apache.cordova.engine.crosswalk.XWalkCordovaWebViewClient;
 import org.apache.cordova.engine.crosswalk.XWalkCordovaChromeClient;
 import org.xwalk.core.XWalkView;
+import org.xwalk.core.XWalkPreferences;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -177,7 +178,6 @@ public class AppHarnessUI extends CordovaPlugin {
                 anim.scaleX(1.0f).scaleY(1.0f);
                 ((View)slaveWebView.getParent()).requestFocus();
             } else {
-            	Bitmap b = slaveWebView.getScreenshot();
                 anim.scaleX(.25f).scaleY(.25f);
                 origMainView.requestFocus();
             }
@@ -261,18 +261,11 @@ public class AppHarnessUI extends CordovaPlugin {
         }
         @Override
         public XWalkView makeXWalkView(Context context) {
+            XWalkPreferences.setValue(XWalkPreferences.ANIMATABLE_XWALK_VIEW, true);
             return new CustomXwalkView(context);
         }
         public void SetStealTapEvents(boolean value){
             ((CustomXwalkView)getView()).stealTapEvents=value;
-        }
-        public Bitmap getScreenshot() {
-        	View v= getView();
-        	v.setDrawingCacheEnabled(true);
-        	v.buildDrawingCache(true);
-        	Bitmap b = Bitmap.createBitmap(v.getDrawingCache());
-        	v.setDrawingCacheEnabled(false);
-        	return b;
         }
     }
 
