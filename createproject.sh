@@ -93,8 +93,6 @@ if [[ "$PLATFORMS" = *android* ]]; then
     cp "$AH_PATH"/template-overrides/icons/android/icon-hdpi.png platforms/android/res/drawable-hdpi/icon.png
     cp "$AH_PATH"/template-overrides/icons/android/icon-xdpi.png platforms/android/res/drawable-xhdpi/icon.png
 
-    # TODO: Won't be necessary once we move to 3.6.0. It adds launcher_name.
-    cp "$AH_PATH"/template-overrides/AndroidManifest.xml platforms/android/AndroidManifest.xml
     cp "$AH_PATH"/template-overrides/strings.xml platforms/android/res/values/strings.xml
 fi
 if [[ "$PLATFORMS" = *ios* ]]; then
