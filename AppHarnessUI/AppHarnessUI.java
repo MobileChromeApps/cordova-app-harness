@@ -47,6 +47,8 @@ import android.view.ViewPropertyAnimator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 
 public class AppHarnessUI extends CordovaPlugin {
     private static final String LOG_TAG = "AppHarnessUI";
@@ -55,6 +57,7 @@ public class AppHarnessUI extends CordovaPlugin {
     CustomCordovaWebView slaveWebView;
     boolean slaveVisible;
     CallbackContext eventsCallback;
+    LinearLayoutSoftKeyboardDetect layoutView;
 
     @Override
     public boolean execute(String action, CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
@@ -120,10 +123,13 @@ public class AppHarnessUI extends CordovaPlugin {
             Log.w(LOG_TAG, "create: already exists");
         } else {
             slaveWebView = new CustomCordovaWebView(activity);
+        }
+        {
             initWebView(slaveWebView);
             if (activity.getBooleanProperty("DisallowOverscroll", false)) {
                 slaveWebView.setOverScrollMode(View.OVER_SCROLL_NEVER);
             }
+            slaveWebView.clearHistory();
             slaveWebView.loadUrl(url);
             View newView = (View)slaveWebView.getParent();
             contentView.addView(newView);
@@ -139,10 +145,13 @@ public class AppHarnessUI extends CordovaPlugin {
         if (slaveWebView == null) {
             Log.w(LOG_TAG, "destroy: already destroyed");
         } else {
+            slaveWebView.loadUrl("data:text/plain;charset=utf-8,");
             contentView.removeView((View)slaveWebView.getParent());
-//            slaveWebView.destroy();
             origMainView.requestFocus();
-            slaveWebView = null;
+
+            slaveWebView.getView().setScaleX(1.0f);
+            slaveWebView.getView().setScaleY(1.0f);
+            slaveWebView.SetStealTapEvents(false);
             slaveVisible = false;
             sendEvent("destroyed");
         }
@@ -168,6 +177,7 @@ public class AppHarnessUI extends CordovaPlugin {
                 anim.scaleX(1.0f).scaleY(1.0f);
                 ((View)slaveWebView.getParent()).requestFocus();
             } else {
+            	Bitmap b = slaveWebView.getScreenshot();
                 anim.scaleX(.25f).scaleY(.25f);
                 origMainView.requestFocus();
             }
@@ -186,7 +196,10 @@ public class AppHarnessUI extends CordovaPlugin {
             origMainView = contentView.getChildAt(0);
         }
 
-        LinearLayoutSoftKeyboardDetect layoutView = new LinearLayoutSoftKeyboardDetect(activity, contentView.getWidth(), contentView.getHeight());
+        if(layoutView == null) {
+            layoutView = new LinearLayoutSoftKeyboardDetect(activity, contentView.getWidth(), contentView.getHeight());
+            layoutView.addView(newWebView.getView());
+        }
         layoutView.setOrientation(LinearLayout.VERTICAL);
 
 //        layoutView.setBackground(origRootView.getBackground());
@@ -199,7 +212,6 @@ public class AppHarnessUI extends CordovaPlugin {
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 1.0F));
-        layoutView.addView(newWebView.getView());
         newWebView.getView().setVisibility(View.VISIBLE);
     }
 
@@ -253,6 +265,14 @@ public class AppHarnessUI extends CordovaPlugin {
         }
         public void SetStealTapEvents(boolean value){
             ((CustomXwalkView)getView()).stealTapEvents=value;
+        }
+        public Bitmap getScreenshot() {
+        	View v= getView();
+        	v.setDrawingCacheEnabled(true);
+        	v.buildDrawingCache(true);
+        	Bitmap b = Bitmap.createBitmap(v.getDrawingCache());
+        	v.setDrawingCacheEnabled(false);
+        	return b;
         }
     }
 
