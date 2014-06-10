@@ -23,37 +23,23 @@ Example of pushing:
     ( cd harness-push && npm install )
     ( cd harness-push/node_modules/chrome-harness-client && npm install )
     npm link cca
-    ./node_modules/gulp/bin/gulp.js build-dev
 
 ## Creating a Project
 
 Currently the project uses a development branch for several components. Do the following to get the correct versions of the various components:
 
     git clone https://github.com/apache/cordova-android.git
-    ( cd cordova-android && git checkout 4.0.x ) 
-
-    git clone https://github.com/MobileChromeApps/mobile-chrome-apps.git
-    ( cd mobile-chrome-apps.git && git checkout crosswalk )
-
-    git clone https://github.com/apache/cordova-plugins.git
-
-    git clone https://github.com/apache/cordova-plugin-file.git
-    ( cd cordova-plugin-file && git checkout pluggable_webview )
-
-    git clone https://github.com/apache/cordova-plugin-file-transfer.git
-    ( cordova-plugin-file-transfer && git checkout pluggable_webview )
-
-    git clone https://github.com/apache/cordova-plugin-media-capture.git
-    ( cd cordova-plugin-media-capture && git checkout pluggable_webview )
+    ( cd cordova-android && git checkout 4.0.x )
 
     git clone https://github.com/clelland/cordova-crosswalk-engine.git
     ( cd cordova-crosswalk-engine && git checkout plugin_with_arm_binary )
 
+    coho repo-clone -r plugins # Master branch of all plugins.
 
 Use `createproject.sh` to create a project. Example invocation:
 
     export ANDROID_PATH = "/Users/foo/cordova-android"
-    export PLUGIN_SEARCH_PATH="/Users/foo/mobile-chrome-apps/chrome-cordova/plugins"
+    export PLUGIN_SEARCH_PATH="/Users/foo/path/to/plugins"
     PLATFORMS="android ios" ./createproject.sh NewProject
 
 For more info:

@@ -39,34 +39,49 @@ DIR_NAME="${1}"
 AH_PATH="$(cd $(dirname $0) && pwd)"
 extra_search_path="$PLUGIN_SEARCH_PATH"
 PLUGIN_SEARCH_PATH="$(dirname "$AH_PATH")"
-CA_PATH="$ANDROID_PATH"
 
+function ResolveSymlinks() {
+  local found_path=$(which "$1")
+  node -e "console.log(require('fs').realpathSync('$found_path'))"
+}
 function AddSearchPathIfExists() {
     if [[ -d "$1" ]]; then
         PLUGIN_SEARCH_PATH="$PLUGIN_SEARCH_PATH:$1"
     fi
 }
-AddSearchPathIfExists "$(dirname "$AH_PATH")/cordova"
-AddSearchPathIfExists "$(dirname "$AH_PATH")/cordova/cordova-plugins"
-AddSearchPathIfExists "$(dirname "$AH_PATH")/cordova-plugins"
-AddSearchPathIfExists "$(dirname "$AH_PATH")/mobile-chrome-apps/chrome-cordova/plugins"
 
-CCA_PATH=$(which cca)
-if [[ -n "$CCA_PATH" ]]; then
-    while [[ -L "$CCA_PATH" ]]; do
-        NEW_CCA_PATH=$(readlink "$CCA_PATH")
-        if [[ "/*" != "$NEW_CCA_PATH" ]]; then
-            NEW_CCA_PATH=$( cd $(dirname "$CCA_PATH") && cd $(dirname "$NEW_CCA_PATH") && echo $(pwd)/$(basename "$NEW_CCA_PATH") )
-        fi
-        CCA_PATH="$NEW_CCA_PATH"
-    done
-    AddSearchPathIfExists "$(dirname $(dirname "$CCA_PATH"))/chrome-cordova/plugins"
-    AddSearchPathIfExists "$(dirname $(dirname "$CCA_PATH"))/cordova"
+# Use coho to find them plugins
+COHO_PATH=$(ResolveSymlinks coho)
+if [[ -n "$COHO_PATH" ]]; then
+    CDV_PATH="$(dirname $(dirname "$COHO_PATH"))"
+    AddSearchPathIfExists "$CDV_PATH"
+    AddSearchPathIfExists "$CDV_PATH/cordova-plugins"
+    ANDROID_PATH=${ANDROID_PATH-$CDV_PATH/cordova-android}
+    echo $ANDROID_PATH
+else
+    # For when repos are cloned as siblings.
+    AddSearchPathIfExists "$(dirname "$AH_PATH")/cordova"
+    AddSearchPathIfExists "$(dirname "$AH_PATH")/cordova/cordova-plugins"
 fi
 
+# Use cca to find Chrome ones.
+CCA_PATH=$(ResolveSymlinks cca)
+if [[ -n "$CCA_PATH" ]]; then
+    AddSearchPathIfExists "$(dirname $(dirname "$CCA_PATH"))/chrome-cordova/plugins"
+    AddSearchPathIfExists "$(dirname $(dirname "$CCA_PATH"))/cordova"
+else
+    # For when repos are cloned as siblings.
+    AddSearchPathIfExists "$(dirname "$AH_PATH")/cordova-plugins"
+    AddSearchPathIfExists "$(dirname "$AH_PATH")/mobile-chrome-apps/chrome-cordova/plugins"
+fi
 
 if [[ -n "$extra_search_path" ]]; then
     PLUGIN_SEARCH_PATH="${extra_search_path}:$PLUGIN_SEARCH_PATH"
+fi
+
+if [[ ! -e "$AH_PATH/www/cdvah/generated" ]]; then
+  echo "Running gulp"
+  (cd "$AH_PATH" && ./node_modules/gulp/bin/gulp.js build-dev) || exit 1
 fi
 
 "$CORDOVA" create "$DIR_NAME" "$APP_ID" "$APP_NAME" --link-to "$AH_PATH/www" || exit 1
@@ -76,10 +91,10 @@ perl -i -pe "s/{ID}/$APP_ID/g" config.xml || exit 1
 perl -i -pe "s/{NAME}/$APP_NAME/g" config.xml || exit 1
 perl -i -pe "s/{VERSION}/$APP_VERSION/g" config.xml || exit 1
 
-if [[ -n "$CA_PATH" ]]; then
+if [[ -n "$ANDROID_PATH" ]]; then
   CJS1='{"lib": {"android": {"uri": "'
   CJS2='", "version": "4.0.x" , "id": "cordova-android-4"}}}'
-  echo $CJS1$CA_PATH$CJS2 > .cordova/config.json
+  echo $CJS1$ANDROID_PATH$CJS2 > .cordova/config.json
 fi
 
 set -x
