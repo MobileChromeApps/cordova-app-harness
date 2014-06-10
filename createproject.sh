@@ -18,7 +18,7 @@
 
 if [[ $# -eq 0 || "$1" = "--help" ]]; then
     echo "Use this script to create a Chrome ADT project"
-    echo "Usage: $0 NewDirName [--allplugins]"
+    echo "Usage: $0 NewDirName"
     echo 'Options via variables:'
     echo '  PLATFORMS="android ios"'
     echo '  CORDOVA="path/to/cordova"'
@@ -134,7 +134,7 @@ echo Installing plugins.
     --searchpath="$PLUGIN_SEARCH_PATH" \
     --noregistry
 
-if [[ "$2" = "--allplugins" ]]; then
+# Extra plugins
 "$CORDOVA" plugin add \
     org.apache.cordova.battery-status \
     org.apache.cordova.camera \
@@ -157,7 +157,6 @@ if [[ "$2" = "--allplugins" ]]; then
     --noregistry
     # Skipped core plugins:
     # org.apache.cordova.console
-fi
 
 # To enable barcode scanning:
 # $CORDOVA plugin add https://github.com/wildabeast/BarcodeScanner.git # Optional
