@@ -32,8 +32,8 @@ fi
 
 CORDOVA="${CORDOVA-cordova}"
 PLATFORMS="${PLATFORMS-android}"
-APP_ID=${APP_ID-org.chromium.appharness}
-APP_NAME=${APP_NAME-Chrome App Harness}
+APP_ID=${APP_ID-org.chromium.appdevtool}
+APP_NAME=${APP_NAME-Chrome App Developer Tool}
 APP_VERSION=${APP_VERSION-0.6.0-dev}
 DIR_NAME="${1}"
 AH_PATH="$(cd $(dirname $0) && pwd)"

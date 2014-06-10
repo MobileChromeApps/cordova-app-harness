@@ -17,9 +17,9 @@
  * under the License.
 */
 
-var myApp = angular.module('ChromeAppHarness', ['ngRoute', 'angularMoment']);
+var myApp = angular.module('ChromeAppDeveloperTool', ['ngRoute', 'angularMoment']);
 
-myApp.value('APP_NAME', 'Chrome App Harness');
+myApp.value('APP_NAME', 'Chrome App Developer Tool');
 myApp.value('APP_VERSION', '0.6.0-dev');
 
 myApp.config(['$routeProvider', function($routeProvider){
@@ -43,5 +43,5 @@ document.addEventListener('deviceready', function() {
     myApp.value('INSTALL_DIRECTORY', cordova.file.dataDirectory + 'apps/');
     myApp.value('APPS_JSON', cordova.file.dataDirectory + 'apps.json');
     myApp.value('TEMP_DIR', cordova.file.tempDirectory || cordova.file.cacheDirectory);
-    angular.bootstrap(document, ['ChromeAppHarness']);
+    angular.bootstrap(document, ['ChromeAppDeveloperTool']);
 }, false);
