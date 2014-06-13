@@ -1,6 +1,7 @@
-# Chrome App Harness
+# Chrome App Developer Tool for Mobile
 
-The Chrome App Harness is a distribution of [Apache Cordova App Harness](https://git-wip-us.apache.org/repos/asf/cordova-app-harness.git)
+The Chrome App Developer Tool for Mobile is a distribution of 
+[Apache Cordova App Harness](https://git-wip-us.apache.org/repos/asf/cordova-app-harness.git) 
 that can run Chrome Apps. It is based on the plugins from the
 [cca](https://github.com/MobileChromeApps/mobile-chrome-apps) toolkit.
 
@@ -84,5 +85,5 @@ For more info:
 
 A server runs within the app that enables remote control functionality.
 
-Use [harness-push/harness-push.js](harness-push/README.md) to send commands to the App Harness.
+Use [harness-push/harness-push.js](harness-push/README.md) to send commands to the Chrome App Developer Tool for Mobile.
 
