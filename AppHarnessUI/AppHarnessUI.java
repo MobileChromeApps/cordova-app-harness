@@ -130,6 +130,7 @@ public class AppHarnessUI extends CordovaPlugin {
             if (activity.getBooleanProperty("DisallowOverscroll", false)) {
                 slaveWebView.setOverScrollMode(View.OVER_SCROLL_NEVER);
             }
+            slaveWebView.clearCache(true);
             slaveWebView.clearHistory();
             slaveWebView.loadUrl(url);
             View newView = (View)slaveWebView.getParent();
