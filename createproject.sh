@@ -40,9 +40,26 @@ AH_PATH="$(cd $(dirname $0) && pwd)"
 extra_search_path="$PLUGIN_SEARCH_PATH"
 PLUGIN_SEARCH_PATH="$(dirname "$AH_PATH")"
 
+if [[ ! -e "$AH_PATH/node_modules/gulp" ]]; then
+  echo 'Running: npm install'
+  (cd "$AH_PATH" && npm install)
+fi
+
+if [[ ! -e "$AH_PATH/node_modules/cca" ]]; then
+  echo 'Running: npm link cca'
+  (cd "$AH_PATH" && npm link cca) || exit 1
+fi
+
+if [[ ! -e "$AH_PATH/www/cdvah/generated" ]]; then
+  echo "Running: gulp build-dev"
+  (cd "$AH_PATH" && ./node_modules/gulp/bin/gulp.js build-dev) || exit 1
+fi
+
 function ResolveSymlinks() {
-  local found_path=$(which "$1")
-  node -e "console.log(require('fs').realpathSync('$found_path'))"
+  local found_path="$1"
+  if [[ -n "$found_path" ]]; then
+      node -e "console.log(require('fs').realpathSync('$found_path'))"
+  fi
 }
 function AddSearchPathIfExists() {
     if [[ -d "$1" ]]; then
@@ -51,13 +68,12 @@ function AddSearchPathIfExists() {
 }
 
 # Use coho to find them plugins
-COHO_PATH=$(ResolveSymlinks coho)
+COHO_PATH=$(ResolveSymlinks $(which coho))
 if [[ -n "$COHO_PATH" ]]; then
     CDV_PATH="$(dirname $(dirname "$COHO_PATH"))"
     AddSearchPathIfExists "$CDV_PATH"
     AddSearchPathIfExists "$CDV_PATH/cordova-plugins"
     ANDROID_PATH=${ANDROID_PATH-$CDV_PATH/cordova-android}
-    echo $ANDROID_PATH
 else
     # For when repos are cloned as siblings.
     AddSearchPathIfExists "$(dirname "$AH_PATH")/cordova"
@@ -65,23 +81,12 @@ else
 fi
 
 # Use cca to find Chrome ones.
-CCA_PATH=$(ResolveSymlinks cca)
-if [[ -n "$CCA_PATH" ]]; then
-    AddSearchPathIfExists "$(dirname $(dirname "$CCA_PATH"))/chrome-cordova/plugins"
-    AddSearchPathIfExists "$(dirname $(dirname "$CCA_PATH"))/cordova"
-else
-    # For when repos are cloned as siblings.
-    AddSearchPathIfExists "$(dirname "$AH_PATH")/cordova-plugins"
-    AddSearchPathIfExists "$(dirname "$AH_PATH")/mobile-chrome-apps/chrome-cordova/plugins"
-fi
+CCA_PATH=$(ResolveSymlinks "$AH_PATH/node_modules/cca")
+AddSearchPathIfExists "$CCA_PATH/chrome-cordova/plugins"
+AddSearchPathIfExists "$CCA_PATH/cordova"
 
 if [[ -n "$extra_search_path" ]]; then
     PLUGIN_SEARCH_PATH="${extra_search_path}:$PLUGIN_SEARCH_PATH"
-fi
-
-if [[ ! -e "$AH_PATH/www/cdvah/generated" ]]; then
-  echo "Running gulp"
-  (cd "$AH_PATH" && ./node_modules/gulp/bin/gulp.js build-dev) || exit 1
 fi
 
 "$CORDOVA" create "$DIR_NAME" "$APP_ID" "$APP_NAME" --link-to "$AH_PATH/www" || exit 1
