@@ -272,3 +272,20 @@ body {
     background-color: #f2dede;
 }
 
+/* Details page */
+.topcoat-list__container {
+    background-color: #444;
+    padding: 1rem;
+    border: 1px solid #555;
+    border-radius: 2px;
+    width: 80%;
+    margin: 1rem auto;
+}
+
+.topcoat-list {
+    padding: 0;
+}
+
+.topcoat-list__item {
+    list-style-type: none;
+}
