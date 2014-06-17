@@ -67,7 +67,7 @@ function AddSearchPathIfExists() {
     fi
 }
 
-# Use coho to find them plugins
+# Use coho to find Cordova plugins
 COHO_PATH=$(ResolveSymlinks $(which coho))
 if [[ -n "$COHO_PATH" ]]; then
     CDV_PATH="$(dirname $(dirname "$COHO_PATH"))"
@@ -76,8 +76,8 @@ if [[ -n "$COHO_PATH" ]]; then
     ANDROID_PATH=${ANDROID_PATH-$CDV_PATH/cordova-android}
 else
     # For when repos are cloned as siblings.
-    AddSearchPathIfExists "$(dirname "$AH_PATH")/cordova"
-    AddSearchPathIfExists "$(dirname "$AH_PATH")/cordova/cordova-plugins"
+    AddSearchPathIfExists "$(dirname "$AH_PATH")"
+    AddSearchPathIfExists "$(dirname "$AH_PATH")/cordova-plugins"
 fi
 
 # Use cca to find Chrome ones.
