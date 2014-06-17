@@ -33,7 +33,7 @@ fi
 cordova build android || exit 1
 
 # Remove previous signing artifacts
-APK_PATH=$(ls platforms/android/ant-build/*-debug.apk)
+APK_PATH=$(find platforms/android -name *-debug.apk)
 "$AAPT_PATH" remove "$APK_PATH" META-INF/MANIFEST.MF || exit 1
 "$AAPT_PATH" remove "$APK_PATH" META-INF/CERT.SF
 "$AAPT_PATH" remove "$APK_PATH" META-INF/CERT.RSA
