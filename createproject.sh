@@ -96,14 +96,14 @@ perl -i -pe "s/{ID}/$APP_ID/g" config.xml || exit 1
 perl -i -pe "s/{NAME}/$APP_NAME/g" config.xml || exit 1
 perl -i -pe "s/{VERSION}/$APP_VERSION/g" config.xml || exit 1
 
+PLATFORM_ARGS="$PLATFORMS"
 if [[ -n "$ANDROID_PATH" ]]; then
-  CJS1='{"lib": {"android": {"uri": "'
-  CJS2='", "version": "4.0.x" , "id": "cordova-android-4"}}}'
-  echo $CJS1$ANDROID_PATH$CJS2 > .cordova/config.json
+  PLATFORM_ARGS="${PLATFORMS/android/$ANDROID_PATH}"
+  echo HHHH $PLATFORM_ARGS
 fi
 
 set -x
-$CORDOVA platform add $PLATFORMS || exit 1
+$CORDOVA platform add $PLATFORM_ARGS || exit 1
 set +x
 
 if [[ "$PLATFORMS" = *android* ]]; then
