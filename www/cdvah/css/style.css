@@ -289,3 +289,9 @@ body {
 .topcoat-list__item {
     list-style-type: none;
 }
+
+/* About page */
+p {
+  white-space: normal;
+  text-align: left;
+}

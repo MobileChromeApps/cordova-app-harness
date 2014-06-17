@@ -39,6 +39,18 @@
         }
 
         return {
+            availablePlugins: function() {
+                var plugins = [];
+                var pluginIds = Object.keys(harnessPluginMetadata);
+                pluginIds.sort();
+                for (var i=0; i < pluginIds.length; ++i) {
+                    plugins.push({
+                        id: pluginIds[i],
+                        version: harnessPluginMetadata[pluginIds[i]]
+                    });
+                }
+                return plugins;
+            },
             extractPluginMetadata: function(pluginListFileContents) {
                 if (!pluginListFileContents) {
                     throw new Error('cordova_plugins.js file is empty. Something has gone wrong with "cordova prepare".');

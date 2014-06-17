@@ -31,6 +31,10 @@ myApp.config(['$routeProvider', function($routeProvider){
         templateUrl: 'views/details.html',
         controller: 'DetailsCtrl'
     });
+    $routeProvider.when('/about', {
+        templateUrl: 'views/about.html',
+        controller: 'AboutCtrl'
+    });
 }]);
 
 myApp.run(['$rootScope', 'APP_NAME', 'APP_VERSION', function($rootScope, APP_NAME, APP_VERSION){
