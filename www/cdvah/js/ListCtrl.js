@@ -92,7 +92,8 @@
             return AppsService.uninstallAllApps();
         };
 
-        $scope.showDetails = function(index) {
+        $scope.showDetails = function(index, ev) {
+            ev.preventDefault();
             $location.path('/details/' + index);
         };
 

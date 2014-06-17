@@ -41,7 +41,7 @@
               <span style="color:#c00" ng-show="app.plugins.missing.length">{{ app.plugins.missing.length }} missing</span><span ng-show="app.plugins.missing.length && (app.plugins.older.length || app.plugins.newer.length)">, </span>
               <span style="color:#822" ng-show="app.plugins.older.length">{{ app.plugins.older.length }} outdated</span><span ng-show="app.plugins.older.length && app.plugins.newer.length">, </span>
               <span ng-show="app.plugins.newer.length">{{ app.plugins.newer.length }} newer</span>
-              <a ng-click="showDetails(app, $event)" href="#">(details)</a>
+              <a ng-click="showDetails(0, $event)" href="#">(details)</a>
           </div>
         </div>
       </div>
