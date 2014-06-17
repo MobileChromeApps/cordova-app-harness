@@ -134,9 +134,13 @@ echo Installing plugins.
     org.apache.cordova.file-transfer \
     org.apache.cordova.device \
     org.chromium.socket \
-    org.chromium.zip \
     --searchpath="$PLUGIN_SEARCH_PATH" \
     --noregistry
+
+# org.chromium.zip is not part of cordova-core or cca
+"$CORDOVA" plugin add\
+    org.chromium.zip \
+    --searchpath="$PLUGIN_SEARCH_PATH"
 
 # Extra plugins
 "$CORDOVA" plugin add \
