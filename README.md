@@ -60,10 +60,12 @@ For more info:
 - Update the version in `createproject.sh` and `app.js`
   - `vim createproject.sh www/cdvah/js/app.js`
 - Build apk
-  - `./createproject.sh CCAHarness --allplugins`
+  - `./createproject.sh CCAHarness`
   - `cd CCAHarness && ../buildharness.sh`
+- Commit Changes
+  - `git commit -am "Releasing 0.6.0"`
 - Tag release
-  - `git tag -am "Tagged v0.5.1" chrome-app-harness-0.5.1`
+  - `git tag -am "Tagged v0.6.0" chrome-app-developer-tool-0.6.0`
   - `git push origin master --tags`
 - Upload apk to GitHub's releases page
   - Attach the apk
