@@ -47,8 +47,8 @@
         };
 
         DirectoryManager.prototype.deleteAll = function() {
-            this._assetManifest = null;
-            this._assetManifestEtag = null;
+            this._assetManifest = {};
+            this._assetManifestEtag = 0;
             window.clearTimeout(this._flushTimerId);
             return ResourcesLoader.delete(this.rootURL);
         };
@@ -94,6 +94,24 @@
                 'etag': this._assetManifestEtag
             });
             return ResourcesLoader.writeFileContents(this.rootURL + ASSET_MANIFEST, stringContents);
+        };
+
+        DirectoryManager.prototype.bulkAddFile = function(newAssetManifest, srcURL) {
+            var self = this;
+            return this.deleteAll()
+            .then(function() {
+                return ResourcesLoader.moveFile(srcURL, self.rootURL);
+            }).then(function() {
+                var keys = Object.keys(newAssetManifest);
+                return $q.when().then(function next() {
+                    var key = keys.shift();
+                    if (!key) {
+                        return;
+                    }
+                    return self._updateManifest(key, newAssetManifest[key])
+                    .then(next);
+                });
+            });
         };
 
         DirectoryManager.prototype.addFile = function(srcURL, relativePath, etag) {
