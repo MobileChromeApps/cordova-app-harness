@@ -57,6 +57,7 @@ For more info:
 
 ### Cutting a Release
 
+- double check the status of upstream `cordova-app-harness` to see if we should update (instructions above).
 - Update the version in `createproject.sh` and `app.js`
   - `vim createproject.sh www/cdvah/js/app.js`
 - Build apk
