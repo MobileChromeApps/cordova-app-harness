@@ -338,9 +338,6 @@
                     deferred.reject(new Error('Failed to create socket: ' + chrome.runtime.lastError));
                     return;
                 }
-                chrome.runtime.onSuspend.addListener(function() {
-                    chrome.socket.destroy(createInfo.socketId);
-                });
                 chrome.socket.listen(createInfo.socketId, '0.0.0.0', port, function(result) {
                     if (result === 0) {
                         acceptLoop(createInfo.socketId, boundAccept);
