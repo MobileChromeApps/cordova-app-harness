@@ -73,6 +73,8 @@ For more info:
   - Write *short* release notes (download link should be visible without scrolling).
 - Update the version with `-dev`
   - `vim createproject.sh www/cdvah/js/app.js`
+  - `git commit -am "Adding -dev to version after release"`
+  - `git push`
 
 ## Major Unimplemented Features
 * Applying app settings (DisallowOverscroll, etc)
