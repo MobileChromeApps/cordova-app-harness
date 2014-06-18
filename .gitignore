@@ -1,6 +1,6 @@
 .DS_Store
-harness-push/node_modules/*
-!harness-push/node_modules/chrome-app-developer-tool-client
-harness-push/node_modules/chrome-app-developer-tool-client/node_modules
-www/cdvah/generated
-node_modules/
+/harness-push/node_modules/*
+!/harness-push/node_modules/chrome-app-developer-tool-client
+/harness-push/node_modules/chrome-app-developer-tool-client/node_modules
+/www/cdvah/generated
+/node_modules
