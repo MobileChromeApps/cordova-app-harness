@@ -20,7 +20,7 @@
     'use strict';
 
     /* global myApp */
-    myApp.controller('AboutCtrl', ['$rootScope', '$scope', '$location', 'PluginMetadata', '$routeParams', function($rootScope, $scope, $location, PluginMetadata, $routeParams) {
+    myApp.controller('AboutCtrl', ['$rootScope', '$scope', '$location', 'PluginMetadata', function($rootScope, $scope, $location, PluginMetadata) {
         $scope.plugins = PluginMetadata.availablePlugins();
     }]);
 })();
