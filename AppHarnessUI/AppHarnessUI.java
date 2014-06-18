@@ -258,13 +258,19 @@ public class AppHarnessUI extends CordovaPlugin {
 
     }
 
+    private static boolean didSetXwalkPrefs;
     private class CustomCordovaWebView extends XWalkCordovaWebView{
         public CustomCordovaWebView(Context context) {
             super(context);
         }
+
         @Override
         public XWalkView makeXWalkView(Context context) {
-            XWalkPreferences.setValue(XWalkPreferences.ANIMATABLE_XWALK_VIEW, true);
+            if (!didSetXwalkPrefs) {
+                // Throws an exception if we try to set it multiple times.
+                XWalkPreferences.setValue(XWalkPreferences.ANIMATABLE_XWALK_VIEW, true);
+                didSetXwalkPrefs = true;
+            }
             return new CustomXwalkView(context);
         }
         public void SetStealTapEvents(boolean value){

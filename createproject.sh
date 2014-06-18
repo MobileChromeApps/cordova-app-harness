@@ -99,7 +99,6 @@ perl -i -pe "s/{VERSION}/$APP_VERSION/g" config.xml || exit 1
 PLATFORM_ARGS="$PLATFORMS"
 if [[ -n "$ANDROID_PATH" ]]; then
   PLATFORM_ARGS="${PLATFORMS/android/$ANDROID_PATH}"
-  echo HHHH $PLATFORM_ARGS
 fi
 
 set -x
