@@ -43,6 +43,8 @@ PLUGIN_SEARCH_PATH="$(dirname "$AH_PATH")"
 if [[ ! -e "$AH_PATH/node_modules/gulp" ]]; then
   echo 'Running: npm install'
   (cd "$AH_PATH" && npm install)
+  (cd "$AH_PATH/harness-push" && npm install)
+  (cd "$AH_PATH/harness-push/node_modules/chrome-app-developer-tool-client" && npm install)
 fi
 
 if [[ ! -e "$AH_PATH/node_modules/cca" ]]; then

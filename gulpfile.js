@@ -29,7 +29,7 @@ gulp.task('lint:app', function() {
 });
 
 gulp.task('lint:harness-push', function() {
-  return gulp.src(['harness-push/*.js', 'harness-push/node_modules/chrome-harness-client/*.js'])
+  return gulp.src(['harness-push/*.js', 'harness-push/node_modules/chrome-app-developer-tool-client/*.js'])
     .pipe(jshint())
     .pipe(jshint.reporter('default'))
     .pipe(jshint.reporter('fail'));

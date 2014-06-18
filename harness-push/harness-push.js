@@ -19,7 +19,7 @@
  */
 
 var nopt = require('nopt');
-var HarnessClient = require('chrome-harness-client');
+var HarnessClient = require('chrome-app-developer-tool-client');
 
 function parseArgs(argv) {
     var opts = {
