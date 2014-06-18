@@ -50,15 +50,17 @@ html {
     -webkit-user-select: none;
     -webkit-touch-callout: none;
     white-space: nowrap;
-    height: 100%;
-    position: relative;
 }
 
 body {
+    margin: 0;
+}
+
+html, body {
     height: 100%;
     position: relative;
-    margin: 0;
-    overflow: hidden;
+    max-width: 100%;
+    overflow-x: hidden;
 }
 
 @media all and (max-width: 500px) {
