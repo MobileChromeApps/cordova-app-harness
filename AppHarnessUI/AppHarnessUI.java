@@ -192,7 +192,7 @@ public class AppHarnessUI extends CordovaPlugin {
         }
     }
 
-    private void initWebView(final CordovaWebView newWebView) {
+    private void initWebView(final XWalkCordovaWebView newWebView) {
         CordovaActivity activity = (CordovaActivity)cordova.getActivity();
         if (contentView == null) {
             contentView = (ViewGroup)activity.findViewById(android.R.id.content);
