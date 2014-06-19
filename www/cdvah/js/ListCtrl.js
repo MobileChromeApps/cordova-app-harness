@@ -19,7 +19,7 @@
 (function(){
     'use strict';
     /* global myApp */
-    myApp.controller('ListCtrl', ['$location', 'notifier', '$scope', '$routeParams', '$q', 'AppsService', 'HarnessServer', 'AppHarnessUI', function ($location, notifier, $scope, $routeParams, $q, AppsService, HarnessServer, AppHarnessUI) {
+    myApp.controller('ListCtrl', ['$location', '$scope', '$routeParams', '$q', 'AppsService', 'HarnessServer', 'AppHarnessUI', function ($location, $scope, $routeParams, $q, AppsService, HarnessServer, AppHarnessUI) {
         $scope.app = null;
         $scope.ipAddresses = null;
         $scope.port = null;
@@ -68,14 +68,14 @@
                 $scope.app = AppsService.getLastAccessedApp();
                 $scope.isRunning = !!AppsService.getActiveApp();
             }, function(error){
-                notifier.error(error);
+                console.error(error);
             });
         }
 
         $scope.launchApp = function(app){
             return AppsService.launchApp(app)
             .then(null, function(error){
-                notifier.error(error);
+                console.error(error);
             });
         };
 
