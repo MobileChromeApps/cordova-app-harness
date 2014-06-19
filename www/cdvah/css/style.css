@@ -74,6 +74,13 @@ html, body {
     margin-bottom: 19px;
 }
 
+/* iOS title */
+@media all and (max-width: 330px) {
+    .title {
+        font-size: 1.5rem;
+    }
+}
+
 .title-version {
     font-size: .6em;
 }
@@ -81,11 +88,13 @@ html, body {
 .listening-container {
     margin-bottom: 10pt;
     font-size: 1.2rem;
+    white-space: normal;
 }
 
 .listening-ip {
     color: #AAA;
     margin: 0 3pt;
+    display: inline-block;
 }
 
 .listening-error {
