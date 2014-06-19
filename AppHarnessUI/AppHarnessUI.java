@@ -22,7 +22,6 @@ import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaActivity;
 import org.apache.cordova.CordovaArgs;
 import org.apache.cordova.CordovaPlugin;
-import org.apache.cordova.CordovaWebView;
 import org.apache.cordova.LinearLayoutSoftKeyboardDetect;
 import org.apache.cordova.PluginResult;
 import org.json.JSONException;
@@ -48,9 +47,8 @@ import android.view.ViewPropertyAnimator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
 
+@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class AppHarnessUI extends CordovaPlugin {
     private static final String LOG_TAG = "AppHarnessUI";
     ViewGroup contentView;
