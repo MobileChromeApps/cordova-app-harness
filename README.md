@@ -19,7 +19,7 @@ Pre-built APKs are available [here](https://github.com/MobileChromeApps/chrome-a
 
 ## Creating a Project
 
-Currently the project uses a development branch for several components. Do the following to get the correct versions of the various components:
+Currently the project requires unreleased versions of several repos. Do the following to get the correct versions of the various components:
 
     git clone https://github.com/clelland/cordova-crosswalk-engine.git
     ( cd cordova-crosswalk-engine && git checkout plugin_with_arm_binary )
@@ -29,9 +29,11 @@ Currently the project uses a development branch for several components. Do the f
 
 Use `createproject.sh` to create a project. Example invocation:
 
-    export ANDROID_PATH="/Users/foo/cordova-android"
     export PLUGIN_SEARCH_PATH="/Users/foo/path/to/plugins"
     PLATFORMS="android ios" ./createproject.sh NewProject
+
+If you have coho and cca "npm linked", then you should not need to specify a PLUGIN_SEARCH_PATH.
+If your global version of cca is from the registry, you should use PLUGIN_SEARCH_PATH to point to your cca plugins.
 
 For more info:
 

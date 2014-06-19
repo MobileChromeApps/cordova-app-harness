@@ -93,6 +93,8 @@ if [[ -n "$extra_search_path" ]]; then
     PLUGIN_SEARCH_PATH="${extra_search_path}:$PLUGIN_SEARCH_PATH"
 fi
 
+echo "Expanded PLUGIN_SEARCH_PATH: $PLUGIN_SEARCH_PATH"
+
 "$CORDOVA" create "$DIR_NAME" "$APP_ID" "$APP_NAME" --link-to "$AH_PATH/www" || exit 1
 cd "$DIR_NAME"
 cp "$AH_PATH/template-overrides/config.xml" . || exit 1
