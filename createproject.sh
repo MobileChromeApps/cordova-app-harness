@@ -85,7 +85,9 @@ fi
 # Use cca to find Chrome ones.
 CCA_PATH=$(ResolveSymlinks "$AH_PATH/node_modules/cca")
 AddSearchPathIfExists "$CCA_PATH/chrome-cordova/plugins"
+# And also cca-bundled versions of Cordova ones if they are not checked out.
 AddSearchPathIfExists "$CCA_PATH/cordova"
+AddSearchPathIfExists "$CCA_PATH/cordova/cordova-plugins"
 
 if [[ -n "$extra_search_path" ]]; then
     PLUGIN_SEARCH_PATH="${extra_search_path}:$PLUGIN_SEARCH_PATH"
