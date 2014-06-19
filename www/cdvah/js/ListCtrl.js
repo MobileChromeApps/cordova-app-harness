@@ -19,12 +19,13 @@
 (function(){
     'use strict';
     /* global myApp */
-    myApp.controller('ListCtrl', ['$location', '$scope', '$routeParams', '$q', 'AppsService', 'HarnessServer', 'AppHarnessUI', function ($location, $scope, $routeParams, $q, AppsService, HarnessServer, AppHarnessUI) {
+    myApp.controller('ListCtrl', ['$location', '$rootScope', '$scope', '$routeParams', '$q', 'AppsService', 'HarnessServer', 'AppHarnessUI', 'APP_NAME', function ($location, $rootScope, $scope, $routeParams, $q, AppsService, HarnessServer, AppHarnessUI, APP_NAME) {
         $scope.app = null;
         $scope.ipAddresses = null;
         $scope.port = null;
 
         function initialise() {
+            $rootScope.appTitle = APP_NAME;
             $scope.$on('$destroy', function() {
                 AppsService.onAppListChange = null;
             });
