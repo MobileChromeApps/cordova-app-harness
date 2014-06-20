@@ -58,7 +58,6 @@ function createWebpackResultHandler(taskname, callback) {
 }
 
 gulp.task('webpack:build', function(callback) {
-  // modify some webpack config options
   var myConfig = Object.create(webpackConfig);
   myConfig.plugins = (myConfig.plugins || []).concat(
     new webpack.DefinePlugin({
@@ -70,12 +69,10 @@ gulp.task('webpack:build', function(callback) {
     new webpack.optimize.UglifyJsPlugin()
   );
 
-  // run webpack
   webpack(myConfig, createWebpackResultHandler('webpack:build', callback));
 });
 
 gulp.task('webpack:build-dev', (function() {
-  // modify some webpack config options
   var myDevConfig = Object.create(webpackConfig);
   myDevConfig.devtool = 'sourcemap';
   myDevConfig.debug = true;
@@ -84,7 +81,6 @@ gulp.task('webpack:build-dev', (function() {
   var devCompiler = webpack(myDevConfig);
 
   return function(callback) {
-    // run webpack
     devCompiler.run(createWebpackResultHandler('webpack:build-dev', callback));
   };
 }()));

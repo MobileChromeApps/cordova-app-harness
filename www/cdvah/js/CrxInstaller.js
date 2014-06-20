@@ -127,13 +127,7 @@
         };
 
         CrxInstaller.prototype.getPluginMetadata = function() {
-            var pluginIds = cca.extractPluginsFromManifest(this.manifestJson_);
-            pluginIds = pluginIds.concat(cca.getDefaultPluginIds());
-            // Add in known dependencies of plugins:
-            // TODO: add a map plugin->dependencies instead of this hardcoded list.
-            pluginIds.push('org.chromium.common');
-            pluginIds.push('org.chromium.runtime');
-            pluginIds.push('org.chromium.storage');
+            var pluginIds = cca.extractPluginsFromManifest(this.manifestJson_).concat(cca.getDefaultPluginIds());
             var harnessPluginMetadata = cordova.require('cordova/plugin_list').metadata;
             var ret = {};
             // Make all versions match what is installed.
