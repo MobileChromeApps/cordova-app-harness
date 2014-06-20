@@ -27,6 +27,7 @@ import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaActivity;
 import org.apache.cordova.CordovaArgs;
 import org.apache.cordova.CordovaPlugin;
+import org.apache.cordova.CordovaWebView;
 import org.apache.cordova.LinearLayoutSoftKeyboardDetect;
 import org.apache.cordova.PluginResult;
 import org.json.JSONArray;
@@ -114,16 +115,11 @@ public class AppHarnessUI extends CordovaPlugin {
         }
     }
 
-    @SuppressLint("NewApi")
     private void evalJs(String code, CallbackContext callbackContext) {
         if (slaveWebView == null) {
             Log.w(LOG_TAG, "Not evaluating JS since no app is active");
         } else {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-                slaveWebView.loadUrl("javascript:" + code);
-            } else {
-                slaveWebView.getView().evaluateJavascript(code, null);
-            }
+            slaveWebView.evaluateJavascript(code);
         }
         callbackContext.success();
     }
@@ -270,6 +266,7 @@ public class AppHarnessUI extends CordovaPlugin {
 
     private interface CustomCordovaWebView extends CordovaWebView{
         public void SetStealTapEvents(boolean value);
+        public void evaluateJavascript(String script);
     }
     private class CustomCrosswalkWebView extends XWalkCordovaWebView implements CustomCordovaWebView {
 
@@ -290,6 +287,10 @@ public class AppHarnessUI extends CordovaPlugin {
         }
         public void SetStealTapEvents(boolean value){
             ((CustomXwalkView)getView()).stealTapEvents=value;
+        }
+
+        public void evaluateJavascript(String script) {
+            getView().evaluateJavascript(script, null);
         }
     }
 
