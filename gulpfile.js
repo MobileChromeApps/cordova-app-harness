@@ -8,18 +8,27 @@ var jshint = require('gulp-jshint');
 var webpack = require('webpack');
 var webpackConfig = require('./webpack.config.js');
 
-// Default, Watch -> Dev Build
-gulp.task('default', ['lint', 'webpack:build-dev'], function() {
+/******************************************************************************/
+/******************************************************************************/
+
+gulp.task('default', ['build-dev']);
+
+gulp.task('watch', ['build-dev'], function() {
   gulp.watch([
       'www/**/*',
       'webpack.config.js',
       //'node_modules/**/*', // disabled because of https://github.com/gruntjs/grunt-contrib-watch#how-do-i-fix-the-error-emfile-too-many-opened-files
-    ], ['lint', 'webpack:build-dev']);
+    ], ['build-dev']);
 });
+
+gulp.task('build', ['lint', 'webpack:build']);
 
 gulp.task('build-dev', ['lint', 'webpack:build-dev']);
 
-gulp.task('build', ['lint', 'webpack:build']);
+gulp.task('lint', ['lint:app', 'lint:harness-push']);
+
+/******************************************************************************/
+/******************************************************************************/
 
 gulp.task('lint:app', function() {
   return gulp.src(['www/**/*.js', '!www/cdvah/js/libs/*.js', '!www/cdvah/generated/*.js'])
@@ -34,9 +43,6 @@ gulp.task('lint:harness-push', function() {
     .pipe(jshint.reporter('default'))
     .pipe(jshint.reporter('fail'));
 });
-
-gulp.task('lint', ['lint:app', 'lint:harness-push']);
-
 
 /******************************************************************************/
 /******************************************************************************/
