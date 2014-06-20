@@ -134,7 +134,7 @@ public class AppHarnessUI extends CordovaPlugin {
         if (slaveWebView != null) {
             Log.w(LOG_TAG, "create: already exists");
         } else {
-            slaveWebView = new CustomCordovaWebView(activity);
+            slaveWebView = new CustomCrosswalkWebView(activity);
         }
         {
             initWebView(slaveWebView);
@@ -202,7 +202,7 @@ public class AppHarnessUI extends CordovaPlugin {
         }
     }
 
-    private void initWebView(final XWalkCordovaWebView newWebView) {
+    private void initWebView(final CustomCordovaWebView newWebView) {
         CordovaActivity activity = (CordovaActivity)cordova.getActivity();
         if (contentView == null) {
             contentView = (ViewGroup)activity.findViewById(android.R.id.content);
@@ -218,8 +218,8 @@ public class AppHarnessUI extends CordovaPlugin {
 //        layoutView.setBackground(origRootView.getBackground());
         layoutView.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, Gravity.BOTTOM | Gravity.LEFT));
 
-        newWebView.setWebViewClient(new XWalkCordovaWebViewClient(cordova, newWebView));
-        newWebView.setWebChromeClient(new XWalkCordovaChromeClient(cordova, newWebView));
+        newWebView.setWebViewClient(newWebView.makeWebViewClient());
+        newWebView.setWebChromeClient(newWebView.makeWebChromeClient());
 
         newWebView.setLayoutParams(new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -268,9 +268,14 @@ public class AppHarnessUI extends CordovaPlugin {
 
     }
 
-    private static boolean didSetXwalkPrefs;
-    private class CustomCordovaWebView extends XWalkCordovaWebView{
-        public CustomCordovaWebView(Context context) {
+    private interface CustomCordovaWebView extends CordovaWebView{
+        public void SetStealTapEvents(boolean value);
+    }
+    private class CustomCrosswalkWebView extends XWalkCordovaWebView implements CustomCordovaWebView {
+
+        private static boolean didSetXwalkPrefs;
+
+        public CustomCrosswalkWebView(Context context) {
             super(context);
         }
 
