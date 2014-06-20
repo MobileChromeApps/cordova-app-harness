@@ -107,7 +107,7 @@ public class AppHarnessUI extends CordovaPlugin {
         return true;
     }
 
-    private void sendEvent(String eventName) {
+    public void sendEvent(String eventName) {
         if (eventsCallback != null) {
             PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, eventName);
             pluginResult.setKeepCallback(true);
@@ -224,112 +224,5 @@ public class AppHarnessUI extends CordovaPlugin {
         newWebView.getView().setVisibility(View.VISIBLE);
     }
 
-    // Based on: http://stackoverflow.com/questions/12414680/how-to-implement-a-two-finger-double-click-in-android
-    private class TwoFingerDoubleTapGestureDetector {
-        private final int TIMEOUT = ViewConfiguration.getDoubleTapTimeout() + 100;
-        private long mFirstDownTime = 0;
-        private boolean mSeparateTouches = false;
-        private byte mTwoFingerTapCount = 0;
 
-        private void reset(long time) {
-            mFirstDownTime = time;
-            mSeparateTouches = false;
-            mTwoFingerTapCount = 0;
-        }
-
-        public boolean onTouchEvent(MotionEvent event) {
-            switch(event.getActionMasked()) {
-            case MotionEvent.ACTION_DOWN:
-                if(mFirstDownTime == 0 || event.getEventTime() - mFirstDownTime > TIMEOUT)
-                    reset(event.getDownTime());
-                break;
-            case MotionEvent.ACTION_POINTER_UP:
-                if(event.getPointerCount() == 2)
-                    mTwoFingerTapCount++;
-                else
-                    mFirstDownTime = 0;
-                break;
-            case MotionEvent.ACTION_UP:
-                if(!mSeparateTouches)
-                    mSeparateTouches = true;
-                else if(mTwoFingerTapCount == 2 && event.getEventTime() - mFirstDownTime < TIMEOUT) {
-                    sendEvent("showMenu");
-                    mFirstDownTime = 0;
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-    }
-
-    private interface CustomCordovaWebView extends CordovaWebView{
-        public void SetStealTapEvents(boolean value);
-        public void evaluateJavascript(String script);
-    }
-    private class CustomCrosswalkWebView extends XWalkCordovaWebView implements CustomCordovaWebView {
-
-        private static boolean didSetXwalkPrefs;
-
-        public CustomCrosswalkWebView(Context context) {
-            super(context);
-        }
-
-        @Override
-        public XWalkView makeXWalkView(Context context) {
-            if (!didSetXwalkPrefs) {
-                // Throws an exception if we try to set it multiple times.
-                XWalkPreferences.setValue(XWalkPreferences.ANIMATABLE_XWALK_VIEW, true);
-                didSetXwalkPrefs = true;
-            }
-            return new CustomXwalkView(context);
-        }
-        public void SetStealTapEvents(boolean value){
-            ((CustomXwalkView)getView()).stealTapEvents=value;
-        }
-
-        public void evaluateJavascript(String script) {
-            getView().evaluateJavascript(script, null);
-        }
-    }
-
-    private class CustomXwalkView extends XWalkView{
-        TwoFingerDoubleTapGestureDetector twoFingerTapDetector;
-        boolean stealTapEvents;
-
-        public CustomXwalkView(Context context) {
-            super(context, (Activity)null);
-            twoFingerTapDetector = new TwoFingerDoubleTapGestureDetector();
-        }
-
-        @Override
-        public boolean onTouchEvent(MotionEvent e) {
-            if (stealTapEvents) {
-                if (e.getAction() == MotionEvent.ACTION_UP) {
-                    sendEvent("hideMenu");
-                }
-                return true;
-            }
-            return super.onTouchEvent(e);
-        }
-        @Override
-        public boolean onInterceptTouchEvent(MotionEvent e) {
-            if (stealTapEvents) {
-                if (e.getAction() == MotionEvent.ACTION_UP) {
-                    sendEvent("hideMenu");
-                }
-                return true;
-            }
-            twoFingerTapDetector.onTouchEvent(e);
-            return super.onInterceptTouchEvent(e);
-        }
-
-        @SuppressLint("NewApi")
-        protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-            super.onSizeChanged(w, h, oldw, oldh);
-            // Needed for the view to stay in the bottom when rotating.
-            setPivotY(h);
-        }
-    }
 }
