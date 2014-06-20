@@ -21,8 +21,6 @@ package org.apache.appharness;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.cordova.AndroidChromeClient;
-import org.apache.cordova.AndroidWebView;
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaActivity;
 import org.apache.cordova.CordovaArgs;
@@ -31,16 +29,13 @@ import org.apache.cordova.LinearLayoutSoftKeyboardDetect;
 import org.apache.cordova.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
-
 import org.apache.cordova.engine.crosswalk.XWalkCordovaWebView;
 import org.apache.cordova.engine.crosswalk.XWalkCordovaWebViewClient;
 import org.apache.cordova.engine.crosswalk.XWalkCordovaChromeClient;
-import org.xwalk.core.XWalkView;
 import org.xwalk.core.XWalkPreferences;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.util.Log;
@@ -149,8 +144,8 @@ public class AppHarnessUI extends CordovaPlugin {
             contentView.addView(newView);
             slaveVisible = true;
             // Back button capturing breaks without these:
+            webView.getView().setEnabled(false);
             newView.requestFocus();
-
         }
         callbackContext.success();
     }
@@ -161,6 +156,7 @@ public class AppHarnessUI extends CordovaPlugin {
         } else {
             slaveWebView.loadUrl("data:text/plain;charset=utf-8,");
             contentView.removeView((View)slaveWebView.getParent());
+            webView.getView().setEnabled(true);
             origMainView.requestFocus();
 
             slaveWebView.getView().setScaleX(1.0f);
@@ -189,9 +185,13 @@ public class AppHarnessUI extends CordovaPlugin {
             // Note: Pivot is set in onSizeChanged.
             if (value) {
                 anim.scaleX(1.0f).scaleY(1.0f);
+                webView.getView().setEnabled(false);
+                slaveWebView.getView().setEnabled(true);
                 ((View)slaveWebView.getParent()).requestFocus();
             } else {
                 anim.scaleX(.25f).scaleY(.25f);
+                webView.getView().setEnabled(true);
+                slaveWebView.getView().setEnabled(false);
                 origMainView.requestFocus();
             }
             slaveWebView.SetStealTapEvents( !value);
@@ -275,25 +275,25 @@ public class AppHarnessUI extends CordovaPlugin {
         }
 
         @Override
-        public XWalkView makeXWalkView(Context context) {
+        public XWalkCordovaWebView.CordovaXWalkView makeXWalkView(Context context) {
             if (!didSetXwalkPrefs) {
                 // Throws an exception if we try to set it multiple times.
                 XWalkPreferences.setValue(XWalkPreferences.ANIMATABLE_XWALK_VIEW, true);
                 didSetXwalkPrefs = true;
             }
-            return new CustomXwalkView(context);
+            return new CustomXwalkView(context, this);
         }
         public void SetStealTapEvents(boolean value){
             ((CustomXwalkView)getView()).stealTapEvents=value;
         }
     }
 
-    private class CustomXwalkView extends XWalkView{
+    private class CustomXwalkView extends XWalkCordovaWebView.CordovaXWalkView {
         TwoFingerDoubleTapGestureDetector twoFingerTapDetector;
         boolean stealTapEvents;
 
-        public CustomXwalkView(Context context) {
-            super(context, (Activity)null);
+        public CustomXwalkView(Context context, CustomCordovaWebView customCordovaWebView) {
+            super(context, customCordovaWebView);
             twoFingerTapDetector = new TwoFingerDoubleTapGestureDetector();
         }
 
@@ -319,7 +319,6 @@ public class AppHarnessUI extends CordovaPlugin {
             return super.onInterceptTouchEvent(e);
         }
 
-        @SuppressLint("NewApi")
         protected void onSizeChanged(int w, int h, int oldw, int oldh) {
             super.onSizeChanged(w, h, oldw, oldh);
             // Needed for the view to stay in the bottom when rotating.
