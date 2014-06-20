@@ -126,6 +126,9 @@ if [[ "$PLATFORMS" = *ios* ]]; then
     cp "$AH_PATH"/template-overrides/Info.plist platforms/ios/*/*-Info.plist
 fi
 
+mkdir -p hooks/after_prepare
+cp "$AH_PATH"/template-overrides/after-hook.js hooks/after_prepare
+
 # if [[ $PLATFORMS = *ios* ]]; then
     # ../../cordova-ios/bin/update_cordova_subproject platforms/ios/CordovaAppHarness.xcodeproj
 # fi
