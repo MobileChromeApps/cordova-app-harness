@@ -41,13 +41,13 @@ class CustomCrosswalkWebView extends XWalkCordovaWebView implements CustomCordov
     }
 
     @Override
-    public XWalkView makeXWalkView(Context context) {
+    public XWalkCordovaWebView.CordovaXWalkView makeXWalkView(Context context) {
         if (!didSetXwalkPrefs) {
             // Throws an exception if we try to set it multiple times.
             XWalkPreferences.setValue(XWalkPreferences.ANIMATABLE_XWALK_VIEW, true);
             didSetXwalkPrefs = true;
         }
-        return new CustomXwalkView(context);
+        return new CustomXwalkView(context, (XWalkCordovaWebView)this);
     }
     public void SetStealTapEvents(boolean value){
         ((CustomXwalkView)getView()).stealTapEvents=value;
@@ -57,13 +57,13 @@ class CustomCrosswalkWebView extends XWalkCordovaWebView implements CustomCordov
         getView().evaluateJavascript(script, null);
     }
 
-    private class CustomXwalkView extends XWalkView{
+    private class CustomXwalkView extends XWalkCordovaWebView.CordovaXWalkView {
         AppHarnessUI parent;
         TwoFingerDoubleTapGestureDetector twoFingerTapDetector;
         boolean stealTapEvents;
 
-        public CustomXwalkView(Context context) {
-            super(context, (Activity)null);
+        public CustomXwalkView(Context context, XWalkCordovaWebView cordovaWebView) {
+            super(context, cordovaWebView);
             this.parent = null;
             twoFingerTapDetector = new TwoFingerDoubleTapGestureDetector();
         }
