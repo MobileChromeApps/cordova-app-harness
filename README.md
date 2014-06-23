@@ -32,8 +32,8 @@ Use `createproject.sh` to create a project. Example invocation:
     export PLUGIN_SEARCH_PATH="/Users/foo/path/to/plugins"
     PLATFORMS="android ios" ./createproject.sh NewProject
 
-If you have coho and cca "npm linked", then you should not need to specify a PLUGIN_SEARCH_PATH.
-If your global version of cca is from the registry, you should use PLUGIN_SEARCH_PATH to point to your cca plugins.
+If you have coho and cca "npm linked", then you should not need to specify a PLUGIN_SEARCH_PATH or ANDROID_PATH.
+If your global version of cca is from the registry, you should use PLUGIN_SEARCH_PATH to point to your cca plugins and ANDROID_PATH to point to the copy of cordova-android 4.0.x.
 
 For more info:
 
