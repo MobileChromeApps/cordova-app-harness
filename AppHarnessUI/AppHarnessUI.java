@@ -21,23 +21,14 @@ package org.apache.appharness;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.cordova.AndroidChromeClient;
-import org.apache.cordova.AndroidWebView;
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaActivity;
 import org.apache.cordova.CordovaArgs;
 import org.apache.cordova.CordovaPlugin;
-import org.apache.cordova.CordovaWebView;
 import org.apache.cordova.LinearLayoutSoftKeyboardDetect;
 import org.apache.cordova.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
-
-import org.apache.cordova.engine.crosswalk.XWalkCordovaWebView;
-import org.apache.cordova.engine.crosswalk.XWalkCordovaWebViewClient;
-import org.apache.cordova.engine.crosswalk.XWalkCordovaChromeClient;
-import org.xwalk.core.XWalkView;
-import org.xwalk.core.XWalkPreferences;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -46,9 +37,7 @@ import android.content.Context;
 import android.os.Build;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
 import android.view.animation.DecelerateInterpolator;
