@@ -52,10 +52,8 @@ if [[ ! -e "$AH_PATH/node_modules/cca" ]]; then
   (cd "$AH_PATH" && npm link cca) || exit 1
 fi
 
-if [[ ! -e "$AH_PATH/www/cdvah/generated" ]]; then
-  echo "Running: gulp build-dev"
-  (cd "$AH_PATH" && ./node_modules/gulp/bin/gulp.js build-dev) || exit 1
-fi
+echo "Running: gulp build-dev"
+(cd "$AH_PATH" && ./node_modules/gulp/bin/gulp.js build-dev) || exit 1
 
 function ResolveSymlinks() {
   local found_path="$1"
