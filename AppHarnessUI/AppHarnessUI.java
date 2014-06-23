@@ -63,9 +63,10 @@ public class AppHarnessUI extends CordovaPlugin {
             for (int i = 0; i < pluginIdWhitelist.length(); ++i) {
                 pluginIdWhitelistAsSet.add(pluginIdWhitelist.getString(i));
             }
+            final String webViewType = args.getString(2);
             this.cordova.getActivity().runOnUiThread(new Runnable() {
                 public void run() {
-                    create(url, pluginIdWhitelistAsSet, callbackContext);
+                    create(url, pluginIdWhitelistAsSet, webViewType, callbackContext);
                 }
             });
         } else if ("destroy".equals(action)) {
@@ -113,13 +114,17 @@ public class AppHarnessUI extends CordovaPlugin {
         callbackContext.success();
     }
 
-    private void create(String url, Set<String> pluginIdWhitelist, CallbackContext callbackContext) {
+    private void create(String url, Set<String> pluginIdWhitelist, String webViewType, CallbackContext callbackContext) {
         CordovaActivity activity = (CordovaActivity)cordova.getActivity();
 
         if (slaveWebView != null) {
             Log.w(LOG_TAG, "create: already exists");
         } else {
-            slaveWebView = new CustomCrosswalkWebView(activity);
+            if ("system".equals(webViewType)) {
+                slaveWebView = new CustomAndroidWebView(this, activity);
+            } else {
+                slaveWebView = new CustomCrosswalkWebView(this, activity);
+            }
         }
         {
             initWebView(slaveWebView);

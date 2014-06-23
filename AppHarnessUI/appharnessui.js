@@ -25,9 +25,12 @@ function eventHandler(type) {
 
 exports.onEvent = null;
 
-exports.create = function(url, serviceNameWhitelist, win) {
+exports.create = function(url, serviceNameWhitelist, webViewType, win) {
+    if (webViewType != "system" && webViewType != "crosswalk") {
+        return;
+    }
     exec(eventHandler, null, 'AppHarnessUI', 'events', []);
-    exec(win, null, 'AppHarnessUI', 'create', [url, serviceNameWhitelist]);
+    exec(win, null, 'AppHarnessUI', 'create', [url, serviceNameWhitelist, webViewType]);
 };
 
 exports.destroy = function(win) {

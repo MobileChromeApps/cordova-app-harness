@@ -38,10 +38,10 @@
         }
 
         return {
-            create: function(url, pluginMetadata) {
+            create: function(url, pluginMetadata, webViewType) {
                 var deferred = $q.defer();
                 var serviceNames = createServiceNameWhitelist(pluginMetadata);
-                cordova.plugins.appharnessui.create(url, serviceNames, deferred.resolve);
+                cordova.plugins.appharnessui.create(url, serviceNames, webViewType, deferred.resolve);
                 return deferred.promise;
             },
             destroy: function() {
