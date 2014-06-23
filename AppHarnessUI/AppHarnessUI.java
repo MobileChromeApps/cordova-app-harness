@@ -29,10 +29,6 @@ import org.apache.cordova.LinearLayoutSoftKeyboardDetect;
 import org.apache.cordova.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.apache.cordova.engine.crosswalk.XWalkCordovaWebView;
-import org.apache.cordova.engine.crosswalk.XWalkCordovaWebViewClient;
-import org.apache.cordova.engine.crosswalk.XWalkCordovaChromeClient;
-import org.xwalk.core.XWalkPreferences;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -40,9 +36,7 @@ import android.content.Context;
 import android.os.Build;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
 import android.view.animation.DecelerateInterpolator;
@@ -68,9 +62,10 @@ public class AppHarnessUI extends CordovaPlugin {
             for (int i = 0; i < pluginIdWhitelist.length(); ++i) {
                 pluginIdWhitelistAsSet.add(pluginIdWhitelist.getString(i));
             }
+            final String webViewType = args.getString(2);
             this.cordova.getActivity().runOnUiThread(new Runnable() {
                 public void run() {
-                    create(url, pluginIdWhitelistAsSet, callbackContext);
+                    create(url, pluginIdWhitelistAsSet, webViewType, callbackContext);
                 }
             });
         } else if ("destroy".equals(action)) {
@@ -101,7 +96,7 @@ public class AppHarnessUI extends CordovaPlugin {
         return true;
     }
 
-    private void sendEvent(String eventName) {
+    public void sendEvent(String eventName) {
         if (eventsCallback != null) {
             PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, eventName);
             pluginResult.setKeepCallback(true);
@@ -109,27 +104,26 @@ public class AppHarnessUI extends CordovaPlugin {
         }
     }
 
-    @SuppressLint("NewApi")
     private void evalJs(String code, CallbackContext callbackContext) {
         if (slaveWebView == null) {
             Log.w(LOG_TAG, "Not evaluating JS since no app is active");
         } else {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-                slaveWebView.loadUrl("javascript:" + code);
-            } else {
-                slaveWebView.getView().evaluateJavascript(code, null);
-            }
+            slaveWebView.evaluateJavascript(code);
         }
         callbackContext.success();
     }
 
-    private void create(String url, Set<String> pluginIdWhitelist, CallbackContext callbackContext) {
+    private void create(String url, Set<String> pluginIdWhitelist, String webViewType, CallbackContext callbackContext) {
         CordovaActivity activity = (CordovaActivity)cordova.getActivity();
 
         if (slaveWebView != null) {
             Log.w(LOG_TAG, "create: already exists");
         } else {
-            slaveWebView = new CustomCordovaWebView(activity);
+            if ("system".equals(webViewType)) {
+                slaveWebView = new CustomAndroidWebView(this, activity);
+            } else {
+                slaveWebView = new CustomCrosswalkWebView(this, activity);
+            }
         }
         {
             initWebView(slaveWebView);
@@ -202,7 +196,7 @@ public class AppHarnessUI extends CordovaPlugin {
         }
     }
 
-    private void initWebView(final XWalkCordovaWebView newWebView) {
+    private void initWebView(final CustomCordovaWebView newWebView) {
         CordovaActivity activity = (CordovaActivity)cordova.getActivity();
         if (contentView == null) {
             contentView = (ViewGroup)activity.findViewById(android.R.id.content);
@@ -218,8 +212,8 @@ public class AppHarnessUI extends CordovaPlugin {
 //        layoutView.setBackground(origRootView.getBackground());
         layoutView.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, Gravity.BOTTOM | Gravity.LEFT));
 
-        newWebView.setWebViewClient(new XWalkCordovaWebViewClient(cordova, newWebView));
-        newWebView.setWebChromeClient(new XWalkCordovaChromeClient(cordova, newWebView));
+        newWebView.setWebViewClient(newWebView.makeWebViewClient());
+        newWebView.setWebChromeClient(newWebView.makeWebChromeClient());
 
         newWebView.setLayoutParams(new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -228,101 +222,4 @@ public class AppHarnessUI extends CordovaPlugin {
         newWebView.getView().setVisibility(View.VISIBLE);
     }
 
-    // Based on: http://stackoverflow.com/questions/12414680/how-to-implement-a-two-finger-double-click-in-android
-    private class TwoFingerDoubleTapGestureDetector {
-        private final int TIMEOUT = ViewConfiguration.getDoubleTapTimeout() + 100;
-        private long mFirstDownTime = 0;
-        private boolean mSeparateTouches = false;
-        private byte mTwoFingerTapCount = 0;
-
-        private void reset(long time) {
-            mFirstDownTime = time;
-            mSeparateTouches = false;
-            mTwoFingerTapCount = 0;
-        }
-
-        public boolean onTouchEvent(MotionEvent event) {
-            switch(event.getActionMasked()) {
-            case MotionEvent.ACTION_DOWN:
-                if(mFirstDownTime == 0 || event.getEventTime() - mFirstDownTime > TIMEOUT)
-                    reset(event.getDownTime());
-                break;
-            case MotionEvent.ACTION_POINTER_UP:
-                if(event.getPointerCount() == 2)
-                    mTwoFingerTapCount++;
-                else
-                    mFirstDownTime = 0;
-                break;
-            case MotionEvent.ACTION_UP:
-                if(!mSeparateTouches)
-                    mSeparateTouches = true;
-                else if(mTwoFingerTapCount == 2 && event.getEventTime() - mFirstDownTime < TIMEOUT) {
-                    sendEvent("showMenu");
-                    mFirstDownTime = 0;
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-    }
-
-    private static boolean didSetXwalkPrefs;
-    private class CustomCordovaWebView extends XWalkCordovaWebView{
-        public CustomCordovaWebView(Context context) {
-            super(context);
-        }
-
-        @Override
-        public XWalkCordovaWebView.CordovaXWalkView makeXWalkView(Context context) {
-            if (!didSetXwalkPrefs) {
-                // Throws an exception if we try to set it multiple times.
-                XWalkPreferences.setValue(XWalkPreferences.ANIMATABLE_XWALK_VIEW, true);
-                didSetXwalkPrefs = true;
-            }
-            return new CustomXwalkView(context, this);
-        }
-        public void SetStealTapEvents(boolean value){
-            ((CustomXwalkView)getView()).stealTapEvents=value;
-        }
-    }
-
-    private class CustomXwalkView extends XWalkCordovaWebView.CordovaXWalkView {
-        TwoFingerDoubleTapGestureDetector twoFingerTapDetector;
-        boolean stealTapEvents;
-
-        public CustomXwalkView(Context context, CustomCordovaWebView customCordovaWebView) {
-            super(context, customCordovaWebView);
-            twoFingerTapDetector = new TwoFingerDoubleTapGestureDetector();
-        }
-
-        @Override
-        public boolean onTouchEvent(MotionEvent e) {
-            if (stealTapEvents) {
-                if (e.getAction() == MotionEvent.ACTION_UP) {
-                    sendEvent("hideMenu");
-                }
-                return true;
-            }
-            return super.onTouchEvent(e);
-        }
-        @Override
-        public boolean onInterceptTouchEvent(MotionEvent e) {
-            if (stealTapEvents) {
-                if (e.getAction() == MotionEvent.ACTION_UP) {
-                    sendEvent("hideMenu");
-                }
-                return true;
-            }
-            twoFingerTapDetector.onTouchEvent(e);
-            return super.onInterceptTouchEvent(e);
-        }
-
-        protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-            super.onSizeChanged(w, h, oldw, oldh);
-            // Needed for the view to stay in the bottom when rotating.
-            setPivotY(h);
-        }
-    }
 }

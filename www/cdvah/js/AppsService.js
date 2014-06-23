@@ -176,7 +176,7 @@
                     }).then(function() {
                         return installer.getPluginMetadata();
                     }).then(function(pluginMetadata) {
-                        return AppHarnessUI.create(launchUrl, pluginMetadata);
+                        return AppHarnessUI.create(launchUrl, pluginMetadata, 'crosswalk');
                     }).then(function() {
                         if (AppsService.onAppListChange) {
                             AppsService.onAppListChange();
