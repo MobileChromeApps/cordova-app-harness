@@ -37,6 +37,8 @@
                     return AppHarnessUI.setVisible(false);
                 } else if (eventName == 'hideMenu') {
                     return AppHarnessUI.setVisible(true);
+                } else if (eventName == 'quitApp') {
+                    return AppsService.quitApp();
                 } else if (eventName == 'destroyed') {
                     return loadAppsList();
                 } else {

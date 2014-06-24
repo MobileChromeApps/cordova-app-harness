@@ -19,12 +19,8 @@
 package org.apache.appharness;
 
 import org.apache.cordova.AndroidWebView;
-import org.apache.cordova.CordovaWebView;
-import org.apache.cordova.CordovaWebViewClient;
-import org.apache.cordova.IceCreamCordovaWebViewClient;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.util.Log;
@@ -32,6 +28,7 @@ import android.view.MotionEvent;
 import android.webkit.WebView;
 
 class CustomAndroidWebView extends AndroidWebView implements CustomCordovaWebView {
+    private static final String LOG_TAG = "AppHarnessUI";
 
     private AppHarnessUI parent;
 
@@ -75,5 +72,19 @@ class CustomAndroidWebView extends AndroidWebView implements CustomCordovaWebVie
         } else {
             ((WebView)this).evaluateJavascript(script, null);
         }
+    }
+    
+    @Override
+    public boolean backHistory() {
+        if (canGoBack()) {
+            return super.backHistory();
+        }
+        if (parent.slaveVisible) {
+            parent.sendEvent("showMenu");
+            return true;
+        }
+        // Should never get here since the webview does not have focus.
+        Log.w(LOG_TAG, "Somehow back button was pressed when app not visible");
+        return false;
     }
 }

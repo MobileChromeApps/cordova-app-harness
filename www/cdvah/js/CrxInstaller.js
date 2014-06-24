@@ -58,7 +58,7 @@
     }
 
     /* global myApp */
-    myApp.factory('CrxInstaller', ['$q', 'Installer', 'AppsService', 'ResourcesLoader', function($q, Installer, AppsService, ResourcesLoader) {
+    myApp.factory('CrxInstaller', ['$q', 'Installer', 'AppsService', 'ResourcesLoader', 'pluginDepsMap', function($q, Installer, AppsService, ResourcesLoader, pluginDepsMap) {
 
         function CrxInstaller() {
             this.manifestJson_ = null;
@@ -126,8 +126,26 @@
             });
         };
 
+        function expandPluginIdsWithDeps(ids) {
+            var idMap = {};
+            function addAll(arr) {
+                arr.forEach(function(pluginId) {
+                    if (!idMap[pluginId]) {
+                        idMap[pluginId] = true;
+                        var deps = pluginDepsMap[pluginId];
+                        if (deps) {
+                            addAll(deps);
+                        }
+                    }
+                });
+            }
+            addAll(ids);
+            return Object.keys(idMap);
+        }
+
         CrxInstaller.prototype.getPluginMetadata = function() {
             var pluginIds = cca.extractPluginsFromManifest(this.manifestJson_).concat(cca.getDefaultPluginIds());
+            pluginIds = expandPluginIdsWithDeps(pluginIds);
             var harnessPluginMetadata = cordova.require('cordova/plugin_list').metadata;
             var ret = {};
             // Make all versions match what is installed.

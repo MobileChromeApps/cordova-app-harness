@@ -117,6 +117,15 @@ if [[ "$PLATFORMS" = *android* ]]; then
     cp "$AH_PATH"/template-overrides/icons/android/icon-xdpi.png platforms/android/res/drawable-xhdpi/icon.png
 
     cp "$AH_PATH"/template-overrides/strings.xml platforms/android/res/values/strings.xml
+
+    echo 'var fs = require("fs");
+          var fname = "platforms/android/src/org/chromium/appdevtool/ChromeAppDeveloperTool.java";
+          var tname = "'$AH_PATH'/template-overrides/Activity.java";
+          var orig = fs.readFileSync(fname, "utf8");
+          var templ = fs.readFileSync(tname, "utf8");
+          var newData = orig.replace(/}\s*$/, templ + "\n}\n").replace(/import.*?$/m, "import org.apache.appharness.AppHarnessUI;\n$&");
+          fs.writeFileSync(fname, newData);
+          ' | node || exit $?
 fi
 if [[ "$PLATFORMS" = *ios* ]]; then
     cp -r "$AH_PATH"/template-overrides/icons/ios/* platforms/ios/*/Resources/icons
@@ -176,8 +185,6 @@ echo Installing plugins.
 # To enable barcode scanning:
 # $CORDOVA plugin add https://github.com/wildabeast/BarcodeScanner.git # Optional
 
-cordova prepare
-
 if [[ $? != 0 ]]; then
     echo "Plugin installation failed. Probably you need to set PLUGIN_SEARCH_PATH env variable so that it contains the plugin that failed to install."
     exit 1
@@ -221,6 +228,8 @@ if [[ $? != 0 ]]; then
     echo "Plugin installation failed. Probably you need to set PLUGIN_SEARCH_PATH env variable so that it contains the plugin that failed to install."
     exit 1
 fi
+
+cordova prepare
 
 # TODO: Add an option for installing grunt
 exit 0

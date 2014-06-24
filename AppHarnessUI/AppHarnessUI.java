@@ -30,9 +30,7 @@ import org.apache.cordova.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.content.Context;
 import android.os.Build;
 import android.util.Log;
 import android.view.Gravity;
@@ -52,6 +50,14 @@ public class AppHarnessUI extends CordovaPlugin {
     boolean slaveVisible;
     CallbackContext eventsCallback;
     LinearLayoutSoftKeyboardDetect layoutView;
+
+    public boolean isSlaveVisible() {
+        return slaveVisible;
+    }
+
+    public boolean isSlaveCreated() {
+        return slaveWebView != null && slaveWebView.getParent() != null && ((ViewGroup)slaveWebView.getParent()).getParent() != null;
+    }
 
     @Override
     public boolean execute(String action, CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
@@ -221,5 +227,4 @@ public class AppHarnessUI extends CordovaPlugin {
                 1.0F));
         newWebView.getView().setVisibility(View.VISIBLE);
     }
-
 }

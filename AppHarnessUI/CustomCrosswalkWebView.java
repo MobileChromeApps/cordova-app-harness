@@ -19,16 +19,15 @@
 package org.apache.appharness;
 
 import org.apache.cordova.engine.crosswalk.XWalkCordovaWebView;
-import org.xwalk.core.XWalkView;
 import org.xwalk.core.XWalkPreferences;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 import android.view.MotionEvent;
 
 class CustomCrosswalkWebView extends XWalkCordovaWebView implements CustomCordovaWebView {
+    private static final String LOG_TAG = "AppHarnessUI";
 
     private static boolean didSetXwalkPrefs = false;
 
@@ -55,6 +54,20 @@ class CustomCrosswalkWebView extends XWalkCordovaWebView implements CustomCordov
 
     public void evaluateJavascript(String script) {
         getView().evaluateJavascript(script, null);
+    }
+    
+    @Override
+    public boolean backHistory() {
+        if (getView().getNavigationHistory().canGoBack()) {
+            return super.backHistory();
+        }
+        if (parent.slaveVisible) {
+            parent.sendEvent("showMenu");
+            return true;
+        }
+        // Should never get here since the webview does not have focus.
+        Log.w(LOG_TAG, "Somehow back button was pressed when app not visible");
+        return false;
     }
 
     private class CustomXwalkView extends XWalkCordovaWebView.CordovaXWalkView {
