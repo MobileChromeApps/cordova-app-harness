@@ -186,6 +186,7 @@ fi
 # Using CCA here to get the right search path.
 echo "Installing Chromium plugins"
 cordova plugin add \
+    org.chromium.alarms \
     org.chromium.bootstrap \
     org.chromium.navigation \
     org.chromium.fileSystem \
