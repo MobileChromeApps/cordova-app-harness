@@ -141,8 +141,20 @@
         }
 
         function getAssetManifestJson(app) {
+            var assetManifest = app && app.directoryManager.getAssetManifest();
+            // Hide cordova_plugins.js for Chrome Apps so that the client
+            // doesn't have to worry about them.
+            if (app && app.appType == 'chrome') {
+                var newMap = {};
+                for (var k in assetManifest) {
+                    if (assetManifest.hasOwnProperty(k) && k != 'www/cordova_plugins.js') {
+                        newMap[k] = assetManifest[k];
+                    }
+                }
+                assetManifest = newMap;
+            }
             return {
-                'assetManifest': app && app.directoryManager.getAssetManifest(),
+                'assetManifest': assetManifest,
                 'assetManifestEtag': app ? app.directoryManager.getAssetManifestEtag() : '0',
                 'platform': cordova.platformId,
                 'cordovaVer': cordova.version,
