@@ -26,8 +26,8 @@
   - `git push origin master refs/tags/chrome-app-developer-tool-$(npm ls --depth=0 | head -n1 | sed -E 's:.*@| .*::g')`
 - Upload apk to GitHub's releases page
   - Attach the apk
-  - Write *short* release notes (download link should be visible without scrolling).
+  - Copy in release notes (follow the format of previous releases)
 - Update the version with `-dev`
-  - `vim createproject.sh www/cdvah/js/app.js`
-  - `git commit -am "Adding -dev to version after release"`
+  - `vim package.json www/cdvah/js/app.js`
+  - `git commit -am "Setting chrome-app-developer-tool version to $(npm ls --depth=0 | head -n1 | sed -E 's:.*@| .*::g')"`
   - `git push`
