@@ -84,21 +84,3 @@ A server runs within the app that enables remote control functionality.
 
 Use `cca` or `harness-push/harness-push.js` (see [harness-push/README.md]) to send commands to the Chrome App Developer Tool for Mobile.
 
-## Releasing chrome-app-developer-tool-client
-
-- Update the version in `package.json`
-  - `vim harness-push/node_modules/chrome-app-developer-tool-client/package.json`
-- Update the release notes
-  - `git log --oneline --no-merges $(tail -n1 harness-push/node_modules/chrome-app-developer-tool-client/release_hashes.txt | cut -d':' -f2)..HEAD -- harness-push/node_modules/chrome-app-developer-tool-client`
-  - `vim harness-push/node_modules/chrome-app-developer-tool-client/README.md`
-- Tag release (via `release_hashes.txt` file)
-  - `echo "v0.0.1: $(git rev-parse HEAD)" >> harness-push/node_modules/chrome-app-developer-tool-client/release_hashes.txt`
-- Commit Changes
-  - `git commit -am "Releasing chrome-app-developer-tool-client-0.0.1"`
-- Publish to npm
-  - `npm publish harness-push/node_modules/chrome-app-developer-tool-client`
-  - `git push origin master`
-- Update the version with `-dev`
-  - `vim harness-push/node_modules/chrome-app-developer-tool-client/package.json`
-  - `git commit -am "Adding -dev to chrome-app-developer-tool-client"`
-  - `git push origin master`
