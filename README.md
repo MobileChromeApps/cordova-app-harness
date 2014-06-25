@@ -5,82 +5,69 @@ The Chrome App Developer Tool for Mobile is a distribution of
 that can run Chrome Apps. It is based on the plugins from the
 [cca](https://github.com/MobileChromeApps/mobile-chrome-apps) toolkit.
 
-## Use a Pre-built APK
-Pre-built APKs are available [here](https://github.com/MobileChromeApps/chrome-app-harness/releases).
+## Installation
 
-# How to use it:
-1. Run the app on a device or simulator
-2. Push your app to it via `cca push` command (See [cca](https://github.com/MobileChromeApps/mobile-chrome-apps/blob/master/docs/Installation.md#install-the-cca-command-line-tool))
-3. Use two-finger double-tap to bring up in-app menu.
+### Install a Pre-Built APK
 
-## Repository Initialization
+**Note:** This option is only available on Android.
 
-    npm link cca
+1. Enable USB debugging on your device (follow step 2 [here](http://developer.android.com/tools/device.html#setting-up)).
+2. Download an APK from [here](https://github.com/MobileChromeApps/chrome-app-harness/releases).
+3. Run `adb install ChromeAppDeveloperTool-debug.apk` (of course, navigating to the appropriate directory first).
 
-## Creating a Project
+### Install from Source
 
-Currently the project requires unreleased versions of several repos. Do the following to get the correct versions of the various components:
+1. Install **cca**, our toolkit for Chrome Apps for mobile:
 
-    git clone https://github.com/clelland/cordova-crosswalk-engine.git
-    ( cd cordova-crosswalk-engine && git checkout plugin_with_arm_binary )
+        npm install -g cca
 
-    coho repo-clone -r plugins -r android
-    ( cd cordova-android && git checkout 4.0.x )
+    **Note:** You can find more on cca [here](https://github.com/MobileChromeApps/mobile-chrome-apps/blob/master/docs/Installation.md#install-the-cca-command-line-tool).
 
-Use `createproject.sh` to create a project. Example invocation:
+2. Clone this repository:
 
-    export PLUGIN_SEARCH_PATH="/Users/foo/path/to/plugins"
-    PLATFORMS="android ios" ./createproject.sh NewProject
+        git clone https://github.com/MobileChromeApps/chrome-app-developer-tool.git
 
-If you have coho and cca "npm linked", then you should not need to specify a PLUGIN_SEARCH_PATH or ANDROID_PATH.
-If your global version of cca is from the registry, you should use PLUGIN_SEARCH_PATH to point to your cca plugins and ANDROID_PATH to point to the copy of cordova-android 4.0.x.
+3. The Chrome App Developer Tool for Mobile currently requires unreleased versions of a couple of repositories.  Do the following to get the correct versions:
 
-For more info:
+        git clone https://github.com/clelland/cordova-crosswalk-engine.git
+        ( cd cordova-crosswalk-engine && git checkout plugin_with_arm_binary )
 
-    ./createproject.sh --help
+        coho repo-clone -r plugins -r android
+        ( cd cordova-android && git checkout 4.0.x )
+    
+    **Note:** Instructions on installing `coho` can be found [here](https://github.com/apache/cordova-coho#how-to-clone--use-coho).
 
-## Updating from cordova-app-harness
+4. Create a Chrome App Developer Tool project using `createproject.sh`.  For instance:
 
-    git checkout upstream
-    git pull /path/to/cordova-app-harness master
-    git checkout master
-    git merge upstream
-    git push origin master upstream
+        export PLUGIN_SEARCH_PATH="/Users/foo/path/to/plugins"
+        export PLATFORMS="android ios"
+        ./createproject.sh ChromeAppDevTool
 
-### Cutting a Release
+You can get more info using `./createproject.sh --help`.
 
-- double check the status of upstream `cordova-app-harness` to see if we should update (instructions above).
-- Update the version in `createproject.sh` and `app.js`
-  - `vim createproject.sh www/cdvah/js/app.js`
-- Build apk
-  - `./createproject.sh CCAHarness`
-  - `cd CCAHarness && ../buildharness.sh`
-- Commit Changes
-  - `git commit -am "Releasing 0.6.0"`
-- Tag release
-  - `git tag -am "Tagged v0.6.0" chrome-app-developer-tool-0.6.0`
-  - `git push origin master --tags`
-- Upload apk to GitHub's releases page
-  - Attach the apk
-  - Write *short* release notes (download link should be visible without scrolling).
-- Update the version with `-dev`
-  - `vim createproject.sh www/cdvah/js/app.js`
-  - `git commit -am "Adding -dev to version after release"`
-  - `git push`
+## Using the Chrome App Developer Tool
+
+1. Run the Chrome App Developer Tool on a device or simulator.
+2. Navigate to your app directory and deploy using the `cca push` command.
+    
+    **Note:** You can find more on cca [here](https://github.com/MobileChromeApps/mobile-chrome-apps/blob/master/docs/Installation.md#install-the-cca-command-line-tool).
+    
+That's it—you're up and running!
+
+### Tips and Tricks
+
+* Use `cca push --watch` to automatically refresh the app when a file is updated.
+* Minimize the app using a two-finger double-tap.
 
 ## Major Unimplemented Features
+
+Suggestions are always welcome! :)
+
+### General
 * Applying app settings (DisallowOverscroll, etc)
 * Applying app splashscreen
 * Applying app's whitelist
 
-## Major Unimplemented In-App Menu Features
+### In-App Menu
 * Inject a JSConsole script tag
 * Initiate a weinre session
-* Suggestions welcome! :)
-
-# Harness Server
-
-A server runs within the app that enables remote control functionality.
-
-Use `cca` or `harness-push/harness-push.js` (see [harness-push/README.md]) to send commands to the Chrome App Developer Tool for Mobile.
-
