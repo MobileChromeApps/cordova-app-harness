@@ -10,17 +10,20 @@
 
 ## Cutting a Release
 
-- double check the status of upstream `cordova-app-harness` to see if we should update (instructions above).
-- Update the version in `createproject.sh` and `app.js`
-  - `vim createproject.sh www/cdvah/js/app.js`
+- Double check the status of upstream `cordova-app-harness` to see if we should update (instructions above).
+- Update release notes (bottom of this file)
+  - `git log --pretty=format:'* %s' --no-merges $(git describe --tags --abbrev=0)..HEAD`
+  - Trim them down liberally & reword them.
+- Update the version in `package.json` and `app.js`
+  - `vim package.json www/cdvah/js/app.js`
 - Build apk
   - `./createproject.sh CCAHarness`
-  - `cd CCAHarness && ../buildharness.sh`
+  - `(cd CCAHarness && ../buildharness.sh)`
 - Commit Changes
-  - `git commit -am "Releasing 0.6.0"`
+  - `git commit -am "Releasing chrome-app-developer-tool v$(npm ls --depth=0 | head -n1 | sed -E 's:.*@| .*::g')"`
 - Tag release
-  - `git tag -am "Tagged v0.6.0" chrome-app-developer-tool-0.6.0`
-  - `git push origin master --tags`
+  - `git tag -m "Tagged v$(npm ls --depth=0 | head -n1 | sed -E 's:.*@| .*::g')" chrome-app-developer-tool-$(npm ls --depth=0 | head -n1 | sed -E 's:.*@| .*::g')`
+  - `git push origin master refs/tags/chrome-app-developer-tool-$(npm ls --depth=0 | head -n1 | sed -E 's:.*@| .*::g')`
 - Upload apk to GitHub's releases page
   - Attach the apk
   - Write *short* release notes (download link should be visible without scrolling).

@@ -23,20 +23,17 @@ if [[ $# -eq 0 || "$1" = "--help" ]]; then
     echo '  PLATFORMS="android ios"'
     echo '  CORDOVA="path/to/cordova"'
     echo '  PLUGIN_SEARCH_PATH="path1:path2:path3"'
-    echo '  APP_ID="org.apache.AppHarness"'
-    echo '  APP_NAME="CordovaAppHarness"'
-    echo '  APP_VERSION="0.0.1"'
     echo '  ANDROID_PATH="path/to/cordova-android"'
     exit 1
 fi
 
 CORDOVA="${CORDOVA-cordova}"
 PLATFORMS="${PLATFORMS-android}"
-APP_ID=${APP_ID-org.chromium.appdevtool}
-APP_NAME=${APP_NAME-Chrome App Developer Tool}
-APP_VERSION=${APP_VERSION-0.7.1-dev}
-DIR_NAME="${1}"
+DIR_NAME="$1"
 AH_PATH="$(cd $(dirname $0) && pwd)"
+APP_ID="org.chromium.appdevtool"
+APP_NAME="Chrome App Developer Tool"
+APP_VERSION=$(cd "$AH_PATH" && npm ls --depth=0 | head -n1 | sed -E 's:.*@| .*::g')
 extra_search_path="$PLUGIN_SEARCH_PATH"
 PLUGIN_SEARCH_PATH="$(dirname "$AH_PATH")"
 
