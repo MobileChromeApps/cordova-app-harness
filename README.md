@@ -71,3 +71,51 @@ Suggestions are always welcome! :)
 ### In-App Menu
 * Inject a JSConsole script tag
 * Initiate a weinre session
+* Suggestions welcome! :)
+
+# Harness Server
+
+A server runs within the app that enables remote control functionality.
+
+Use `cca` or `harness-push/harness-push.js` (see [harness-push/README.md]) to send commands to the Chrome App Developer Tool for Mobile.
+
+# Release Notes
+
+## v0.8.0 (June 25, 2014)
+* Add chrome.alarms and org.apache.cordova.media plugins (mistakenly left out)
+* Fix Android back button always quitting the app (now does what you'd expect)
+* App now loads only the plugins that an app uses (instead of all installed plugins)
+* Initial app push is now much faster for apps with lots of files
+* First cut at "Details" and "About" pages
+* Deleted notification bubble
+* Fix apps not launching when you: push App A, then push App B, then push App A again
+
+## v0.7.1 (June 17, 2014)
+* Fix crash on launch-after-backbutton (#13)
+
+## v0.7.0 (June 17, 2014)
+* Speed improvements to initial app push (zippush endpoint)
+* Implemented details & about page
+* Minor UI tweaks
+
+## v0.6.0 (June 17, 2014)
+* New name: Chrome App Developer Tool for Mobile
+* Default WebView for Chrome Apps is now using Crosswalk, currently based on Chrome/36.0.1985.18
+* Changed the Android Launch Mode to singleTop so that clicking icon from launcher doesn't restart the app unnecessarily
+* Few updates to the set of plugins we bundle by default
+* Fix "failed to start server" when you close the app and start it again
+* Displayed IP address now updates when your device's IP changes
+* Some minor UI updates
+
+## v0.5.1 (June 3, 2014)
+* Now bundling all core Cordova plugins
+* Use relative times for "last updated"
+* Deleted in-app menu in favour of showing the main screen on double two-finger tap
+* UI Overhaul
+
+## v0.5.0 (May 27, 2014)
+* Harness server now written in JS using chrome.socket
+* Supports incremental updates to apps for faster pushes
+* Server now works on iOS
+* Use two-finger double-tap to summon menu instead of three-finger swipe
+
