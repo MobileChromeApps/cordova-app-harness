@@ -7,15 +7,14 @@ that can run Chrome Apps. It is based on the plugins from the
 
 ## Installation
 
-### Install a Pre-Built APK
-
-**Note:** This option is only available on Android.
+### Using a Pre-Built Binary (Android only)
 
 1. Enable USB debugging on your device (follow step 2 [here](http://developer.android.com/tools/device.html#setting-up)).
-2. Download an APK from [here](https://github.com/MobileChromeApps/chrome-app-harness/releases).
+2. Download an APK from [here](https://github.com/MobileChromeApps/chrome-app-developer-tool/releases).
 3. Run `adb install ChromeAppDeveloperTool-debug.apk` (of course, navigating to the appropriate directory first).
+  * Alternatively, download the `.apk` using your device's browser.
 
-### Install from Source
+### Building from Source (iOS or Android)
 
 1. Install **cca**, our toolkit for Chrome Apps for mobile:
 
@@ -48,7 +47,7 @@ You can get more info using `./createproject.sh --help`.
 ## Using the Chrome App Developer Tool
 
 1. Run the Chrome App Developer Tool on a device or simulator.
-2. Navigate to your app directory and deploy using the `cca push` command.
+2. Navigate to your app directory and deploy using the `cca push --target=IP_ADDRESS` command.
     
     **Note:** You can find more on cca [here](https://github.com/MobileChromeApps/mobile-chrome-apps/blob/master/docs/Installation.md#install-the-cca-command-line-tool).
     
@@ -58,6 +57,9 @@ That's it—you're up and running!
 
 * Use `cca push --watch` to automatically refresh the app when a file is updated.
 * Minimize the app using a two-finger double-tap.
+* Deploying via USB:
+  * Android: Use `adb forward tcp:2424 tcp:2424`, and then run `cca push`
+  * iOS: Use `python tcprelay.py 2424:2424` (available [here](https://github.com/chid/tcprelay)), and then run `cca push`
 
 ## Major Unimplemented Features
 
@@ -72,12 +74,6 @@ Suggestions are always welcome! :)
 * Inject a JSConsole script tag
 * Initiate a weinre session
 * Suggestions welcome! :)
-
-# Harness Server
-
-A server runs within the app that enables remote control functionality.
-
-Use `cca` or `harness-push/harness-push.js` (see [harness-push/README.md]) to send commands to the Chrome App Developer Tool for Mobile.
 
 # Release Notes
 
