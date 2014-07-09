@@ -31,11 +31,11 @@
   </js-module>
 
   <platform name="android">
-    <source-file src="AppHarnessUI.java" target-dir="src/org/apache/appharness" />
-    <source-file src="CustomAndroidWebView.java" target-dir="src/org/apache/appharness" />
-    <source-file src="CustomCordovaWebView.java" target-dir="src/org/apache/appharness" />
-    <source-file src="CustomCrosswalkWebView.java" target-dir="src/org/apache/appharness" />
-    <source-file src="TwoFingerDoubleTapGestureDetector.java" target-dir="src/org/apache/appharness" />
+    <source-file src="android/AppHarnessUI.java" target-dir="src/org/apache/appharness" />
+    <source-file src="android/CustomAndroidWebView.java" target-dir="src/org/apache/appharness" />
+    <source-file src="android/CustomCordovaWebView.java" target-dir="src/org/apache/appharness" />
+    <source-file src="android/TwoFingerDoubleTapGestureDetector.java" target-dir="src/org/apache/appharness" />
+    <source-file src="android/CustomCrosswalkWebView.java" target-dir="src/org/apache/appharness" />
 
     <config-file target="config.xml" parent="/*">
       <feature name="AppHarnessUI">

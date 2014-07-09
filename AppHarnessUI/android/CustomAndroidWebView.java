@@ -39,7 +39,7 @@ class CustomAndroidWebView extends AndroidWebView implements CustomCordovaWebVie
         twoFingerTapDetector.setParent(parent);
     }
 
-    public void SetStealTapEvents(boolean value){
+    public void setStealTapEvents(boolean value){
         stealTapEvents=value;
     }
 

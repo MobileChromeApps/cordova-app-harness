@@ -21,6 +21,6 @@ package org.apache.appharness;
 import org.apache.cordova.CordovaWebView;
 
 interface CustomCordovaWebView extends CordovaWebView {
-    public void SetStealTapEvents(boolean value);
-    public void evaluateJavascript(String script);
+    void setStealTapEvents(boolean value);
+    void evaluateJavascript(String script);
 }

@@ -18,14 +18,17 @@
 */
 package org.apache.appharness;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.cordova.CallbackContext;
+import org.apache.cordova.ConfigXmlParser;
 import org.apache.cordova.CordovaActivity;
 import org.apache.cordova.CordovaArgs;
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.LinearLayoutSoftKeyboardDetect;
+import org.apache.cordova.PluginEntry;
 import org.apache.cordova.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -56,7 +59,7 @@ public class AppHarnessUI extends CordovaPlugin {
     }
 
     public boolean isSlaveCreated() {
-        return slaveWebView != null && slaveWebView.getParent() != null && ((ViewGroup)slaveWebView.getParent()).getParent() != null;
+        return slaveWebView != null && slaveWebView.getView().getParent() != null && ((ViewGroup)slaveWebView.getView().getParent()).getParent() != null;
     }
 
     @Override
@@ -132,15 +135,15 @@ public class AppHarnessUI extends CordovaPlugin {
             }
         }
         {
-            initWebView(slaveWebView);
-            if (activity.getBooleanProperty("DisallowOverscroll", false)) {
-                slaveWebView.setOverScrollMode(View.OVER_SCROLL_NEVER);
+            initWebView(slaveWebView, pluginIdWhitelist);
+            if (preferences.getBoolean("DisallowOverscroll", false)) {
+                slaveWebView.getView().setOverScrollMode(View.OVER_SCROLL_NEVER);
             }
             slaveWebView.clearCache(true);
             slaveWebView.clearHistory();
             slaveWebView.getPluginManager().setPluginIdWhitelist(pluginIdWhitelist);
             slaveWebView.loadUrl(url);
-            View newView = (View)slaveWebView.getParent();
+            View newView = (View)slaveWebView.getView().getParent();
             contentView.addView(newView);
             slaveVisible = true;
             // Back button capturing breaks without these:
@@ -155,13 +158,13 @@ public class AppHarnessUI extends CordovaPlugin {
             Log.w(LOG_TAG, "destroy: already destroyed");
         } else {
             slaveWebView.loadUrl("data:text/plain;charset=utf-8,");
-            contentView.removeView((View)slaveWebView.getParent());
+            contentView.removeView((View)slaveWebView.getView().getParent());
             webView.getView().setEnabled(true);
             origMainView.requestFocus();
 
             slaveWebView.getView().setScaleX(1.0f);
             slaveWebView.getView().setScaleY(1.0f);
-            slaveWebView.SetStealTapEvents(false);
+            slaveWebView.setStealTapEvents(false);
             slaveVisible = false;
             sendEvent("destroyed");
         }
@@ -187,14 +190,14 @@ public class AppHarnessUI extends CordovaPlugin {
                 anim.scaleX(1.0f).scaleY(1.0f);
                 webView.getView().setEnabled(false);
                 slaveWebView.getView().setEnabled(true);
-                ((View)slaveWebView.getParent()).requestFocus();
+                ((View)slaveWebView.getView().getParent()).requestFocus();
             } else {
                 anim.scaleX(.25f).scaleY(.25f);
                 webView.getView().setEnabled(true);
                 slaveWebView.getView().setEnabled(false);
                 origMainView.requestFocus();
             }
-            slaveWebView.SetStealTapEvents( !value);
+            slaveWebView.setStealTapEvents(!value);
             anim.setDuration(300).setInterpolator(new DecelerateInterpolator(2.0f)).start();
         }
         if (callbackContext != null) {
@@ -202,8 +205,14 @@ public class AppHarnessUI extends CordovaPlugin {
         }
     }
 
-    private void initWebView(final CustomCordovaWebView newWebView) {
+    private void initWebView(final CustomCordovaWebView newWebView, Set<String> pluginIdWhitelist) {
         CordovaActivity activity = (CordovaActivity)cordova.getActivity();
+        ConfigXmlParser parser = new ConfigXmlParser();
+        // TODO: Parse the app's config.xml rather than our own config.xml.
+        parser.parse(activity);
+        ArrayList<PluginEntry> pluginEntries = parser.getPluginEntries();
+
+        newWebView.init(cordova, pluginEntries, webView.getWhitelist(), preferences);
         if (contentView == null) {
             contentView = (ViewGroup)activity.findViewById(android.R.id.content);
             origMainView = contentView.getChildAt(0);
@@ -218,10 +227,7 @@ public class AppHarnessUI extends CordovaPlugin {
 //        layoutView.setBackground(origRootView.getBackground());
         layoutView.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, Gravity.BOTTOM | Gravity.LEFT));
 
-        newWebView.setWebViewClient(newWebView.makeWebViewClient());
-        newWebView.setWebChromeClient(newWebView.makeWebChromeClient());
-
-        newWebView.setLayoutParams(new LinearLayout.LayoutParams(
+        newWebView.getView().setLayoutParams(new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 1.0F));

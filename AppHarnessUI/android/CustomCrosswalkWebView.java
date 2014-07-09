@@ -18,6 +18,7 @@
 */
 package org.apache.appharness;
 
+import org.apache.cordova.engine.crosswalk.XWalkCordovaView;
 import org.apache.cordova.engine.crosswalk.XWalkCordovaWebView;
 import org.xwalk.core.XWalkPreferences;
 
@@ -32,26 +33,26 @@ class CustomCrosswalkWebView extends XWalkCordovaWebView implements CustomCordov
     private static boolean didSetXwalkPrefs = false;
 
     private AppHarnessUI parent;
+    private boolean stealTapEvents;
 
-    public CustomCrosswalkWebView(AppHarnessUI parent, Context context) {
-        super(context);
+    CustomCrosswalkWebView(AppHarnessUI parent, Context context) {
+        super((XWalkCordovaView)null);
         this.parent = parent;
-        ((CustomXwalkView)getView()).setParent(parent);
-    }
 
-    @Override
-    public XWalkCordovaWebView.CordovaXWalkView makeXWalkView(Context context) {
         if (!didSetXwalkPrefs) {
             // Throws an exception if we try to set it multiple times.
             XWalkPreferences.setValue(XWalkPreferences.ANIMATABLE_XWALK_VIEW, true);
             didSetXwalkPrefs = true;
         }
-        return new CustomXwalkView(context, (XWalkCordovaWebView)this);
-    }
-    public void SetStealTapEvents(boolean value){
-        ((CustomXwalkView)getView()).stealTapEvents=value;
+        webview = new CustomXwalkView(context);
     }
 
+    @Override
+    public void setStealTapEvents(boolean value){
+        stealTapEvents=value;
+    }
+
+    @Override
     public void evaluateJavascript(String script) {
         getView().evaluateJavascript(script, null);
     }
@@ -70,20 +71,12 @@ class CustomCrosswalkWebView extends XWalkCordovaWebView implements CustomCordov
         return false;
     }
 
-    private class CustomXwalkView extends XWalkCordovaWebView.CordovaXWalkView {
-        AppHarnessUI parent;
+    private class CustomXwalkView extends XWalkCordovaView {
         TwoFingerDoubleTapGestureDetector twoFingerTapDetector;
-        boolean stealTapEvents;
 
-        public CustomXwalkView(Context context, XWalkCordovaWebView cordovaWebView) {
-            super(context, cordovaWebView);
-            this.parent = null;
+        public CustomXwalkView(Context context) {
+            super(context, null);
             twoFingerTapDetector = new TwoFingerDoubleTapGestureDetector();
-        }
-
-        public void setParent(AppHarnessUI parent) {
-            this.parent = parent;
-            twoFingerTapDetector.setParent(parent);
         }
 
         @Override
