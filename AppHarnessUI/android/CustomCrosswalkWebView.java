@@ -76,7 +76,7 @@ class CustomCrosswalkWebView extends XWalkCordovaWebView implements CustomCordov
 
         public CustomXwalkView(Context context) {
             super(context, null);
-            twoFingerTapDetector = new TwoFingerDoubleTapGestureDetector();
+            twoFingerTapDetector = new TwoFingerDoubleTapGestureDetector(parent);
         }
 
         @Override
