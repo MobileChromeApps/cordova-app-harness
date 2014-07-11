@@ -11,7 +11,7 @@
 ## Cutting a Release
 
 - Double check the status of upstream `cordova-app-harness` to see if we should update (instructions above).
-- Update release notes (bottom of this file)
+- Update release notes (bottom of README.md)
   - `git log --pretty=format:'* %s' --no-merges $(git describe --tags --abbrev=0)..HEAD`
   - Trim them down liberally & reword them.
 - Update the version in `package.json` and `app.js`
@@ -30,4 +30,4 @@
 - Update the version with `-dev`
   - `vim package.json www/cdvah/js/app.js`
   - `git commit -am "Setting chrome-app-developer-tool version to $(npm ls --depth=0 | head -n1 | sed -E 's:.*@| .*::g')"`
-  - `git push`
+  - `git push origin master`
