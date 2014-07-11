@@ -77,6 +77,13 @@ Suggestions are always welcome! :)
 
 # Release Notes
 
+## v0.8.1 (July 11, 2014)
+* Fix exception on second launch and stop using plugin whitelist
+* Fix wrong path in createproject.sh (failed every time)
+* Add ArrayBuffer.slice polyfill for Android pre-KK (#22)
+* Update link to Chrome Dev Editor
+* Fix line-breaking CSS in About page
+
 ## v0.8.0 (June 25, 2014)
 * Add chrome.alarms and org.apache.cordova.media plugins (mistakenly left out)
 * Fix Android back button always quitting the app (now does what you'd expect)
