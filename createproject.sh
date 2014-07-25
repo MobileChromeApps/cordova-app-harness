@@ -28,7 +28,7 @@ if [[ $# -eq 0 || "$1" = "--help" ]]; then
 fi
 
 CORDOVA="${CORDOVA-cordova}"
-PLATFORMS="${PLATFORMS-android}"
+PLATFORMS="${PLATFORMS-android ios}"
 DIR_NAME="$1"
 AH_PATH="$(cd $(dirname $0) && pwd)"
 APP_ID="org.chromium.appdevtool"
@@ -90,6 +90,7 @@ fi
 
 echo "Expanded PLUGIN_SEARCH_PATH: $PLUGIN_SEARCH_PATH"
 
+rm -rf "$DIR_NAME"
 "$CORDOVA" create "$DIR_NAME" "$APP_ID" "$APP_NAME" --link-to "$AH_PATH/www" || exit 1
 cd "$DIR_NAME"
 cp "$AH_PATH/template-overrides/config.xml" . || exit 1
