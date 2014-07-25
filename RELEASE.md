@@ -18,7 +18,7 @@
   - `vim package.json www/cdvah/js/app.js`
 - Build apk
   - `./createproject.sh CCAHarness`
-  - `(cd CCAHarness && ../buildharness.sh)`
+  - `(cd CCAHarness && ../build-android-release.sh)`
 - Commit Changes
   - `git commit -am "Releasing chrome-app-developer-tool v$(npm ls --depth=0 | head -n1 | sed -E 's:.*@| .*::g')"`
 - Tag release
