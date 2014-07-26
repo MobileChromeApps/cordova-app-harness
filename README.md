@@ -16,30 +16,12 @@ that can run Chrome Apps. It is based on the plugins from the
 
 ### Building from Source (iOS or Android)
 
-1. Install **cca**, our toolkit for Chrome Apps for mobile:
-
-        npm install -g cca
-
-    **Note:** You can find more on cca [here](https://github.com/MobileChromeApps/mobile-chrome-apps/blob/master/docs/Installation.md#install-the-cca-command-line-tool).
-
-2. Clone this repository:
+1. Clone this repository:
 
         git clone https://github.com/MobileChromeApps/chrome-app-developer-tool.git
 
-3. The Chrome App Developer Tool for Mobile currently requires unreleased versions of a couple of repositories.  Do the following to get the correct versions:
+2. Create a Chrome App Developer Tool project using `createproject.sh`.  For instance:
 
-        git clone https://github.com/clelland/cordova-crosswalk-engine.git
-        ( cd cordova-crosswalk-engine && git checkout plugin_with_arm_binary )
-
-        coho repo-clone -r plugins -r android
-        ( cd cordova-android && git checkout 4.0.x )
-    
-    **Note:** Instructions on installing `coho` can be found [here](https://github.com/apache/cordova-coho#how-to-clone--use-coho).
-
-4. Create a Chrome App Developer Tool project using `createproject.sh`.  For instance:
-
-        export PLUGIN_SEARCH_PATH="/Users/foo/path/to/plugins"
-        export PLATFORMS="android ios"
         ./createproject.sh ChromeAppDevTool
 
 You can get more info using `./createproject.sh --help`.
