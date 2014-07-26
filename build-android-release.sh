@@ -30,7 +30,7 @@ if [[ ! -e "$KEYSTORE_PATH" ]]; then
   exit 1
 fi
 
-cordova build android || exit 1
+./cordova build android || exit 1
 
 # Remove previous signing artifacts
 APK_PATH=$(find platforms/android -name *-debug.apk)
