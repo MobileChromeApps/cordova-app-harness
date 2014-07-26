@@ -26,8 +26,12 @@ if [[ $# -eq 0 || "$1" = "--help" ]]; then
     exit 1
 fi
 
-PLATFORMS="${PLATFORMS-android ios}"
 DIR_NAME="$1"
+if [[ "Darwin" = $(uname -s) ]]; then
+    PLATFORMS="${PLATFORMS-android ios}"
+else
+    PLATFORMS="${PLATFORMS-android}"
+fi
 AH_PATH="$(cd $(dirname $0) && pwd)"
 APP_ID="org.chromium.appdevtool"
 APP_NAME="Chrome App Developer Tool"
