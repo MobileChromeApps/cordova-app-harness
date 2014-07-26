@@ -21,7 +21,6 @@
     "gulp-util": "latest",
     "webpack": "latest",
     "cordova": "latest",
-    "cca": "latest",
-    "cordova-crosswalk-engine": "agrieve/cordova-crosswalk-engine#plugin_with_arm_binary"
+    "cca": "latest"
   }
 }
