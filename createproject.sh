@@ -189,15 +189,24 @@ set -x
 # Using CCA here to get the right search path.
 "$CORDOVA" plugin add \
     org.chromium.alarms \
+    org.chromium.audioCapture \
     org.chromium.bootstrap \
-    org.chromium.navigation \
     org.chromium.fileSystem \
+    org.chromium.gcm \
     org.chromium.i18n \
     org.chromium.identity \
     org.chromium.idle \
+    org.chromium.navigation \
     org.chromium.notifications \
     org.chromium.power \
+    org.chromium.pushMessaging \
     org.chromium.socket \
+    org.chromium.storage \
+    org.chromium.system.cpu \
+    org.chromium.system.display \
+    org.chromium.system.memory \
+    org.chromium.system.network \
+    org.chromium.videoCapture \
     org.chromium.syncFileSystem \
     org.chromium.FileChooser \
     org.chromium.polyfill.blob_constructor \
