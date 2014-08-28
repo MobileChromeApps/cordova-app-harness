@@ -59,6 +59,15 @@ Suggestions are always welcome! :)
 
 # Release Notes
 
+## v0.8.2 (August 28, 2014)
+* Make createproject.sh delete output directory and rm andrew-create-project.sh
+* Rename buildharness.sh -> build-android-release.sh
+* Make createproject.sh work even when no dependencies are set up ahead of time
+* createproject.sh: include ios by default when host=Darwin
+* Remove xwalk as a package.json dep. Use the version within cca instead
+* Update list of preloaded plugins
+* Install plugins from registry when needed
+
 ## v0.8.1 (July 11, 2014)
 * Fix exception on second launch and stop using plugin whitelist
 * Fix wrong path in createproject.sh (failed every time)
