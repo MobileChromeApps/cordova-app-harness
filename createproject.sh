@@ -112,6 +112,9 @@ $CORDOVA platform add $PLATFORM_ARGS || exit 1
 set +x
 
 if [[ "$PLATFORMS" = *android* ]]; then
+    # TODO: remove this line once the next version of cordova cli is out (current is 3.5.0-0.2.7)
+    cp "$AH_PATH"/node_modules/cca/cordova/cordova-android/framework/assets/www/cordova.js platforms/android/platform_www/
+
     cp "$AH_PATH"/template-overrides/icons/android/icon.png platforms/android/res/drawable/icon.png
     rm platforms/android/res/drawable-ldpi/icon.png
     cp "$AH_PATH"/template-overrides/icons/android/icon-mdpi.png platforms/android/res/drawable-mdpi/icon.png
@@ -130,6 +133,9 @@ if [[ "$PLATFORMS" = *android* ]]; then
           ' | node || exit $?
 fi
 if [[ "$PLATFORMS" = *ios* ]]; then
+    # TODO: remove this line once the next version of cordova cli is out (current is 3.5.0-0.2.7)
+    cp "$AH_PATH"/node_modules/cca/cordova/cordova-ios/CordovaLib/cordova.js platforms/ios/platform_www/
+
     cp -r "$AH_PATH"/template-overrides/icons/ios/* platforms/ios/*/Resources/icons
     # Set CFBundleName to "App Harness" instead of "Chrome App Harness".
     cp "$AH_PATH"/template-overrides/Info.plist platforms/ios/*/*-Info.plist
