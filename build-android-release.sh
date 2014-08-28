@@ -33,7 +33,7 @@ fi
 ./cordova build android || exit 1
 
 # Remove previous signing artifacts
-APK_PATH=$(find platforms/android -name *-debug.apk)
+APK_PATH=$((find platforms/android/out -name *-debug.apk; find platforms/android -name *-debug.apk) | head -1)
 "$AAPT_PATH" remove "$APK_PATH" META-INF/MANIFEST.MF || exit 1
 "$AAPT_PATH" remove "$APK_PATH" META-INF/CERT.SF
 "$AAPT_PATH" remove "$APK_PATH" META-INF/CERT.RSA
