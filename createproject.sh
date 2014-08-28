@@ -189,9 +189,9 @@ set -x
 # Using CCA here to get the right search path.
 "$CORDOVA" plugin add \
     org.chromium.alarms \
-    org.chromium.audioCapture \
+    org.chromium.audiocapture \
     org.chromium.bootstrap \
-    org.chromium.fileSystem \
+    org.chromium.filesystem \
     org.chromium.gcm \
     org.chromium.i18n \
     org.chromium.identity \
@@ -199,24 +199,23 @@ set -x
     org.chromium.navigation \
     org.chromium.notifications \
     org.chromium.power \
-    org.chromium.pushMessaging \
+    org.chromium.pushmessaging \
     org.chromium.socket \
     org.chromium.storage \
     org.chromium.system.cpu \
     org.chromium.system.display \
     org.chromium.system.memory \
     org.chromium.system.network \
-    org.chromium.videoCapture \
-    org.chromium.syncFileSystem \
-    org.chromium.FileChooser \
+    org.chromium.videocapture \
+    org.chromium.syncfilesystem \
+    org.chromium.filechooser \
     org.chromium.polyfill.blob_constructor \
-    org.chromium.polyfill.CustomEvent \
+    org.chromium.polyfill.customevent \
     org.chromium.polyfill.xhr_features \
     org.apache.cordova.labs.keyboard \
     org.apache.cordova.statusbar \
     org.apache.cordova.network-information \
-    --searchpath="$PLUGIN_SEARCH_PATH" \
-    --noregistry
+    --searchpath="$PLUGIN_SEARCH_PATH"
 
 "$CORDOVA" plugin add org.apache.cordova.engine.crosswalk \
     --searchpath="$PLUGIN_SEARCH_PATH" \
