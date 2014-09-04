@@ -35,6 +35,10 @@ myApp.config(['$routeProvider', function($routeProvider){
         templateUrl: 'views/about.html',
         controller: 'AboutCtrl'
     });
+    $routeProvider.when('/permission', {
+        templateUrl: 'views/permission.html',
+        controller: 'PermissionCtrl'
+    });
 }]);
 
 myApp.run(['$rootScope', 'APP_NAME', 'APP_VERSION', function($rootScope, APP_NAME, APP_VERSION){
