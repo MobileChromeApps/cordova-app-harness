@@ -20,7 +20,7 @@
     'use strict';
     /* global myApp */
     /* global chrome */
-    myApp.controller('ListCtrl', ['$location', '$rootScope', '$scope', '$routeParams', '$q', 'AppsService', 'HarnessServer', 'AppHarnessUI', 'APP_NAME', function ($location, $rootScope, $scope, $routeParams, $q, AppsService, HarnessServer, AppHarnessUI, APP_NAME) {
+    myApp.controller('ListCtrl', ['$location', '$rootScope', '$scope', '$routeParams', '$q', 'AppsService', 'HarnessServer', 'AppHarnessUI', 'Reporter', 'APP_NAME', function ($location, $rootScope, $scope, $routeParams, $q, AppsService, HarnessServer, AppHarnessUI, Reporter, APP_NAME) {
         $scope.app = null;
         $scope.ipAddresses = null;
         $scope.port = null;
@@ -64,21 +64,13 @@
             }, function() {
                 $scope.ipAddresses = [];
             }).then(function() {
-                if (!$rootScope.reportingPermission) {
-                    // We don't have reporting permission in memory, so check storage.
-                    var reportingPermissionDefault = { reportingPermission: 'empty' };
-                    var getReportingPermissionCallback = function(data) {
-                        if (data.reportingPermission === 'empty') {
-                            // Permission hasn't previously been granted or denied.  Ask for permission.
-                            $location.path('/permission');
-                        } else {
-                            // Permission has previously been granted or denied.  Set it globally.
-                            $rootScope.reportingPermission = data.reportingPermission;
-                        }
-                    };
-                    // Check local storage for reporting permission.
-                    chrome.storage.local.get(reportingPermissionDefault, getReportingPermissionCallback);
-                }
+                // Retrieve reporting permission from local storage.
+                // This will also navigate to a permission page if we don't have a record of consent or denial.
+                Reporter.fetchPermission();
+            }).then(function() {
+                // Send an "app has started" event.
+                // TODO(maxw): This is the wrong place for this.  Put it somewhere else.
+                Reporter.sendEvent('Start');
             });
         }
 
