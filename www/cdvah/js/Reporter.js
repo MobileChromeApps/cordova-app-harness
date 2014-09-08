@@ -51,7 +51,7 @@
         // This helper function sends a measurement to the given URL.
         function sendMeasurement(url) {
             var xhr = new XMLHttpRequest();
-            xhr.open('GET', url, false);
+            xhr.open('GET', url);
             xhr.send(null);
         }
 
