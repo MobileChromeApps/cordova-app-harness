@@ -74,7 +74,6 @@
                         } else {
                             // Permission has previously been granted or denied.  Set it globally.
                             $rootScope.reportingPermission = data.reportingPermission;
-                            alert('already have permission: ' + data.reportingPermission);
                         }
                     };
                     // Check local storage for reporting permission.
