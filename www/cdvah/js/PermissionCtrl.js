@@ -25,10 +25,14 @@
         // By default, the checkbox should be checked.
         $scope.formData = { reportingPermissionCheckbox: true };
 
-        // Save the permission, both globally and in local storage.
         $scope.saveReportingPermission = function() {
+            // Save the permission, both globally and in local storage.
             $rootScope.reportingPermission = $scope.formData.reportingPermissionCheckbox;
             chrome.storage.local.set({ reportingPermission: $scope.formData.reportingPermissionCheckbox });
+
+            // If we're here, we tried to report a launch, but failed since we hadn't asked for permission.
+            // So we want to try again.
+            $rootScope.appLaunchReported = false;
         };
     }]);
 })();

@@ -66,11 +66,13 @@
             }).then(function() {
                 // Retrieve reporting permission from local storage.
                 // This will also navigate to a permission page if we don't have a record of consent or denial.
-                Reporter.fetchPermission();
+                return Reporter.fetchPermission();
             }).then(function() {
-                // Send an "app has started" event.
-                // TODO(maxw): This is the wrong place for this.  Put it somewhere else.
-                Reporter.sendEvent('start');
+                // Send an "app has launched" event, if we haven't already.
+                if (!$rootScope.appLaunchReported) {
+                    Reporter.sendEvent('launched');
+                    $rootScope.appLaunchReported = true;
+                }
             });
         }
 

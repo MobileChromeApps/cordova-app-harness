@@ -33,6 +33,8 @@
         URL_BASE += '&an=' + an;
 
         function fetchPermission() {
+            var deferred = $q.defer();
+
             if ($rootScope.reportingPermission === undefined) {
                 // We don't have reporting permission in memory, so check storage.
                 var reportingPermissionDefault = { reportingPermission: 'empty' };
@@ -44,10 +46,16 @@
                         // Permission has previously been granted or denied.  Set it globally.
                         $rootScope.reportingPermission = data.reportingPermission;
                     }
+
+                    deferred.resolve();
                 };
                 // Check local storage for reporting permission.
                 chrome.storage.local.get(reportingPermissionDefault, getReportingPermissionCallback);
+            } else {
+                deferred.resolve();
             }
+
+            return deferred.promise;
         }
 
         // This helper function sends a measurement to the given URL.
