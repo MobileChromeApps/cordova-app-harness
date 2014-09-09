@@ -22,5 +22,14 @@
     /* global myApp */
     myApp.controller('AboutCtrl', ['$rootScope', '$scope', '$location', 'PluginMetadata', function($rootScope, $scope, $location, PluginMetadata) {
         $scope.plugins = PluginMetadata.availablePlugins();
+
+        // By default, the checkbox should be checked.
+        $scope.formData = { reportingPermissionCheckbox: $rootScope.reportingPermission };
+
+        // Save the permission, both globally and in local storage.
+        $scope.saveReportingPermission = function() {
+            $rootScope.reportingPermission = $scope.formData.reportingPermissionCheckbox;
+            chrome.storage.local.set({ reportingPermission: $scope.formData.reportingPermissionCheckbox });
+        };
     }]);
 })();

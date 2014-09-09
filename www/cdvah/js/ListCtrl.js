@@ -70,7 +70,7 @@
             }).then(function() {
                 // Send an "app has started" event.
                 // TODO(maxw): This is the wrong place for this.  Put it somewhere else.
-                Reporter.sendEvent('Start');
+                Reporter.sendEvent('start');
             });
         }
 

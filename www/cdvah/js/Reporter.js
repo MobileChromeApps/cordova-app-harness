@@ -22,7 +22,7 @@
         // Common parameters.
         var v = 1;
         var tid = 'UA-52080037-1';
-        var cid = 'user-id'; // TODO(maxw): We need to maintain privacy.
+        var cid = '12345'; // TODO(maxw): We need to maintain privacy.
 
         // URL base, based on the above parameters.
         var URL_BASE = 'http://www.google-analytics.com/collect?';
@@ -51,7 +51,7 @@
         // This helper function sends a measurement to the given URL.
         function sendMeasurement(url) {
             var xhr = new XMLHttpRequest();
-            xhr.open('GET', url);
+            xhr.open('GET', encodeURI(url));
             xhr.send(null);
         }
 
@@ -62,8 +62,9 @@
                 if ($rootScope.reportingPermission) {
                     var url = URL_BASE;
                     url += '&t=event';
-                    url += '&av=0.0.0'; // TODO(maxw): Make this accurate.
+                    url += '&ec=app';
                     url += '&ea=' + eventAction;
+                    url += '&av=0.0.0'; // TODO(maxw): Make this accurate.
 
                     sendMeasurement(url);
                 }
