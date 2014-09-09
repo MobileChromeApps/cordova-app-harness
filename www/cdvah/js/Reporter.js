@@ -23,12 +23,14 @@
         var v = 1;
         var tid = 'UA-52080037-1';
         var cid = '12345'; // TODO(maxw): We need to maintain privacy.
+        var an = 'CADT';
 
         // URL base, based on the above parameters.
-        var URL_BASE = 'http://www.google-analytics.com/collect?';
+        var URL_BASE = 'https://www.google-analytics.com/collect?';
         URL_BASE += 'v=' + v;
         URL_BASE += '&tid=' + tid;
         URL_BASE += '&cid=' + cid;
+        URL_BASE += '&an=' + an;
 
         function fetchPermission() {
             if ($rootScope.reportingPermission === undefined) {
@@ -64,7 +66,6 @@
                     url += '&t=event';
                     url += '&ec=app';
                     url += '&ea=' + eventAction;
-                    url += '&av=0.0.0'; // TODO(maxw): Make this accurate.
 
                     sendMeasurement(url);
                 }
