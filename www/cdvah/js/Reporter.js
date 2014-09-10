@@ -18,12 +18,13 @@
 */
 (function() {
     'use strict';
-    myApp.factory('Reporter', ['$location', '$rootScope', '$q', function($location, $rootScope, $q) {
+    myApp.factory('Reporter', ['$location', '$rootScope', '$q', 'APP_VERSION', function($location, $rootScope, $q, APP_VERSION) {
         // Common parameters.
-        var v = 1;
-        var tid = 'UA-52080037-1';
-        var cid = '12345'; // TODO(maxw): We need to maintain privacy.
-        var an = 'CADT';
+        var v = 1; // Protocol version.
+        var tid = 'UA-52080037-1'; // Tracking ID.
+        var cid = '12345'; // Client ID. TODO(maxw): We need to maintain privacy.
+        var an = 'CADT'; // App name.
+        var av = APP_VERSION; // App version.
 
         // URL base, based on the above parameters.
         var URL_BASE = 'https://www.google-analytics.com/collect?';
@@ -31,6 +32,7 @@
         URL_BASE += '&tid=' + tid;
         URL_BASE += '&cid=' + cid;
         URL_BASE += '&an=' + an;
+        URL_BASE += '&av=' + av;
 
         function fetchPermission() {
             var deferred = $q.defer();
