@@ -19,7 +19,7 @@
 (function() {
     'use strict';
     /* global myApp */
-    myApp.factory('AppsService', ['$q', 'ResourcesLoader', 'INSTALL_DIRECTORY', 'APPS_JSON', 'AppHarnessUI', function($q, ResourcesLoader, INSTALL_DIRECTORY, APPS_JSON, AppHarnessUI) {
+    myApp.factory('AppsService', ['$q', 'ResourcesLoader', 'INSTALL_DIRECTORY', 'APPS_JSON', 'AppHarnessUI', 'Reporter', function($q, ResourcesLoader, INSTALL_DIRECTORY, APPS_JSON, AppHarnessUI, Reporter) {
         // Map of type -> installer.
         var _installerFactories = Object.create(null);
         // Array of installer objects.
@@ -181,6 +181,8 @@
                         if (AppsService.onAppListChange) {
                             AppsService.onAppListChange();
                         }
+                    }).then(function() {
+                        Reporter.sendEvent('app', 'launched');
                     });
                 });
             },

@@ -70,11 +70,11 @@
         return {
             fetchPermission: fetchPermission,
 
-            sendEvent: function(eventAction) {
+            sendEvent: function(eventCategory, eventAction) {
                 if ($rootScope.reportingPermission) {
                     var url = URL_BASE;
                     url += '&t=event';
-                    url += '&ec=app';
+                    url += '&ec=' + eventCategory;
                     url += '&ea=' + eventAction;
 
                     sendMeasurement(url);

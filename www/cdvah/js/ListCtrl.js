@@ -70,7 +70,7 @@
             }).then(function() {
                 // Send an "app has launched" event, if we haven't already.
                 if (!$rootScope.appLaunchReported) {
-                    Reporter.sendEvent('launched');
+                    Reporter.sendEvent('CADT', 'launched');
                     $rootScope.appLaunchReported = true;
                 }
             });
