@@ -25,7 +25,7 @@
         // Common parameters.
         var v = 1; // Protocol version.
         var tid = 'UA-52080037-1'; // Tracking ID.
-        var cid = '12345'; // Client ID. TODO(maxw): We need to maintain privacy.
+        var cid = device.uuid; // Client ID.
         var an = 'CADT'; // App name.
         var av = APP_VERSION; // App version.
 
