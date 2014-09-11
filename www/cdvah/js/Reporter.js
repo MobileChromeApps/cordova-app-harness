@@ -18,6 +18,9 @@
 */
 (function() {
     'use strict';
+    /* global chrome */
+    /* global device */
+    /* global myApp */
     myApp.factory('Reporter', ['$location', '$rootScope', '$q', 'APP_VERSION', function($location, $rootScope, $q, APP_VERSION) {
         // Common parameters.
         var v = 1; // Protocol version.

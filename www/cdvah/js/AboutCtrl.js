@@ -18,7 +18,7 @@
 */
 (function(){
     'use strict';
-
+    /* global chrome */
     /* global myApp */
     myApp.controller('AboutCtrl', ['$rootScope', '$scope', '$location', 'PluginMetadata', function($rootScope, $scope, $location, PluginMetadata) {
         $scope.plugins = PluginMetadata.availablePlugins();

@@ -19,7 +19,6 @@
 (function(){
     'use strict';
     /* global myApp */
-    /* global chrome */
     myApp.controller('ListCtrl', ['$location', '$rootScope', '$scope', '$routeParams', '$q', 'AppsService', 'HarnessServer', 'AppHarnessUI', 'Reporter', 'APP_NAME', function ($location, $rootScope, $scope, $routeParams, $q, AppsService, HarnessServer, AppHarnessUI, Reporter, APP_NAME) {
         $scope.app = null;
         $scope.ipAddresses = null;
