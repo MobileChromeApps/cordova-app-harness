@@ -30,9 +30,9 @@ You can get more info using `./createproject.sh --help`.
 
 1. Run the Chrome App Developer Tool on a device or simulator.
 2. Navigate to your app directory and deploy using the `cca push --target=IP_ADDRESS` command.
-    
+
     **Note:** You can find more on cca [here](https://github.com/MobileChromeApps/mobile-chrome-apps/blob/master/docs/Installation.md#install-the-cca-command-line-tool).
-    
+
 That's it—you're up and running!
 
 ### Tips and Tricks
@@ -58,6 +58,10 @@ Suggestions are always welcome! :)
 * Suggestions welcome! :)
 
 # Release Notes
+
+## v0.9.0 (September 12, 2014)
+* Added basic analytics.
+* Updated app icons.
 
 ## v0.8.2 (August 28, 2014)
 * Make createproject.sh delete output directory and rm andrew-create-project.sh
