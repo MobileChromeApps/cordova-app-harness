@@ -22,4 +22,5 @@
     <content src="cdvah/harnessmenu.html" />
     <access origin="*" />
     <preference name="webView" value="org.apache.cordova.AndroidWebView" />
+    <preference name="android-minSdkVersion" value="14" />
 </widget>
