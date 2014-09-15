@@ -221,6 +221,7 @@ set -x
     org.apache.cordova.labs.keyboard \
     org.apache.cordova.statusbar \
     org.apache.cordova.network-information \
+    com.google.payments \
     --searchpath="$PLUGIN_SEARCH_PATH"
 
 "$CORDOVA" plugin add org.apache.cordova.engine.crosswalk \
