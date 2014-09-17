@@ -13,6 +13,7 @@ CADT integrates with both [Chrome Dev Editor (CDE)](https://github.com/dart-lang
 1. Enable USB debugging on your device (follow step 2 [here](http://developer.android.com/tools/device.html#setting-up)).
 2. Download an APK from [here](https://github.com/MobileChromeApps/chrome-app-developer-tool/releases).
 3. Run `adb install ChromeAppDeveloperTool-debug.apk` (of course, navigating to the appropriate directory first).
+  * **Note:** On Windows, you need [vendor-specific device drivers](http://developer.android.com/tools/extras/oem-usb.html) to connect to certain devices.
   * Alternatively, download the `.apk` using your device's browser.
 
 ### Building from Source (iOS or Android)
@@ -21,28 +22,17 @@ CADT integrates with both [Chrome Dev Editor (CDE)](https://github.com/dart-lang
 
         git clone https://github.com/MobileChromeApps/chrome-app-developer-tool.git
 
-2. Create a Chrome App Developer Tool project using `createproject.sh`.  For instance:
+2. Create a CADT project using `createproject.sh`.  For instance:
 
         ./createproject.sh ChromeAppDevTool
 
 You can get more info using `./createproject.sh --help`.
 
-## Using the Chrome App Developer Tool
+## Using CADT
 
-1. Run the Chrome App Developer Tool on a device or simulator.
-2. Navigate to your app directory and deploy using the `cca push --target=IP_ADDRESS` command.
+To start using CADT, follow these instructions for running your Chrome App for Mobile:
 
-    **Note:** You can find more on cca [here](https://github.com/MobileChromeApps/mobile-chrome-apps/blob/master/docs/Installation.md#install-the-cca-command-line-tool).
-
-That's it—you're up and running!
-
-### Tips and Tricks
-
-* Use `cca push --watch` to automatically refresh the app when a file is updated.
-* Minimize the app using a two-finger double-tap.
-* Deploying via USB:
-  * Android: Use `adb forward tcp:2424 tcp:2424`, and then run `cca push`
-  * iOS: Use `python tcprelay.py 2424:2424` (available [here](https://github.com/chid/tcprelay)), and then run `cca push`
+[Option A: Live deploy with CADT](https://github.com/MobileChromeApps/mobile-chrome-apps/blob/master/docs/Develop.md#option-a-live-deploy-with-cadt-quick-and-easy)
 
 ## Major Unimplemented Features
 
