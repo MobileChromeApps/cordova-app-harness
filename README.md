@@ -16,7 +16,7 @@ CADT integrates with both [Chrome Dev Editor (CDE)](https://github.com/dart-lang
   * **Note:** On Windows, you need [vendor-specific device drivers](http://developer.android.com/tools/extras/oem-usb.html) to connect to certain devices.
   * Alternatively, download the `.apk` using your device's browser.
 
-### Building from Source (iOS or Android)
+### Building from Source (iOS or Android - instructions for iOS / Linux)
 
 1. Clone this repository:
 
@@ -25,6 +25,9 @@ CADT integrates with both [Chrome Dev Editor (CDE)](https://github.com/dart-lang
 2. Create a CADT project using `createproject.sh`.  For instance:
 
         ./createproject.sh ChromeAppDevTool
+        cd ChromeAppDevTool
+        ./gradle-build.sh # For Android
+        cordova build ios # For iOS
 
 You can get more info using `./createproject.sh --help`.
 
