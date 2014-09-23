@@ -23,6 +23,7 @@ if [[ $# -eq 0 || "$1" = "--help" ]]; then
     echo '  PLATFORMS="android ios"'
     echo '  PLUGIN_SEARCH_PATH="path1:path2:path3"'
     echo '  DISABLE_PLUGIN_REGISTRY=1'
+    echo '  ENABLE_APK_PACKAGER=1 # Currently experimental'
     exit 1
 fi
 
@@ -224,6 +225,10 @@ set -x
 "$CORDOVA" plugin add org.apache.cordova.engine.crosswalk \
     --searchpath="$PLUGIN_SEARCH_PATH" \
     --noregistry
+
+if [[ -n "$ENABLE_APK_PACKAGER" ]]; then
+  "$CORDOVA" plugin add "$AH_PATH/apkpackager"
+fi
 
 "$CORDOVA" prepare
 ln -s "$CORDOVA" .

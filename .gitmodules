@@ -1,0 +1,3 @@
+[submodule "apkpackager"]
+	path = apkpackager
+	url = https://github.com/MobileChromeApps/apkpackager.git
