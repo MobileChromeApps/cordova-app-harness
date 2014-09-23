@@ -18,70 +18,25 @@
 */
 (function() {
     'use strict';
+    /* global analytics */
     /* global chrome */
-    /* global device */
     /* global myApp */
-    myApp.factory('Reporter', ['$location', '$rootScope', '$q', 'APP_VERSION', function($location, $rootScope, $q, APP_VERSION) {
-        // Common parameters.
-        var v = 1; // Protocol version.
-        var tid = 'UA-52080037-1'; // Tracking ID.
-        var cid = device.uuid; // Client ID.
-        var an = 'CADT'; // App name.
-        var av = APP_VERSION; // App version.
+    myApp.factory('Reporter', ['$rootScope', 'APP_VERSION', function($rootScope, APP_VERSION) {
+        // This tracking ID identifies our app for Google Analytics.
+        var trackingId = 'UA-52080037-1';
 
-        // URL base, based on the above parameters.
-        var URL_BASE = 'https://www.google-analytics.com/collect?';
-        URL_BASE += 'v=' + v;
-        URL_BASE += '&tid=' + tid;
-        URL_BASE += '&cid=' + cid;
-        URL_BASE += '&an=' + an;
-        URL_BASE += '&av=' + av;
+        // We rewrite chrome.runtime.getManifest(), since CADT doesn't have a manifest.
+        chrome.runtime.getManifest = function() {
+            return { version: APP_VERSION };
+        };
 
-        function fetchPermission() {
-            var deferred = $q.defer();
-
-            if ($rootScope.reportingPermission === undefined) {
-                // We don't have reporting permission in memory, so check storage.
-                var reportingPermissionDefault = { reportingPermission: 'empty' };
-                var getReportingPermissionCallback = function(data) {
-                    if (data.reportingPermission === 'empty') {
-                        // Permission hasn't previously been granted or denied.  Ask for permission.
-                        $location.path('/permission');
-                    } else {
-                        // Permission has previously been granted or denied.  Set it globally.
-                        $rootScope.reportingPermission = data.reportingPermission;
-                    }
-
-                    deferred.resolve();
-                };
-                // Check local storage for reporting permission.
-                chrome.storage.local.get(reportingPermissionDefault, getReportingPermissionCallback);
-            } else {
-                deferred.resolve();
-            }
-
-            return deferred.promise;
-        }
-
-        // This helper function sends a measurement to the given URL.
-        function sendMeasurement(url) {
-            var xhr = new XMLHttpRequest();
-            xhr.open('GET', encodeURI(url));
-            xhr.send(null);
-        }
+        // Chrome Platform Analytics objects.
+        var service = analytics.getService($rootScope.appTitle);
+        var tracker = service.getTracker(trackingId);
 
         return {
-            fetchPermission: fetchPermission,
-
             sendEvent: function(eventCategory, eventAction) {
-                if ($rootScope.reportingPermission) {
-                    var url = URL_BASE;
-                    url += '&t=event';
-                    url += '&ec=' + eventCategory;
-                    url += '&ea=' + eventAction;
-
-                    sendMeasurement(url);
-                }
+                tracker.sendEvent(eventCategory, eventAction);
             }
         };
     }]);

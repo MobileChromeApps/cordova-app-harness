@@ -1,0 +1,8 @@
+{
+    "lib": {
+        "www": {
+            "uri": "/Users/jleichtling/Documents/chrome-app-developer-tool/www",
+            "link": true
+        }
+    }
+}

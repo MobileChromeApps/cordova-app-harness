@@ -18,21 +18,26 @@
 */
 (function(){
     'use strict';
-
-    /* global myApp */
+    /* global analytics */
     /* global chrome */
+    /* global myApp */
     myApp.controller('PermissionCtrl', ['$rootScope', '$scope', function($rootScope, $scope) {
         // By default, the checkbox should be checked.
         $scope.formData = { reportingPermissionCheckbox: true };
 
         $scope.saveReportingPermission = function() {
-            // Save the permission, both globally and in local storage.
-            $rootScope.reportingPermission = $scope.formData.reportingPermissionCheckbox;
-            chrome.storage.local.set({ reportingPermission: $scope.formData.reportingPermissionCheckbox });
+            var getConfigCallback = function(config) {
+                // Set tracking according to the user's response.
+                var permitted = $scope.formData.reportingPermissionCheckbox;
+                config.setTrackingPermitted(permitted);
+            };
 
-            // If we're here, we tried to report a launch, but failed since we hadn't asked for permission.
-            // So we want to try again.
-            $rootScope.appLaunchReported = false;
+            // Get the config object so we can update tracking permission.
+            var service = analytics.getService($rootScope.appTitle);
+            service.getConfig().addCallback(getConfigCallback);
+
+            // Note that the app has run, so that we don't show this page again.
+            chrome.storage.local.set({ hasRun: true });
         };
     }]);
 })();

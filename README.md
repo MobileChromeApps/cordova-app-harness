@@ -2,9 +2,9 @@
 
 The Chrome App Developer Tool for Mobile (CADT) is a distribution of [Apache Cordova App Harness](https://git-wip-us.apache.org/repos/asf/cordova-app-harness.git) that can run Chrome Apps. It is based on the plugins from the [Chrome Apps for Mobile](https://github.com/MobileChromeApps/mobile-chrome-apps) project.
 
-CADT is an app for your mobile development device that makes it quick and easy to see your code in action. It provides the Cordova framework of Chrome Apps for Mobile so you can test your code by simply pushing your Chrome App assets to your mobile device (made easy with our tools), which is must faster than packaging up the entire mobile app.
+CADT is an app for your mobile development device that makes it quick and easy to see your code in action. It provides the Cordova framework of Chrome Apps for Mobile so you can test your code by simply pushing your Chrome App assets to your mobile device (made easy with our tools), which is must faster than packaging up the entire mobile app. This is called **live deploy**.
 
-CADT integrates with both [Chrome Dev Editor (CDE)](https://github.com/dart-lang/chromedeveditor) and the [Chrome Apps for Mobile command line tool](https://github.com/MobileChromeApps/mobile-chrome-apps/blob/master/docs/Installation.md#install-the-cca-command-line-tool) to bring you __live deploy__, allowing you to instantly preview the Chrome App you're editing, running right on your Android or iOS device. When you make a change to the code in your editor, you'll see it straight away on your device.
+With CADT running on your mobile device, live deploy can be initiated from your development computer with either [Chrome Dev Editor (CDE)](https://github.com/dart-lang/chromedeveditor) or the [Chrome Apps for Mobile command line tool](https://github.com/MobileChromeApps/mobile-chrome-apps/blob/master/docs/Installation.md#install-the-cca-command-line-tool), allowing you to instantly preview the Chrome App you're editing, running right on Android or iOS. When you make a change to the code in your editor, you're a quick push away from seeing it straight on your device.
 
 ## Installation
 
