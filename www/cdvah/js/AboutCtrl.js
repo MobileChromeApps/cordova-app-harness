@@ -18,18 +18,27 @@
 */
 (function(){
     'use strict';
-    /* global chrome */
+    /* global analytics */
     /* global myApp */
-    myApp.controller('AboutCtrl', ['$rootScope', '$scope', '$location', 'PluginMetadata', function($rootScope, $scope, $location, PluginMetadata) {
+    myApp.controller('AboutCtrl', ['$rootScope', '$scope', 'PluginMetadata', function($rootScope, $scope, PluginMetadata) {
         $scope.plugins = PluginMetadata.availablePlugins();
-
-        // By default, the checkbox should be checked.
-        $scope.formData = { reportingPermissionCheckbox: $rootScope.reportingPermission };
 
         // Save the permission, both globally and in local storage.
         $scope.saveReportingPermission = function() {
-            $rootScope.reportingPermission = $scope.formData.reportingPermissionCheckbox;
-            chrome.storage.local.set({ reportingPermission: $scope.formData.reportingPermissionCheckbox });
+            $scope.config.setTrackingPermitted($scope.formData.reportingPermissionCheckbox);
         };
+
+        var getConfigCallback = function(config) {
+            // Save the config object so we can update it when the user leaves this screen.
+            $scope.config = config;
+
+            // Initialize the reporting permission checkbox according to the recorded response.
+            var permitted = config.isTrackingPermitted();
+            $scope.formData = { reportingPermissionCheckbox: permitted };
+        };
+
+        // Get the config object.
+        var service = analytics.getService($rootScope.appTitle);
+        service.getConfig().addCallback(getConfigCallback);
     }]);
 })();

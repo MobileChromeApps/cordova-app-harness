@@ -19,6 +19,7 @@
 (function(){
     'use strict';
     /* global myApp */
+    /* global chrome */
     myApp.controller('ListCtrl', ['$location', '$rootScope', '$scope', '$routeParams', '$q', 'AppsService', 'HarnessServer', 'AppHarnessUI', 'Reporter', 'APP_NAME', function ($location, $rootScope, $scope, $routeParams, $q, AppsService, HarnessServer, AppHarnessUI, Reporter, APP_NAME) {
         $scope.app = null;
         $scope.ipAddresses = null;
@@ -63,12 +64,27 @@
             }, function() {
                 $scope.ipAddresses = [];
             }).then(function() {
-                // Retrieve reporting permission from local storage.
-                // This will also navigate to a permission page if we don't have a record of consent or denial.
-                return Reporter.fetchPermission();
-            }).then(function() {
-                // Send an "app has launched" event, if we haven't already.
-                if (!$rootScope.appLaunchReported) {
+                var deferred = $q.defer();
+
+                // If this is the app's first run, show the first-launch screen.
+                var hasRunDefault = { hasRun: 'empty' };
+                var getHasRunCallback = function(data) {
+                    var isFirstRun = (data.hasRun === 'empty');
+                    if (isFirstRun) {
+                        // This is the app's first run, so ask for permission!
+                        $location.path('/permission');
+                    }
+                    // If this the first run, we don't want to send any events yet, since we want to ask permission first.
+                    deferred.resolve(/* shouldSendEvent */ !isFirstRun);
+                };
+
+                // Check local storage for the first run key.
+                chrome.storage.local.get(hasRunDefault, getHasRunCallback);
+
+                return deferred.promise;
+            }).then(function(shouldSendEvent) {
+                // Send a "CADT has launched" event, if we haven't already.
+                if (shouldSendEvent && !$rootScope.appLaunchReported) {
                     Reporter.sendEvent('CADT', 'launched');
                     $rootScope.appLaunchReported = true;
                 }
