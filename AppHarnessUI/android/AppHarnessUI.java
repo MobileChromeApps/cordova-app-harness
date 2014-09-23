@@ -134,7 +134,7 @@ public class AppHarnessUI extends CordovaPlugin {
                 slaveWebView = new CustomCrosswalkWebView(this, activity);
             }
             // We'll set the plugin entries in initWebView.
-            slaveWebView.init(cordova, new ArrayList<PluginEntry>(), webView.getWhitelist(), preferences);
+            slaveWebView.init(cordova, new ArrayList<PluginEntry>(), webView.getWhitelist(), webView.getExternalWhitelist(), preferences);
         }
         {
             initWebView(slaveWebView, pluginIdWhitelist);
