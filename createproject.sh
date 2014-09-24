@@ -228,6 +228,8 @@ set -x
 
 if [[ -n "$ENABLE_APK_PACKAGER" ]]; then
   "$CORDOVA" plugin add "$AH_PATH/apkpackager"
+  mkdir -p merges/android
+  ( cd merges/android && ln -s "$AH_PATH/AndroidApkTemplate/apk-template" . )
 fi
 
 "$CORDOVA" prepare

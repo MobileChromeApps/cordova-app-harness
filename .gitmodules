@@ -1,3 +1,6 @@
 [submodule "apkpackager"]
 	path = apkpackager
 	url = https://github.com/MobileChromeApps/apkpackager.git
+[submodule "AndroidApkTemplate"]
+	path = AndroidApkTemplate
+	url = https://github.com/MobileChromeApps/AndroidApkTemplate.git
