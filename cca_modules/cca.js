@@ -25,3 +25,5 @@ exports.getDefaultPluginIds = function() {
     var pluginMap = require('cca/src/shared-with-cadt/plugin-map');
     return pluginMap.DEFAULT_PLUGINS;
 };
+
+exports.decodeBase64 = require('base64-arraybuffer').decode;

@@ -63,7 +63,8 @@
 //   - Removed support for custom dstPath within zipassetmanifest.json
 //   - Sped up zippush by doing a directory move rather than per-file moves.
 //   - Added ?movetype=file to zippush command for old per-file behaviour.
-    myApp.factory('HarnessServer', ['$q', 'HttpServer', 'ResourcesLoader', 'AppHarnessUI', 'AppsService', 'APP_VERSION', function($q, HttpServer, ResourcesLoader, AppHarnessUI, AppsService, APP_VERSION) {
+
+myApp.factory('HarnessServer', ['$q', 'HttpServer', 'ResourcesLoader', 'AppHarnessUI', 'AppsService', 'ApkPackager', 'APP_VERSION', function($q, HttpServer, ResourcesLoader, AppHarnessUI, AppsService, ApkPackager, APP_VERSION) {
 
         var PROTOCOL_VER = 3;
         var server = null;
@@ -76,6 +77,14 @@
                 }
                 return func(req, resp);
             };
+        }
+
+        function getRequiredJsonField(json, key) {
+            var ret = json[key];
+            if (!ret) {
+                throw new HttpServer.ResponseException(400, 'JSON Request missing required field: ' + key);
+            }
+            return ret;
         }
 
         function pipeRequestToFile(req, destUrl) {
@@ -104,6 +113,18 @@
                 });
             }
             return req.readChunk().then(handleChunk);
+        }
+
+        function pipeFileToResponse(srcUrl, resp) {
+            // TODO: HttpServer needs to expose a "readyForWrite" event, and we need to use FileReader
+            // so that we can stream this.
+            // Might also be able to get the file as a Blob via an XHR,
+            // but that doesn't help us to send it to socket (needs an arraybuffer).
+            return ResourcesLoader.readFileContents(srcUrl)
+            .then(function(arrayBuffer) {
+                resp.writeChunk(arrayBuffer);
+                resp.close();
+            });
         }
 
         function handleExec(req, resp) {
@@ -347,6 +368,31 @@
             });
         }
 
+        // TODO: Don't allow file pushes while packaging!
+        function handleBuildApk(req, resp) {
+            var appId = req.getQueryParam('appId');
+            var appType = req.getQueryParam('appType') || 'cordova';
+            var manifestEtag = req.getQueryParam('manifestEtag');
+            return AppsService.getAppById(appId, appType)
+            .then(function(app) {
+                if (manifestEtag && app.directoryManager.getAssetManifestEtag() !== manifestEtag) {
+                    return resp.sendJsonResponse(409, getAssetManifestJson(app));
+                }
+                var outputApkUrl = app.directoryManager.rootURL + 'built.apk';
+                return req.readAsJson()
+                .then(function(requestJson) {
+                    // TODO: Add progress to plugins & to UI via a progress notification.
+                    var storeData = getRequiredJsonField(requestJson, 'storeData');
+                    var storePassword = getRequiredJsonField(requestJson, 'storePassword');
+                    var keyAlias = getRequiredJsonField(requestJson, 'keyAlias');
+                    var keyPassword = getRequiredJsonField(requestJson, 'keyPassword');
+                    return ApkPackager.build(app, storeData, storePassword, keyAlias, keyPassword, outputApkUrl);
+                }).then(function() {
+                    return pipeFileToResponse(outputApkUrl);
+                });
+            });
+        }
+
         function handleInfo(req, resp) {
             var activeApp = AppsService.getActiveApp();
             var json = {
@@ -376,7 +422,8 @@
                 .addRoute('/deletefiles', ensureMethodDecorator('POST', handleDeleteFiles))
                 .addRoute('/putfile', ensureMethodDecorator('PUT', handlePutFile))
                 .addRoute('/zippush', ensureMethodDecorator('POST', handleZipPush))
-                .addRoute('/deleteapp', ensureMethodDecorator('POST', handleDeleteApp));
+                .addRoute('/deleteapp', ensureMethodDecorator('POST', handleDeleteApp))
+                .addRoute('/buildapk', ensureMethodDecorator('POST', handleBuildApk));
             return server.start();
         }
 
