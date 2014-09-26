@@ -19,6 +19,7 @@
  */
 
 var path = require('path');
+var fs = require('fs');
 try {
     var nopt = require('nopt');
 } catch (e) {
@@ -53,6 +54,7 @@ function usage() {
     console.log('Usage: harness-push assetmanifest [appId]');
     console.log('Usage: harness-push delete appId');
     console.log('Usage: harness-push deleteall');
+    console.log('Usage: harness-push buildapk [appId] --keyProps=android-release-keys.properties');
     console.log();
     console.log('--target defaults to localhost:2424');
     console.log('    To deploy to Android over USB: adb forward tcp:2424 tcp:2424');
@@ -60,6 +62,17 @@ function usage() {
     console.log('    To deploy to iOS over USB: python tcprelay.py 2424:2424');
     console.log('        "tcprelay.py" is available from https://github.com/chid/tcprelay');
     process.exit(1);
+}
+
+function readPropertiesFile(propsFile) {
+    var data = fs.readFileSync(propsFile, 'utf8');
+    var pattern = /(.*?)=(.*)/g;
+    var match;
+    var ret = {};
+    while ((match = pattern.exec(data))) {
+        ret[match[1]] = match[2];
+    }
+    return ret;
 }
 
 function main() {
@@ -88,6 +101,12 @@ function main() {
         .then(function() {
             return pushSession.push();
         }).then(onSuccess, onFailure);
+    } else if (cmd == 'buildapk') {
+        var propsFilePath = args.keyProps || 'android-release-keys.properties';
+        var props = readPropertiesFile(propsFilePath);
+        var keyStorePath = path.join(path.dirname(propsFilePath), props.storeFile);
+        var appId = args.argv.remain[1];
+        client.buildApk(appId, 'chrome', keyStorePath, props.storePassword, props.keyAlias, props.keyPassword).then(onSuccess, onFailure);
     } else if (cmd == 'deleteall') {
         client.deleteAllApps().then(onSuccess, onFailure);
     } else if (cmd == 'delete') {
