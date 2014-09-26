@@ -31,12 +31,12 @@
             ret.updatingStatus = null;
             ret.lastUpdated = null;
             // Asset manifest is a cache of what files have been downloaded along with their etags.
-            ret.appId = null; // Read from config.xml
+            ret.appId = appId; // Read from config.xml
             ret.appName = null; // Read from config.xml
             ret.iconURL = null; // Read from config.xml
             ret.startPage = null; // Read from config.xml
+            ret.version = null; // Read from config.xml
             ret.plugins = {}; // Read from orig-cordova_plugins.js
-            ret.appId = appId;
             ret.directoryManager = new DirectoryManager();
             return ret.directoryManager.init(installPath)
             .then(function() {
@@ -71,7 +71,9 @@
                     return els[els.length - 1];
                 }
                 var xmlDoc = new DOMParser().parseFromString(configStr, 'text/xml');
-                self.appId = xmlDoc.firstChild.getAttribute('id');
+                var widgetEl = xmlDoc.lastChild;
+                self.appId = widgetEl.getAttribute('id');
+                self.version = widgetEl.getAttribute('version');
                 var el = lastEl(xmlDoc.getElementsByTagName('content'));
                 self.startPage = el ? el.getAttribute('src') : 'index.html';
                 el = lastEl(xmlDoc.getElementsByTagName('icon'));
@@ -81,6 +83,7 @@
                 }
                 el = lastEl(xmlDoc.getElementsByTagName('name'));
                 self.appName = el ? el.textContent : null;
+                return xmlDoc;
             });
         };
 
@@ -118,13 +121,17 @@
             return $q.when();
         };
 
+        Installer.prototype.getWwwDir = function() {
+            return this.directoryManager.rootURL + 'www/';
+        };
+
         Installer.prototype.launch = function() {
             var self = this;
             return $q.when(this._prepareForLaunch())
             .then(function() {
                 var urlutil = cordova.require('cordova/urlutil');
                 var harnessWwwUrl = urlutil.makeAbsolute(location.pathname).replace(/\/[^\/]*\/[^\/]*$/, '/');
-                var appWwwUrl = self.directoryManager.rootURL + 'www/';
+                var appWwwUrl = self.getWwwDir();
                 var startLocation = urlutil.makeAbsolute(self.startPage).replace('/cdvah/', '/');
                 var realStartLocation = startLocation.replace(harnessWwwUrl, appWwwUrl);
                 var useRemapper = platformId == 'android';
