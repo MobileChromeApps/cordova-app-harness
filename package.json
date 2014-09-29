@@ -2,9 +2,6 @@
   "name": "chrome-app-developer-tool",
   "version": "0.9.1-dev",
   "description": "The Chrome App Developer Tool for Mobile (\"App Dev Tool\" for short) is a distribution of [Apache Cordova App Harness](https://git-wip-us.apache.org/repos/asf/cordova-app-harness.git) that can run Chrome Apps. It is based on the plugins from the [cca](https://github.com/MobileChomeApps/mobile-chrome-apps) toolkit.",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "repository": {
     "type": "git",
     "url": "git://github.com/MobileChromeApps/chrome-app-developer-tool.git"
@@ -17,7 +14,7 @@
   "homepage": "https://github.com/MobileChromeApps/chrome-app-developer-tool",
   "devDependencies": {
     "base64-arraybuffer": "^0.1.2",
-    "cca": "latest",
+    "cca-manifest-logic": "0.0.1",
     "cordova": "latest",
     "gulp": "latest",
     "gulp-jshint": "~1.6",

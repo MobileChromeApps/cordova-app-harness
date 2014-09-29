@@ -130,7 +130,7 @@
         }
 
         CrxInstaller.prototype.getPluginMetadata = function() {
-            var pluginIds = cca.analyseManifest(this.mergedManifestJson_).pluginsToBeInstalled.concat(cca.getDefaultPluginIds());
+            var pluginIds = cca.analyseManifest(this.mergedManifestJson_).pluginsToBeInstalled;
             pluginIds = expandPluginIdsWithDeps(pluginIds);
             var harnessPluginMetadata = cordova.require('cordova/plugin_list').metadata;
             var ret = {};

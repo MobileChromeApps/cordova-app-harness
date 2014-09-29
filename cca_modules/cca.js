@@ -17,13 +17,5 @@
 */
 
 
-exports.parseAndMergeManifests = require('cca/src/shared-with-cadt/parse-and-merge-manifests');
-exports.analyseManifest = require('cca/src/shared-with-cadt/analyse-manifest');
-exports.updateConfigXml = require('cca/src/shared-with-cadt/update-config-xml');
-
-exports.getDefaultPluginIds = function() {
-    var pluginMap = require('cca/src/shared-with-cadt/plugin-map');
-    return pluginMap.DEFAULT_PLUGINS;
-};
-
-exports.decodeBase64 = require('base64-arraybuffer').decode;
+module.exports = require('cca-manifest-logic');
+module.exports.decodeBase64 = require('base64-arraybuffer').decode;
