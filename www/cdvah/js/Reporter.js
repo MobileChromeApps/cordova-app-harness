@@ -37,6 +37,10 @@
         return {
             sendEvent: function(eventCategory, eventAction) {
                 tracker.sendEvent(eventCategory, eventAction);
+            },
+
+            sendPageView: function(pageName) {
+                tracker.sendAppView(pageName);
             }
         };
     }]);

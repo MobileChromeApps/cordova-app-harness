@@ -21,7 +21,7 @@
     /* global analytics */
     /* global chrome */
     /* global myApp */
-    myApp.controller('PermissionCtrl', ['$rootScope', '$scope', function($rootScope, $scope) {
+    myApp.controller('PermissionCtrl', ['$rootScope', '$scope', 'Reporter', function($rootScope, $scope, Reporter) {
         // By default, the checkbox should be checked.
         $scope.formData = { reportingPermissionCheckbox: true };
 
@@ -30,6 +30,9 @@
                 // Set tracking according to the user's response.
                 var permitted = $scope.formData.reportingPermissionCheckbox;
                 config.setTrackingPermitted(permitted);
+
+                // Track the page view.
+                Reporter.sendPageView('permission');
             };
 
             // Get the config object so we can update tracking permission.

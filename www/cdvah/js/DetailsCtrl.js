@@ -20,7 +20,7 @@
     'use strict';
 
     /* global myApp */
-    myApp.controller('DetailsCtrl', ['$rootScope', '$scope', '$location', 'AppsService', '$routeParams', function($rootScope, $scope, $location, AppsService, $routeParams) {
+    myApp.controller('DetailsCtrl', ['$rootScope', '$scope', '$location', 'AppsService', '$routeParams', 'Reporter', function($rootScope, $scope, $location, AppsService, $routeParams, Reporter) {
         AppsService.getAppList().then(function(appsList) {
             if ($routeParams.index >= 0) {
                 $scope.app = appsList[$routeParams.index];
@@ -29,6 +29,9 @@
                 $location.path('/');
             }
             //$scope.$apply();
+        }).then(function() {
+            // Track the page view.
+            Reporter.sendPageView('details');
         });
     }]);
 })();

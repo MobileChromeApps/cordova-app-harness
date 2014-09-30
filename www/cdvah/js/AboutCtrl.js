@@ -20,7 +20,10 @@
     'use strict';
     /* global analytics */
     /* global myApp */
-    myApp.controller('AboutCtrl', ['$rootScope', '$scope', 'PluginMetadata', function($rootScope, $scope, PluginMetadata) {
+    myApp.controller('AboutCtrl', ['$rootScope', '$scope', 'PluginMetadata', 'Reporter', function($rootScope, $scope, PluginMetadata, Reporter) {
+        // Track the page view.
+        Reporter.sendPageView('about');
+
         $scope.plugins = PluginMetadata.availablePlugins();
 
         // Save the permission, both globally and in local storage.

@@ -75,18 +75,23 @@
                         $location.path('/permission');
                     }
                     // If this the first run, we don't want to send any events yet, since we want to ask permission first.
-                    deferred.resolve(/* shouldSendEvent */ !isFirstRun);
+                    deferred.resolve(/* shouldSendEvents */ !isFirstRun);
                 };
 
                 // Check local storage for the first run key.
                 chrome.storage.local.get(hasRunDefault, getHasRunCallback);
 
                 return deferred.promise;
-            }).then(function(shouldSendEvent) {
-                // Send a "CADT has launched" event, if we haven't already.
-                if (shouldSendEvent && !$rootScope.appLaunchReported) {
-                    Reporter.sendEvent('CADT', 'launched');
-                    $rootScope.appLaunchReported = true;
+            }).then(function(shouldSendEvents) {
+                if (shouldSendEvents) {
+                    // Track the page view.
+                    Reporter.sendPageView('list');
+
+                    // Send a "CADT has launched" event, if we haven't already.
+                    if (!$rootScope.appLaunchReported) {
+                        Reporter.sendEvent('CADT', 'launched');
+                        $rootScope.appLaunchReported = true;
+                    }
                 }
             });
         }
