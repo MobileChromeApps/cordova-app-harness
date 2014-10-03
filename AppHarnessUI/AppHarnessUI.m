@@ -122,7 +122,8 @@
         [_slaveCordovaViewController didMoveToParentViewController:self.viewController];
         _slaveVisible = YES;
     } else {
-        NSLog(@"AppHarnessUI.create: already exists");
+        // We already have a webview created, so just reload it.
+        [[_slaveCordovaViewController webView] reload];
     }
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
