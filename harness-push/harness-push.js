@@ -54,7 +54,7 @@ function usage() {
     console.log('Usage: harness-push assetmanifest [appId]');
     console.log('Usage: harness-push delete appId');
     console.log('Usage: harness-push deleteall');
-    console.log('Usage: harness-push buildapk [appId] --keyProps=android-release-keys.properties');
+    console.log('Usage: harness-push buildapk [appId] [--output=output.apk] [--keyProps=android-release-keys.properties]');
     console.log();
     console.log('--target defaults to localhost:2424');
     console.log('    To deploy to Android over USB: adb forward tcp:2424 tcp:2424');
@@ -104,9 +104,27 @@ function main() {
     } else if (cmd == 'buildapk') {
         var propsFilePath = args.keyProps || 'android-release-keys.properties';
         var props = readPropertiesFile(propsFilePath);
-        var keyStorePath = path.join(path.dirname(propsFilePath), props.storeFile);
+        var certificatePath = props['certificateFile'];
+        var privateKeyPath = props['privateKeyFile'];
+        var keyStorePath = props['storeFile'];
         var appId = args.argv.remain[1];
-        client.buildApk(appId, 'chrome', keyStorePath, props.storePassword, props.keyAlias, props.keyPassword).then(onSuccess, onFailure);
+        var outputPath = args.output || 'output.apk';
+        var signingOpts = {
+            keyPassword: props['keyPassword']
+        };
+        if (certificatePath && privateKeyPath) {
+            signingOpts.certificatePath = path.join(path.dirname(propsFilePath), certificatePath);
+            signingOpts.privateKeyPath = path.join(path.dirname(propsFilePath), privateKeyPath);
+        } else if (keyStorePath) {
+            signingOpts.keyStorePath = path.join(path.dirname(propsFilePath), keyStorePath);
+            signingOpts.storeType = props['storeType'];
+            signingOpts.storePassword = props['storePassword'];
+            signingOpts.keyAlias = props['keyAlias'];
+        } else {
+            throw new Error('No key signing information within ' + propsFilePath);
+        }
+
+        client.buildApk(appId, 'chrome', signingOpts, outputPath).then(onSuccess, onFailure);
     } else if (cmd == 'deleteall') {
         client.deleteAllApps().then(onSuccess, onFailure);
     } else if (cmd == 'delete') {

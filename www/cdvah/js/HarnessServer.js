@@ -396,11 +396,18 @@ myApp.factory('HarnessServer', ['$q', 'HttpServer', 'ResourcesLoader', 'AppHarne
                 return req.readAsJson()
                 .then(function(requestJson) {
                     // TODO: Add progress to plugins & to UI via a progress notification.
-                    var storeData = getRequiredJsonField(requestJson, 'storeData');
-                    var storePassword = getRequiredJsonField(requestJson, 'storePassword');
-                    var keyAlias = getRequiredJsonField(requestJson, 'keyAlias');
-                    var keyPassword = getRequiredJsonField(requestJson, 'keyPassword');
-                    return ApkPackager.build(app, storeData, storePassword, keyAlias, keyPassword, outputApkUrl);
+                    var signingOpts = {};
+                    signingOpts['keyPassword'] = getRequiredJsonField(requestJson, 'keyPassword');
+                    if (requestJson['privateKeyData']) {
+                        signingOpts.privateKeyData = requestJson['privateKeyData'];
+                        signingOpts.certificateData = getRequiredJsonField(requestJson, 'publicKeyData');
+                    } else {
+                        signingOpts.storeData = getRequiredJsonField(requestJson, 'storeData');
+                        signingOpts.storeType = getRequiredJsonField(requestJson, 'storeType');
+                        signingOpts.storePassword = getRequiredJsonField(requestJson, 'storePassword');
+                        signingOpts.keyAlias = getRequiredJsonField(requestJson, 'keyAlias');
+                    }
+                    return ApkPackager.build(app, signingOpts, outputApkUrl);
                 }).then(function() {
                     return pipeFileToResponse(outputApkUrl, resp);
                 });
