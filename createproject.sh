@@ -123,6 +123,7 @@ if [[ "$PLATFORMS" = *android* ]]; then
     cp "$AH_PATH"/template-overrides/android-debug-keys.properties .
     cp "$AH_PATH"/template-overrides/CCAHarness-debug.keystore .
     cp "$AH_PATH"/template-overrides/gradle-build.sh .
+    cp "$AH_PATH"/template-overrides/gradle-run.sh .
 
     echo 'var fs = require("fs");
           var fname = "platforms/android/src/org/chromium/appdevtool/ChromeAppDeveloperTool.java";
