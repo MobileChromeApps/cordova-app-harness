@@ -28,12 +28,12 @@
     <div class="app-button-x" ng-click="removeApp(app, $event)"></div>
     <div class="app-container-body">
       <div class="app-icon-container" ng-click="launchApp(app)">
-        <img ng-src="{{app.iconURL}}" class="app-icon" ng-if="!!app.iconURL">
-        <div class="app-icon app-icon-missing" ng-show="!app.iconURL">No Icon</div>
+        <img ng-src="{{app.getIconUrl()}}" class="app-icon" ng-if="!!app.getIconUrl()">
+        <div class="app-icon app-icon-missing" ng-show="!app.getIconUrl()">No Icon</div>
       </div>
       <div class="app-text-container-1">
         <div class="app-text-container-2">
-          <div class="app-title">{{app.appName || app.appId}} <span class="app-version">{{app.version}}</span></div>
+          <div class="app-title">{{app.getAppName() || getConfigXmlId() || app.appId}} <span class="app-version">{{app.getVersion()}}</span></div>
           <div class="app-last-updated" ng-show="app.updatingStatus === null">Last updated: <span am-time-ago="app.lastUpdated"></span></div>
           <div class="app-last-updated" ng-show="app.updatingStatus !== null">Update in progress: {{app.updatingStatus}}%</div>
           <div class="app-plugin-status">Plugins:

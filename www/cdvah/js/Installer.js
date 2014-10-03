@@ -28,14 +28,11 @@
         Installer.prototype.init = function(installPath, /* optional */ appId) {
             var ret = this;
             ret.appType = ret.constructor.type;
-            ret.updatingStatus = null;
+            ret.appId = appId || 'default'; // Stored in apps.json. May be different from id within config.xml.
             ret.lastUpdated = null;
-            // Asset manifest is a cache of what files have been downloaded along with their etags.
-            ret.appId = appId; // Read from config.xml
-            ret.appName = null; // Read from config.xml
-            ret.iconURL = null; // Read from config.xml
-            ret.startPage = null; // Read from config.xml
-            ret.version = null; // Read from config.xml
+            // Derived values:
+            ret.updatingStatus = null;
+            ret.configXmlDom = null; // Read from config.xml
             ret.plugins = {}; // Read from orig-cordova_plugins.js
             ret.directoryManager = new DirectoryManager();
             return ret.directoryManager.init(installPath)
@@ -50,7 +47,7 @@
             return this.init(json['installPath'], json['appId'])
             .then(function(ret) {
                 ret.lastUpdated = json['lastUpdated'] && new Date(json['lastUpdated']);
-                return self.readConfigXml();
+                return self.readConfigXml_();
             });
         };
 
@@ -63,28 +60,75 @@
             };
         };
 
-        Installer.prototype.readConfigXml = function() {
+        Installer.prototype.readConfigXml_ = function() {
             var self = this;
             return ResourcesLoader.readFileContents(this.directoryManager.rootURL + 'config.xml')
             .then(function(configStr) {
-                function lastEl(els) {
-                    return els[els.length - 1];
-                }
-                var xmlDoc = new DOMParser().parseFromString(configStr, 'text/xml');
-                var widgetEl = xmlDoc.lastChild;
-                self.appId = widgetEl.getAttribute('id');
-                self.version = widgetEl.getAttribute('version');
-                var el = lastEl(xmlDoc.getElementsByTagName('content'));
-                self.startPage = el ? el.getAttribute('src') : 'index.html';
-                el = lastEl(xmlDoc.getElementsByTagName('icon'));
-                self.iconURL = el ? el.getAttribute('src') : null;
-                if (self.iconURL) {
-                    self.iconURL = self.directoryManager.rootURL + self.iconURL;
-                }
-                el = lastEl(xmlDoc.getElementsByTagName('name'));
-                self.appName = el ? el.textContent : null;
-                return xmlDoc;
+                self.configXmlDom = new DOMParser().parseFromString(configStr, 'text/xml');
             });
+        };
+
+        function lastEl(els) {
+            return els[els.length - 1];
+        }
+
+        Installer.prototype.getAppName = function() {
+            if (!this.configXmlDom) {
+                return '';
+            }
+            var el = lastEl(this.configXmlDom.getElementsByTagName('name'));
+            return el && el.textContent;
+        };
+
+        Installer.prototype.getIconUrl = function() {
+            if (!this.configXmlDom) {
+                return '';
+            }
+            var el = lastEl(this.configXmlDom.getElementsByTagName('icon'));
+            var ret = el && el.getAttribute('src');
+            // Don't set icon until the file exists.
+            if (!ret || !this.directoryManager.getAssetEtag(ret)) {
+                return '';
+            }
+            ret = this.directoryManager.rootURL + ret;
+            return ret;
+        };
+
+        Installer.prototype.getStartPage = function() {
+            var el = lastEl(this.configXmlDom.getElementsByTagName('content'));
+            var ret = el ? el.getAttribute('src') : 'index.html';
+            return ret;
+        };
+
+        Installer.prototype.getVersion = function() {
+            if (!this.configXmlDom) {
+                return '';
+            }
+            var widgetEl = this.configXmlDom.lastChild;
+            return widgetEl.getAttribute('version');
+        };
+
+        Installer.prototype.getConfigXmlId = function() {
+            if (!this.configXmlDom) {
+                return '';
+            }
+            var widgetEl = this.configXmlDom.lastChild;
+            return widgetEl.getAttribute('id');
+        };
+
+        Installer.prototype.getAndroidVersionCode = function() {
+            // copied from android_parser.js
+            function defaultVersionCode(version) {
+                var nums = version.split('-')[0].split('.').map(Number);
+                var versionCode = nums[0] * 10000 + nums[1] * 100 + nums[2];
+                return versionCode;
+            }
+
+            var versionCode = this.configXmlDom.lastChild.getAttribute('android-versionCode');
+            if (versionCode) {
+                return +versionCode;
+            }
+            return defaultVersionCode(this.getVersion() || '0.0.1');
         };
 
         Installer.prototype.updateCordovaPluginsFile = function(etag) {
@@ -100,7 +144,7 @@
 
         Installer.prototype.onFileAdded = function(path) {
             if (path == 'config.xml') {
-                return this.readConfigXml();
+                return this.readConfigXml_();
             }
         };
 
@@ -132,7 +176,7 @@
                 var urlutil = cordova.require('cordova/urlutil');
                 var harnessWwwUrl = urlutil.makeAbsolute(location.pathname).replace(/\/[^\/]*\/[^\/]*$/, '/');
                 var appWwwUrl = self.getWwwDir();
-                var startLocation = urlutil.makeAbsolute(self.startPage).replace('/cdvah/', '/');
+                var startLocation = urlutil.makeAbsolute(self.getStartPage()).replace('/cdvah/', '/');
                 var realStartLocation = startLocation.replace(harnessWwwUrl, appWwwUrl);
                 var useRemapper = platformId == 'android';
 

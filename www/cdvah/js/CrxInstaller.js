@@ -36,7 +36,7 @@
         '</widget>\n';
 
 
-    function generateConfigXmlData(appId, manifest) {
+    function generateConfigXmlData(manifest) {
         // TODO Share icon code with CCA.
         var iconSrc = '';
         var iconSize = 0;
@@ -104,7 +104,7 @@
 
         CrxInstaller.prototype.updateDerivedFiles = function() {
             var self = this;
-            var contents = generateConfigXmlData(this.appId, this.mergedManifestJson_);
+            var contents = generateConfigXmlData(this.mergedManifestJson_);
             var combinedEtag = this.directoryManager.getAssetEtag('www/manifest.json') + this.directoryManager.getAssetEtag('www/manifest.mobile.json');
             return this.directoryManager.writeFile(contents, 'config.xml', combinedEtag)
             .then(function() {
