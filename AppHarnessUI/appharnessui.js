@@ -33,9 +33,12 @@ exports.create = function(url, serviceNameWhitelist, webViewType, win) {
     exec(win, null, 'AppHarnessUI', 'create', [url, serviceNameWhitelist, webViewType]);
 };
 
-exports.reload = function(win) {
-    exec(win, null, 'AppHarnessUI', 'reload', []);
-}
+exports.reload = function(url, serviceNameWhitelist, webViewType, win) {
+    if (webViewType != "system" && webViewType != "crosswalk") {
+        return;
+    }
+    exec(win, null, 'AppHarnessUI', 'reload', [url, serviceNameWhitelist, webViewType]);
+};
 
 exports.destroy = function(win) {
     exec(win, null, 'AppHarnessUI', 'destroy', []);
