@@ -33,6 +33,10 @@ exports.create = function(url, serviceNameWhitelist, webViewType, win) {
     exec(win, null, 'AppHarnessUI', 'create', [url, serviceNameWhitelist, webViewType]);
 };
 
+exports.reload = function(win) {
+    exec(win, null, 'AppHarnessUI', 'reload', []);
+}
+
 exports.destroy = function(win) {
     exec(win, null, 'AppHarnessUI', 'destroy', []);
 };

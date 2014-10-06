@@ -53,6 +53,7 @@ public class AppHarnessUI extends CordovaPlugin {
     boolean slaveVisible;
     CallbackContext eventsCallback;
     LinearLayoutSoftKeyboardDetect layoutView;
+    String startUrl;
 
     public boolean isSlaveVisible() {
         return slaveVisible;
@@ -75,6 +76,12 @@ public class AppHarnessUI extends CordovaPlugin {
             this.cordova.getActivity().runOnUiThread(new Runnable() {
                 public void run() {
                     create(url, pluginIdWhitelistAsSet, webViewType, callbackContext);
+                }
+            });
+        } else if ("reload".equals(action)) {
+            this.cordova.getActivity().runOnUiThread(new Runnable() {
+                public void run() {
+                    reload(callbackContext);
                 }
             });
         } else if ("destroy".equals(action)) {
@@ -123,6 +130,7 @@ public class AppHarnessUI extends CordovaPlugin {
     }
 
     private void create(String url, Set<String> pluginIdWhitelist, String webViewType, CallbackContext callbackContext) {
+        startUrl = url;
         CordovaActivity activity = (CordovaActivity)cordova.getActivity();
 
         if (slaveWebView != null) {
@@ -154,6 +162,18 @@ public class AppHarnessUI extends CordovaPlugin {
         callbackContext.success();
     }
 
+    private void reload(CallbackContext callbackContext) {
+        if (slaveWebView == null) {
+            Log.w(LOG_TAG, "reload: no webview exists");
+        } else if (startUrl == null) {
+            Log.w(LOG_TAG, "reload: no recorded start url");
+        } else {
+            slaveWebView.clearCache(true);
+            slaveWebView.loadUrl(startUrl);
+        }
+        callbackContext.success();
+    }
+
     private void destroy(CallbackContext callbackContext) {
         if (slaveWebView == null) {
             Log.w(LOG_TAG, "destroy: already destroyed");
@@ -167,6 +187,7 @@ public class AppHarnessUI extends CordovaPlugin {
             slaveWebView.getView().setScaleY(1.0f);
             slaveWebView.setStealTapEvents(false);
             slaveVisible = false;
+            startUrl = null;
             sendEvent("destroyed");
         }
         if (eventsCallback != null) {
