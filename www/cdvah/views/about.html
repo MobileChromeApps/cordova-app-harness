@@ -17,8 +17,8 @@
   under the License.
 -->
 
-<div class="topcoat-list__container">
-    <h3 class="topcoat-list__header">About {{appTitle}}</h3>
+<div>
+    <h3>About {{appTitle}}</h3>
 <p>
     The Chrome App Developer Tool aids in the development of Chrome Apps for Mobile. It can be used to run Chrome Apps for Mobile with the Chrome Dev Editor, or with the cca tool, for faster development and easier debugging.
 </p>
@@ -26,29 +26,29 @@
 For more information, see the source and documentation <a href="http://goo.gl/2IfFPc">here</a>.
 </p>
 </div>
-<div class="topcoat-list__container">
-    <h3 class="topcoat-list__header">Licences</h3>
+<div>
+    <h3>Licences</h3>
     <p>{{appTitle}} is open source software, released under the Apache License, Version 2.0</p>
     <p>This product contains other open source software. See the License files in <a href="https://github.com/MobileChromeApps/chrome-app-developer-tool">the source tree</a> for full details.</p>
     <p>This version of {{appTitle}} uses the Crosswalk project, which is released under a <a href="https://github.com/crosswalk-project/crosswalk/blob/master/LICENSE">BSD license</a>, and uses Chromium, also released under a <a href="http://src.chromium.org/viewvc/chrome/trunk/src/LICENSE">BSD license</a>.</p>
 </div>
 
-<div class="topcoat-list__container">
-    <h3 class="topcoat-list__header">Available Plugins: {{ plugins.length }}</h3>
-    <ul class="topcoat-list">
-        <li class="topcoat-list__item plugin-list-item" ng-repeat="plugin in plugins">
+<div>
+    <h3>Available Plugins: {{ plugins.length }}</h3>
+    <ul>
+        <li ng-repeat="plugin in plugins">
             <div><strong>{{ plugin.id }}</strong>: {{ plugin.version }}</div>
         </li>
     </ul>
 </div>
 
-<div class="topcoat-list__container">
-    <h3 class="topcoat-list__header">Usage Statistics and Crash Reports</h3>
+<div>
+    <h3>Usage Statistics and Crash Reports</h3>
     <form name="permissionForm">
         <input type="checkbox" ng-model="formData.reportingPermissionCheckbox">Help make {{appTitle}} better by automatically sending usage statistics and crash reports to Google. This information will be used in accordance with the <a href="http://www.google.com/policies/privacy/">Google Privacy Policy</a>.
     </form>
 </div>
 <br/>
 <div class="buttons">
-    <a href="#/"><button class="topcoat-button" ng-click="saveReportingPermission()">Back</button></a>
+    <a href="#/"><button>Back</button></a>
 </div>
