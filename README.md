@@ -1,6 +1,6 @@
 # Chrome App Developer Tool for Mobile (CADT)
 
-![Using CDE, cca, and CADT to develop Chrome Apps for Mobile](docs/images/cde-cadt-diagram.png)
+![Using CDE, cca, and CADT to develop Chrome Apps for Mobile](cde-cadt-diagram.png)
 
 The Chrome App Developer Tool for Mobile (CADT) is a distribution of [Apache Cordova App Harness](https://git-wip-us.apache.org/repos/asf/cordova-app-harness.git) that can run Chrome Apps. It is based on the plugins from the [Chrome Apps for Mobile](https://github.com/MobileChromeApps/mobile-chrome-apps) project.
 
