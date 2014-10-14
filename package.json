@@ -14,10 +14,11 @@
   "homepage": "https://github.com/MobileChromeApps/chrome-app-developer-tool",
   "devDependencies": {
     "base64-arraybuffer": "^0.1.2",
-    "cca-manifest-logic": "0.0.1",
     "cca": "latest",
+    "cca-manifest-logic": "0.0.1",
     "cordova": "latest",
     "gulp": "latest",
+    "gulp-autoprefixer": "^1.0.1",
     "gulp-jshint": "~1.6",
     "gulp-util": "latest",
     "webpack": "latest"

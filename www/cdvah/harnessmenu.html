@@ -20,6 +20,7 @@
 <html>
     <head>
         <meta name="viewport" content="width=device-width, user-scalable=no">
+        <link rel="stylesheet" type="text/css" href="generated/style.css" />
         <script>THIS_IS_APP_HARNESS=true</script>
         <script type="text/javascript" src="../cordova.js"></script>
         <script type="text/javascript" src="js/libs/slice.js"></script>
@@ -48,10 +49,7 @@
         <script type="text/javascript" src="js/ApkPackager.js"></script>
         <script type="text/javascript" src="generated/cca.bundle.js"></script>
         <script type="text/javascript" src="generated/installedPluginsMetadata.js"></script>
-        <link rel="stylesheet" type="text/css" href="css/style.css" />
     </head>
-    <body ng-cloak>
-        <div class="title">{{appTitle}} <span class="title-version">v{{appVersion}}</span></div>
-        <div ng-view></div>
+    <body ng-cloak ng-view class="vflex-container">
     </body>
 </html>

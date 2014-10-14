@@ -17,15 +17,19 @@
   under the License.
 -->
 
+<div class="title">{{appTitle}} <span class="title-version">v{{appVersion}}</span></div>
+<div class="vflex-container flex-justify-around flex-1" style="font-size:1.15rem; margin:0 24px">
 <div>
-    <h3>Welcome!</h3>
-    <p>The Chrome App Developer Tool aids in the development of Chrome Apps for Mobile. It can be used to run Chrome Apps for Mobile with the Chrome Dev Editor, or with the cca tool, for faster development and easier debugging.</p>
-    <h3>Usage Statistics and Crash Reports</h3>
-    <form name="permissionForm">
-        <input type="checkbox" ng-model="formData.reportingPermissionCheckbox">Help make {{appTitle}} better by automatically sending usage statistics and crash reports to Google. This information will be used in accordance with the <a href="http://www.google.com/policies/privacy/">Google Privacy Policy</a>.
-    </form>
+  <h3>Welcome!</h3>
+  <p>The Chrome App Developer Tool aids in the development of Chrome Apps for Mobile. It can be used to run Chrome Apps for Mobile with the Chrome Dev Editor, or with the cca tool, for faster development and easier debugging.</p>
 </div>
-<br />
-<div class="buttons">
-    <a href="#/"><button ng-click="saveReportingPermission()">Done</button></a>
+<div class="hflex-container">
+  <h3>Usage Statistics and Crash Reports</h3>
+  <input type="checkbox" style="width:16px;height:16px" ng-model="formData.reportingPermissionCheckbox">
+  <div class="flex-1" style="text-align:justify;margin:0 4px 0 14px">Help make {{appTitle}} better by automatically sending usage statistics and crash reports to Google. This information will be used in accordance with the <a href="http://www.google.com/policies/privacy/">Google Privacy Policy</a>.
+  </div>
+</div>
+</div>
+<div style="margin:20px">
+    <button ng-click="saveReportingPermission()" class="big-button">Get Started</button>
 </div>

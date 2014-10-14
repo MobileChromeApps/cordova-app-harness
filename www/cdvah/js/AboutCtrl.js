@@ -20,15 +20,17 @@
     'use strict';
     /* global analytics */
     /* global myApp */
-    myApp.controller('AboutCtrl', ['$rootScope', '$scope', 'PluginMetadata', 'Reporter', function($rootScope, $scope, PluginMetadata, Reporter) {
+    myApp.controller('AboutCtrl', ['$rootScope', '$scope', '$location', 'PluginMetadata', 'Reporter', function($rootScope, $scope, $location, PluginMetadata, Reporter) {
         // Track the page view.
         Reporter.sendPageView('about');
 
-        $scope.plugins = PluginMetadata.availablePlugins();
+        $scope.plugins = PluginMetadata.availablePlugins().filter(function(p) {
+            return !/UrlRemap|appharness/.exec(p.id);
+        });
 
-        // Save the permission, both globally and in local storage.
-        $scope.saveReportingPermission = function() {
-            $scope.config.setTrackingPermitted($scope.formData.reportingPermissionCheckbox);
+        $scope.goBack = function() {
+            $scope.config && $scope.config.setTrackingPermitted($scope.formData.reportingPermissionCheckbox);
+            $location.path('/');
         };
 
         var getConfigCallback = function(config) {

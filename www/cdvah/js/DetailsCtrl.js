@@ -21,10 +21,12 @@
 
     /* global myApp */
     myApp.controller('DetailsCtrl', ['$rootScope', '$scope', '$location', 'AppsService', '$routeParams', 'Reporter', function($rootScope, $scope, $location, AppsService, $routeParams, Reporter) {
+        $scope.goBack = function() {
+            $location.path('/');
+        };
         AppsService.getAppList().then(function(appsList) {
             if ($routeParams.index >= 0) {
                 $scope.app = appsList[$routeParams.index];
-                $rootScope.appTitle = 'Details for ' + $scope.app.appId;
             } else {
                 $location.path('/');
             }

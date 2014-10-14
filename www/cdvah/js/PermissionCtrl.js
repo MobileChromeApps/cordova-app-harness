@@ -21,7 +21,7 @@
     /* global analytics */
     /* global chrome */
     /* global myApp */
-    myApp.controller('PermissionCtrl', ['$rootScope', '$scope', 'Reporter', function($rootScope, $scope, Reporter) {
+    myApp.controller('PermissionCtrl', ['$rootScope', '$scope', '$location', 'Reporter', function($rootScope, $scope, $location, Reporter) {
         // By default, the checkbox should be checked.
         $scope.formData = { reportingPermissionCheckbox: true };
 
@@ -41,6 +41,7 @@
 
             // Note that the app has run, so that we don't show this page again.
             chrome.storage.local.set({ hasRun: true });
+            $location.path('/');
         };
     }]);
 })();

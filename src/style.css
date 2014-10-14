@@ -21,7 +21,7 @@
     font-family: 'Roboto Condensed';
     font-style: normal;
     font-weight: 400;
-    src: local('Roboto Condensed Regular'), local('RobotoCondensed-Regular'), url(Zd2E9abXLFGSr9G3YK2MsNxB8OB85xaNTJvVSB9YUjQ.woff) format('woff');
+    src: local('Roboto Condensed Regular'), local('RobotoCondensed-Regular'), url(../css/Zd2E9abXLFGSr9G3YK2MsNxB8OB85xaNTJvVSB9YUjQ.woff) format('woff');
 }
 
 * {
@@ -40,15 +40,32 @@ a:link, a:visited, a:hover, a:active {
     color: #fff;
 }
 
+h1, h2, h3 {
+  text-align: center;
+  width: 100%; /* applies when in an hflex-container */
+}
+
+ul {
+  text-align: left;
+}
+
 html {
-    padding: 20px 8px 8px 8px;
     background: #222;
     color: #ddd;
     font-family: "Roboto Condensed";
-    font-size: 100%;
     text-align: center;
     -webkit-user-select: none;
     -webkit-touch-callout: none;
+    /* For large screens */
+    padding: 30px 30px 0 30px;
+    font-size: 14pt;
+}
+
+@media all and (max-width: 500px) {
+    html {
+        padding: 20px 8px 0 8px;
+        font-size: 10pt;
+    }
 }
 
 body {
@@ -62,15 +79,38 @@ html, body {
     overflow-x: hidden;
 }
 
-@media all and (max-width: 500px) {
-    html {
-        font-size: 10pt;
-    }
+.vflex-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.hflex-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.flex-justify-between {
+    justify-content: space-between;
+}
+
+.flex-justify-around {
+    justify-content: space-around;
+}
+
+.flex-1 {
+    flex-grow: 1;
+    flex-basis: 0;
+}
+
+.scrollable {
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .title {
-    font-size: 2rem;
-    margin-bottom: 19px;
+    font-size: 1.8rem;
+    margin-bottom: 10px;
 }
 
 /* iOS title */
@@ -84,10 +124,13 @@ html, body {
     font-size: .6em;
 }
 
+.big-button {
+    font-size: 1rem;
+}
+
 .listening-container {
     margin-bottom: 10pt;
     font-size: 1.2rem;
-    white-space: normal;
 }
 
 .listening-ip {
@@ -104,38 +147,25 @@ html, body {
     color: #0A0;
 }
 
-.app-outer-container {
-    position: absolute;
-    width: 100%;
-    top: 50%;
-    left: 50%;
-}
-
 .app-container {
     border: 1px solid #555;
     border-radius: 2px;
     text-align: left;
     position: relative;
-    padding: 1rem;
+    padding: .5rem;
     background: #444;
     width: 80%;
-    margin-left: -40%;
-    margin-top: -65px;
+    line-height: 1.5rem;
 }
 
 @media all and (max-width: 500px) {
     .app-container {
         width: 90%;
-        margin-left: -45%;
     }
 }
 
 .app-empty-message {
-    text-align: center;
     font-size: 1.5rem;
-    padding: 1rem;
-    margin-top: 20%;
-    white-space: normal;
 }
 
 .app-button-x {
@@ -161,14 +191,8 @@ html, body {
     text-align: center;
 }
 
-.app-container-body {
-    line-height: 80px;
-    position: relative;
-    margin-bottom: .5rem;
-}
-
 .app-icon-container {
-    display: inline-block;
+    margin-right: 6px;
 }
 
 .app-icon {
@@ -181,7 +205,6 @@ html, body {
 
 .app-icon-missing {
     text-align: center;
-    white-space: normal;
     border: 1px solid #666;
 }
 
@@ -193,29 +216,12 @@ html, body {
     }
 }
 
-.app-text-container-1 {
-    display: inline-block;
-    line-height: 90px;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    position: absolute;
-    right: 0px;
-    left: 72px;
-    top: -8px;
-    bottom: 0;
-}
-
 @media all and (max-width: 500px) {
     .app-text-container-1 {
         left: 58px;
     }
 }
 
-.app-text-container-2 {
-    line-height: 1.5rem;
-    vertical-align: middle;
-    display: inline-block;
-}
 .app-title {
     font-size: 1.3rem;
     line-height: 2rem;
@@ -234,6 +240,7 @@ html, body {
 
 .app-button-container {
     text-align: center;
+    margin-top: 12px;
 }
 
 .app-button {
@@ -251,9 +258,19 @@ html, body {
 }
 
 .footer {
-    position: absolute;
-    bottom: 2.2rem;
-    left: 0;
-    right: 0;
+    margin: 2.2rem 0;
 }
 
+.plugin-newer {
+  color: #FFCA21;
+}
+.plugin-older {
+  color: #FFCA21;
+}
+.plugin-missing {
+  color: #1ADAFF;
+}
+
+.plugin-newer>span, .plugin-older>span, .plugin-missing>span {
+  font-style: italic;
+}

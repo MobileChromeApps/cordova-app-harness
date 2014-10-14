@@ -16,33 +16,33 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<div class="listening-container">
+<div class="title">{{appTitle}} <span class="title-version">v{{appVersion}}</span></div>
+<div class="listening-container">&#x200b;<!-- prevent 0 height while getting address -->
   <span class="listening-ip" ng-repeat="ipAddress in ipAddresses">{{ipAddress}}<span class="listening-port">:{{port}}</span></span>
   <span class="listening-error" ng-show="ipAddresses && ipAddresses.length == 0">Could not bind to port {{port}}</span>
 </div>
-<div class="app-empty-message" ng-show="!app">
-  Use the <a href="https://www.npmjs.org/package/cca">cca</a> or <a href="https://github.com/dart-lang/chromedeveditor">Chrome Dev Editor</a> to launch an app.
+<div class="app-empty-message flex-1 hflex-container flex-justify-around" ng-show="!app">
+  <div>
+    Use the <a href="https://www.npmjs.org/package/cca">cca</a> or <a href="https://github.com/dart-lang/chromedeveditor">Chrome Dev Editor</a> to launch an app.
+  </div>
 </div>
-<div class="app-outer-container" ng-show="!!app">
+<div class="flex-1 hflex-container flex-justify-around" ng-show="!!app">
   <div class="app-container">
     <div class="app-button-x" ng-click="removeApp(app, $event)"></div>
-    <div class="app-container-body">
+    <div class="hflex-container">
       <div class="app-icon-container" ng-click="launchApp(app)">
         <img ng-src="{{app.getIconUrl()}}" class="app-icon" ng-if="!!app.getIconUrl()">
         <div class="app-icon app-icon-missing" ng-show="!app.getIconUrl()">No Icon</div>
       </div>
-      <div class="app-text-container-1">
-        <div class="app-text-container-2">
-          <div class="app-title">{{app.getAppName() || getConfigXmlId() || app.appId}} <span class="app-version">{{app.getVersion()}}</span></div>
-          <div class="app-last-updated" ng-show="app.updatingStatus === null">Last updated: <span am-time-ago="app.lastUpdated"></span></div>
-          <div class="app-last-updated" ng-show="app.updatingStatus !== null">Update in progress: {{app.updatingStatus}}%</div>
-          <div class="app-plugin-status">Plugins:
-              <span>{{app.plugins.all.length}} total</span><span ng-show="app.plugins.missing.length || app.plugins.older.length || app.plugins.newer.length">, </span>
-              <span style="color:#c00" ng-show="app.plugins.missing.length">{{ app.plugins.missing.length }} missing</span><span ng-show="app.plugins.missing.length && (app.plugins.older.length || app.plugins.newer.length)">, </span>
-              <span style="color:#822" ng-show="app.plugins.older.length">{{ app.plugins.older.length }} outdated</span><span ng-show="app.plugins.older.length && app.plugins.newer.length">, </span>
-              <span ng-show="app.plugins.newer.length">{{ app.plugins.newer.length }} newer</span>
-              <a ng-click="showDetails(0, $event)" href="#">(details)</a>
-          </div>
+      <div class="flex-1">
+        <div class="app-title">{{app.getAppName() || getConfigXmlId() || app.appId}} <span class="app-version">{{app.getVersion()}}</span></div>
+        <div class="app-last-updated" ng-show="app.updatingStatus === null">Last updated: <span am-time-ago="app.lastUpdated"></span></div>
+        <div class="app-last-updated" ng-show="app.updatingStatus !== null">Update in progress: {{app.updatingStatus}}%</div>
+        <div class="app-plugin-status">Plugins:
+            <span ng-show="!app.plugins.missing.length && !app.plugins.older.length && !app.plugins.newer.length">{{app.plugins.all.length}} total</span>
+            <span class="plugin-missing"color:#1ADAFF" ng-show="app.plugins.missing.length">{{ app.plugins.missing.length }} missing</span><span ng-show="app.plugins.missing.length && (app.plugins.older.length || app.plugins.newer.length)">, </span>
+            <span class="plugin-older" ng-show="app.plugins.older.length||app.plugins.newer.length">{{ app.plugins.older.length + app.plugins.newer.length }} mismatched</span>
+            <a ng-click="showDetails(0, $event)" href="#">(details)</a>
         </div>
       </div>
     </div>

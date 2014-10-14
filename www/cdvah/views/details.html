@@ -16,39 +16,34 @@
   specific language governing permissions and limitations
   under the License.
 -->
+<div class="title">{{appTitle}} <span class="title-version">v{{appVersion}}</span></div>
 <h2>{{ app.appId }}</h2>
-
-<div>
-    <h3>Missing Plugins: {{ app.plugins.missing.length }}</h3>
-    <ul>
-        <li>
-            <div><strong>{{ plugin.id }}</strong>: {{ plugin.version }}</div>
+<div class="flex-1 scrollable" style="text-align:left">
+    <h3>Plugins in Use: {{ app.plugins.matched.length + app.plugins.older.length + app.plugins.newer.length }}</h3>
+    <ul style="overflow:hidden">
+        <li ng-repeat="plugin in app.plugins.matched">
+            <strong>{{ plugin.id }}</strong>: {{ plugin.version }}
+        </li>
+        <li ng-repeat="plugin in app.plugins.newer" class="plugin-newer">
+            <strong>{{ plugin.id }}</strong>: {{ plugin.versions.harness}}
+            <span>(wants {{ plugin.versions.child }})</span>
+        </li>
+        <li ng-repeat="plugin in app.plugins.older" class="plugin-older">
+            <strong>{{ plugin.id }}</strong>: {{ plugin.versions.harness}}
+            <span>(wants {{ plugin.versions.child }})</span>
+        </li>
+        <li ng-repeat="plugin in app.plugins.missing" class="plugin-missing">
+            <strong>{{ plugin.id }}</strong>
+            <span>(missing)</span>
         </li>
     </ul>
+    <div ng-show="app.plugins.missing">
+        Missing plugins require that you build {{appTitle}} from source with these extra plugins added. See the <a href="https://github.com/MobileChromeApps/chrome-app-developer-tool/blob/master/README.md">README</a> for details.
+    </div>
+    <div>
+        Plugin problems can sometimes be resolved by updating {{appTitle}}, or by it from source. See the <a href="https://github.com/MobileChromeApps/chrome-app-developer-tool/blob/master/README.md">README</a> for details.
+    </div>
 </div>
-
-<div>
-    <h3>Older Plugins: {{ app.plugins.older.length }}</h3>
-    <ul>
-        <li ng-repeat="plugin in app.plugins.older">
-            <div><strong>{{ plugin.id }}</strong></div>
-            <div>App wants {{ plugin.versions.child }}</div>
-            <div>Harness provides {{ plugin.versions.harness }}</div>
-        </li>
-    </ul>
-</div>
-
-<div>
-    <h3>Newer Plugins: {{ app.plugins.newer.length }}</h3>
-    <ul>
-        <li ng-repeat="plugin in app.plugins.newer">
-            <div><strong>{{ plugin.id }}</strong></div>
-            <div>App wants {{ plugin.versions.child }}</div>
-            <div>Harness provides {{ plugin.versions.harness }}</div>
-        </li>
-    </ul>
-</div>
-<br />
-<div class="buttons">
-    <a href="#/"><button>Back</button></a>
+<div style="margin:20px">
+    <button ng-click="goBack()" class="big-button">Done</button>
 </div>

@@ -2,7 +2,7 @@ module.exports = {
   context: __dirname + "/www/cdvah",
   entry: {
     cca: [
-        "../../cca_modules/cca.js",
+        "../../src/cca.js",
       ],
   },
   output: {
