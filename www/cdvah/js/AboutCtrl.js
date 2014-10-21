@@ -29,7 +29,9 @@
         });
 
         $scope.goBack = function() {
-            $scope.config && $scope.config.setTrackingPermitted($scope.formData.reportingPermissionCheckbox);
+            if ($scope.config) {
+                $scope.config.setTrackingPermitted($scope.formData.reportingPermissionCheckbox);
+            }
             $location.path('/');
         };
 
