@@ -209,11 +209,15 @@ set -x
     org.chromium.power \
     org.chromium.pushmessaging \
     org.chromium.socket \
+    org.chromium.sockets.tcp \
+    org.chromium.sockets.tcpserver \
+    org.chromium.sockets.udp \
     org.chromium.storage \
     org.chromium.system.cpu \
     org.chromium.system.display \
     org.chromium.system.memory \
     org.chromium.system.network \
+    org.chromium.system.storage \
     org.chromium.videocapture \
     org.chromium.syncfilesystem \
     org.chromium.filechooser \
