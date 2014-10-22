@@ -16,7 +16,7 @@
   - Trim them down liberally & reword them.
 - Update the version in `package.json` and `app.js`
   - `vim package.json www/cdvah/js/app.js`
-- Build apks
+- Build apks (TODO: add a `--registry-only` flag so that we don't gev -dev plugins)
   - `./createproject.sh ChromeAppDevTool`
   - `(cd ChromeAppDevTool && ./gradle-build.sh)`
 - Double check:
