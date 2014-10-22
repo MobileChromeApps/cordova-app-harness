@@ -55,6 +55,22 @@ Suggestions are always welcome! :)
 
 # Release Notes
 
+## v0.10.0 (October 22, 2014)
+* New plugins:
+  * `com.google.payments`
+  * `org.chromium.sockets.*`
+  * `org.chromium.system.storage`
+* Fix /deletefiles not working when deleting more than ~10 files.
+* UI tweaks:
+  * Nicer permissions page
+  * Show list of installed plugins in details page
+* iOS: Stopped destroying the webview on every launch.
+* Added a `/getfile` endpoint to HarnessServer
+* Delete manifest.json if it causes an exception
+* Share `manifest.json->config.xml` logic with cca via webpack
+* Add filesystem location `<preferences>` to config.xml
+* Switch to building with gradle & enable multi-apks
+
 ## v0.9.0 (September 12, 2014)
 * Added basic analytics.
 * Updated app icons.

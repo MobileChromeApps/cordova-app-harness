@@ -16,9 +16,13 @@
   - Trim them down liberally & reword them.
 - Update the version in `package.json` and `app.js`
   - `vim package.json www/cdvah/js/app.js`
-- Build apk
-  - `./createproject.sh CCAHarness`
-  - `(cd CCAHarness && ./gradle-build.sh)`
+- Build apks
+  - `./createproject.sh ChromeAppDevTool`
+  - `(cd ChromeAppDevTool && ./gradle-build.sh)`
+- Double check:
+  - Signed correctly: `jarsigner -verify -keystore CCAHarness-debug.keystore PATH/android-armv7-debug.apk`
+  - Can push from CDE with "Live deploy"
+  - Can push via `cca push --watch`
 - Commit Changes
   - `git commit -am "Releasing chrome-app-developer-tool v$(npm ls --depth=0 | head -n1 | sed -E 's:.*@| .*::g')"`
 - Tag release
