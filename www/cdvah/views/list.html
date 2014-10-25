@@ -35,7 +35,7 @@
         <div class="app-icon app-icon-missing" ng-show="!app.getIconUrl()">No Icon</div>
       </div>
       <div class="flex-1">
-        <div class="app-title">{{app.getAppName() || getConfigXmlId() || app.appId}} <span class="app-version">{{app.getVersion()}}</span></div>
+        <div class="app-title">{{app.getAppName() || app.getConfigXmlId() || app.appId}} <span class="app-version">{{app.getVersion()}}</span></div>
         <div class="app-last-updated" ng-show="app.updatingStatus === null">Last updated: <span am-time-ago="app.lastUpdated"></span></div>
         <div class="app-last-updated" ng-show="app.updatingStatus !== null">Update in progress: {{app.updatingStatus}}%</div>
         <div class="app-plugin-status">Plugins:
