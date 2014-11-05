@@ -138,7 +138,7 @@
             for (var i = 0; i < pluginIds.length; ++i) {
                 ret[pluginIds[i]] = harnessPluginMetadata[pluginIds[i]] || '0';
             }
-            return ret;
+            return $q.when(ret);
         };
 
         return CrxInstaller;

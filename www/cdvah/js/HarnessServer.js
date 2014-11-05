@@ -462,6 +462,8 @@ myApp.factory('HarnessServer', ['$q', 'HttpServer', 'ResourcesLoader', 'AppHarne
                 .addRoute('/deleteapp', ensureMethodDecorator('POST', handleDeleteApp))
                 .addRoute('/buildapk', ensureMethodDecorator('POST', handleBuildApk))
                 .addRoute('/getfile', ensureMethodDecorator('GET', handleGetFile));
+
+            window.HTTP_SERVER = server; // for debugging
             return server.start();
         }
 
@@ -470,7 +472,7 @@ myApp.factory('HarnessServer', ['$q', 'HttpServer', 'ResourcesLoader', 'AppHarne
                 return $q.when(listenAddress);
             }
             var deferred = $q.defer();
-            chrome.socket.getNetworkList(function(interfaces) {
+            chrome.system.network.getNetworkInterfaces(function(interfaces) {
                 // Filter out ipv6 addresses.
                 var ret = interfaces.filter(function(i) {
                     return i.address.indexOf(':') === -1;

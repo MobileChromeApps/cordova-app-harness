@@ -183,13 +183,8 @@
                 }).then(function() {
                     return installer.launch();
                 }).then(function(launchUrl) {
-                    // Don't just use ResourcesLoader.doesFileExist because remaps might make it exist.
-                    return ResourcesLoader.xhrGet(launchUrl)
-                    .then(null, function() {
-                        throw new Error('Start file does not exist: ' + launchUrl.replace(/.*?\/www\//, 'www/'));
-                    }).then(function() {
-                        return installer.getPluginMetadata();
-                    }).then(function(pluginMetadata) {
+                    return installer.getPluginMetadata()
+                    .then(function(pluginMetadata) {
                         // If we're relaunching the active app, just reload the existing webview.
                         // Otherwise, create a new one.
                         // TODO(maxw): Use the existing webview all the time.

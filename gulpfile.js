@@ -9,10 +9,6 @@ var jshint = require('gulp-jshint');
 var webpack = require('webpack');
 var webpackConfig = require('./webpack.config.js');
 
-
-/******************************************************************************/
-/******************************************************************************/
-
 gulp.task('default', ['build-dev']);
 
 gulp.task('watch', ['build-dev'], function() {
