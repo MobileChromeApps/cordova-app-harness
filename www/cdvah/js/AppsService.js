@@ -27,6 +27,7 @@
         // The app that is currently running.
         var activeInstaller = null;
         var lastAccessedInstaller = null;
+        var curWebViewType = null;
 
         function readAppsJson() {
             var deferred = $q.defer();
@@ -156,6 +157,7 @@
                 if (activeInstaller) {
                     activeInstaller.unlaunch();
                     activeInstaller = null;
+                    curWebViewType = null;
                     return AppHarnessUI.destroy();
                 }
                 return $q.when();
@@ -185,13 +187,20 @@
                 }).then(function(launchUrl) {
                     return installer.getPluginMetadata()
                     .then(function(pluginMetadata) {
-                        // If we're relaunching the active app, just reload the existing webview.
-                        // Otherwise, create a new one.
-                        // TODO(maxw): Use the existing webview all the time.
+                        var webViewType = installer.getWebViewType();
                         if (relaunch) {
-                            return AppHarnessUI.reload(launchUrl, pluginMetadata, 'crosswalk');
+                            if (webViewType != curWebViewType) {
+                                curWebViewType = webViewType;
+                                return AppHarnessUI.destroy()
+                                .then(function() {
+                                    return AppHarnessUI.create(launchUrl, pluginMetadata, webViewType);
+                                });
+                            } else {
+                                return AppHarnessUI.reload(launchUrl, pluginMetadata);
+                            }
                         } else {
-                            return AppHarnessUI.create(launchUrl, pluginMetadata, 'crosswalk');
+                            curWebViewType = webViewType;
+                            return AppHarnessUI.create(launchUrl, pluginMetadata, webViewType);
                         }
                     }).then(function() {
                         if (AppsService.onAppListChange) {

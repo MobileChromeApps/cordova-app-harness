@@ -49,10 +49,10 @@
                 cordova.plugins.appharnessui.destroy(deferred.resolve);
                 return deferred.promise;
             },
-            reload: function(url, pluginMetadata, webViewType) {
+            reload: function(url, pluginMetadata) {
                 var deferred = $q.defer();
                 var serviceNames = createServiceNameWhitelist(pluginMetadata);
-                cordova.plugins.appharnessui.reload(url, serviceNames, webViewType, deferred.resolve);
+                cordova.plugins.appharnessui.reload(url, serviceNames, deferred.resolve);
                 return deferred.promise;
             },
             setVisible: function(value) {

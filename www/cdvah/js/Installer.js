@@ -116,6 +116,15 @@
             return widgetEl.getAttribute('id');
         };
 
+        Installer.prototype.getWebViewType = function() {
+            if (cordova.platformId != 'android') {
+                return 'system';
+            }
+            var pluginsIds = this.plugins.all.map(function(e) { return e.id; });
+            var hasCrosswalk = pluginsIds.indexOf('org.apache.cordova.engine.crosswalk') != -1;
+            return hasCrosswalk ? 'crosswalk' : 'system';
+        };
+
         Installer.prototype.getAndroidVersionCode = function() {
             // copied from android_parser.js
             function defaultVersionCode(version) {

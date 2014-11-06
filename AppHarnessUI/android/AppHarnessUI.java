@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.cordova.AndroidWebView;
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.ConfigXmlParser;
 import org.apache.cordova.CordovaActivity;
@@ -41,6 +42,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
 import android.view.animation.DecelerateInterpolator;
+import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
@@ -76,10 +78,9 @@ public class AppHarnessUI extends CordovaPlugin {
         } else if ("reload".equals(action)) {
             final String url = args.getString(0);
             final Set<String> pluginIdWhitelistAsSet = jsonArrayToSet(args.getJSONArray(1));
-            final String webViewType = args.getString(2);
             this.cordova.getActivity().runOnUiThread(new Runnable() {
                 public void run() {
-                    reload(url, pluginIdWhitelistAsSet, webViewType, callbackContext);
+                    reload(url, pluginIdWhitelistAsSet, callbackContext);
                 }
             });
         } else if ("destroy".equals(action)) {
@@ -138,14 +139,29 @@ public class AppHarnessUI extends CordovaPlugin {
     private void create(String url, Set<String> pluginIdWhitelist, String webViewType, CallbackContext callbackContext) {
         CordovaActivity activity = (CordovaActivity)cordova.getActivity();
 
-        if (slaveWebView != null) {
-            Log.w(LOG_TAG, "create: already exists");
-        } else {
+        if ("system".equals(webViewType) && slaveWebView instanceof CustomCrosswalkWebView ||
+            "crosswalk".equals(webViewType) && slaveWebView instanceof CustomAndroidWebView) {
+            slaveWebView.handleDestroy();
+            // TODO: Crosswalk and AndroidWebview have different destroy flows. AndroidWebView
+            // loads about:blank to allow window.unload to fire.
+            // We explicitly call destroy(), which breaks this, but make the view disappear from
+            // remote inspect.
+            if (slaveWebView instanceof AndroidWebView) {
+                Log.w("ANDROI", "DESTOROY");
+                ((WebView)slaveWebView.getView()).destroy();
+            }
+            layoutView = null;
+            slaveWebView = null;
+        }
+
+        if (slaveWebView == null) {
             if ("system".equals(webViewType)) {
                 slaveWebView = new CustomAndroidWebView(this, activity);
             } else {
                 slaveWebView = new CustomCrosswalkWebView(this, activity);
             }
+            // A consistent view ID is needed for plugins that utilize the background-activity plugin.
+            slaveWebView.getView().setId(200);
             // We'll set the plugin entries in initWebView.
             slaveWebView.init(cordova, new ArrayList<PluginEntry>(), webView.getWhitelist(), webView.getExternalWhitelist(), preferences);
         }
@@ -167,13 +183,14 @@ public class AppHarnessUI extends CordovaPlugin {
         callbackContext.success();
     }
 
-    private void reload(String url, Set<String> pluginIdWhitelist, String webViewType, CallbackContext callbackContext) {
+    private void reload(String url, Set<String> pluginIdWhitelist, CallbackContext callbackContext) {
         if (slaveWebView == null) {
             Log.w(LOG_TAG, "reload: no webview exists");
         } else {
             // TODO(maxw): If the webview type has changed, create a new webview.
             setPluginEntries(pluginIdWhitelist);
             slaveWebView.clearCache(true);
+            slaveWebView.clearHistory();
             slaveWebView.loadUrl(url);
         }
         callbackContext.success();
