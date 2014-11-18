@@ -44,6 +44,8 @@ To start using CADT, follow these instructions for running your Chrome App for M
 Suggestions are always welcome! :)
 
 ### General
+* Support for third party plugins
+* Support for all cordova core plugins
 * Applying app settings (DisallowOverscroll, etc)
 * Applying app splashscreen
 * Applying app's whitelist
