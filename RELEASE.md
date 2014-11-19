@@ -11,6 +11,8 @@
 ## Cutting a Release
 
 - Double check the status of upstream `cordova-app-harness` to see if we should update (instructions above).
+- Update version of cca-manifest-logic to be the latest (if applicable)
+  - `npm install --save cca-manifest-logic`
 - Update release notes (bottom of README.md)
   - `git log --pretty=format:'* %s' --no-merges $(git describe --tags --abbrev=0)..HEAD`
   - Trim them down liberally & reword them.
