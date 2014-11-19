@@ -16,8 +16,8 @@
   - Trim them down liberally & reword them.
 - Update the version in `package.json` and `app.js`
   - `vim package.json www/cdvah/js/app.js`
-- Build apks (TODO: add a `--registry-only` flag so that we don't gev -dev plugins)
-  - `./createproject.sh ChromeAppDevTool`
+- Build apks with release plugins:
+  - `DISABLE_LOCAL_SEARCH_PATH=1 ./createproject.sh ChromeAppDevTool`
   - `(cd ChromeAppDevTool && ./gradle-build.sh)`
 - Double check:
   - Signed correctly: `jarsigner -verify -keystore CCAHarness-debug.keystore PATH/android-armv7-debug.apk`
@@ -29,7 +29,7 @@
   - `git tag -m "Tagged v$(npm ls --depth=0 | head -n1 | sed -E 's:.*@| .*::g')" chrome-app-developer-tool-$(npm ls --depth=0 | head -n1 | sed -E 's:.*@| .*::g')`
   - `git push origin master refs/tags/chrome-app-developer-tool-$(npm ls --depth=0 | head -n1 | sed -E 's:.*@| .*::g')`
 - Upload apk to GitHub's releases page
-  - Attach the apk
+  - Attach the apks
   - Copy in release notes (follow the format of previous releases)
 - Update the version with `-dev`
   - `vim package.json www/cdvah/js/app.js`
