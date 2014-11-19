@@ -23,6 +23,7 @@ if [[ $# -eq 0 || "$1" = "--help" ]]; then
     echo '  PLATFORMS="android ios"'
     echo '  PLUGIN_SEARCH_PATH="path1:path2:path3"'
     echo '  DISABLE_PLUGIN_REGISTRY=1'
+    echo '  DISABLE_LOCAL_SEARCH_PATH=1 # Use this for releases'
     echo '  ENABLE_APK_PACKAGER=1 # Currently experimental'
     exit 1
 fi
@@ -76,20 +77,22 @@ function AddSearchPathIfExists() {
     fi
 }
 
-# Use coho to find Cordova plugins
-COHO_PATH=$(ResolveSymlinks $(which coho))
-if [[ -n "$COHO_PATH" ]]; then
-    echo "Using locally installed cordova plugins."
-    CDV_PATH="$(dirname $(dirname "$COHO_PATH"))"
-    AddSearchPathIfExists "$CDV_PATH"
-    AddSearchPathIfExists "$CDV_PATH/cordova-plugins"
-fi
+if [[ "1" != "$DISABLE_LOCAL_SEARCH_PATH" ]]; then
+    # Use coho to find Cordova plugins
+    COHO_PATH=$(ResolveSymlinks $(which coho))
+    if [[ -n "$COHO_PATH" ]]; then
+        echo "Using locally installed cordova plugins."
+        CDV_PATH="$(dirname $(dirname "$COHO_PATH"))"
+        AddSearchPathIfExists "$CDV_PATH"
+        AddSearchPathIfExists "$CDV_PATH/cordova-plugins"
+    fi
 
-# Use cca to find Chrome ones.
-AddSearchPathIfExists "$AH_PATH/node_modules/cca/chrome-cordova/plugins"
-# And also cca-bundled versions of Cordova ones if they are not checked out.
-AddSearchPathIfExists "$AH_PATH/node_modules/cca/cordova"
-AddSearchPathIfExists "$AH_PATH/node_modules/cca/cordova/cordova-plugins"
+    # Use cca to find Chrome ones.
+    AddSearchPathIfExists "$AH_PATH/node_modules/cca/chrome-cordova/plugins"
+    # And also cca-bundled versions of Cordova ones if they are not checked out.
+    AddSearchPathIfExists "$AH_PATH/node_modules/cca/cordova"
+    AddSearchPathIfExists "$AH_PATH/node_modules/cca/cordova/cordova-plugins"
+fi
 
 if [[ -n "$extra_search_path" ]]; then
     PLUGIN_SEARCH_PATH="${extra_search_path}:$PLUGIN_SEARCH_PATH"
@@ -226,15 +229,12 @@ set -x
     org.chromium.polyfill.blob_constructor \
     org.chromium.polyfill.customevent \
     org.chromium.polyfill.xhr_features \
-    org.apache.cordova.labs.keyboard \
     org.apache.cordova.statusbar \
     org.apache.cordova.network-information \
     com.google.payments \
     --searchpath="$PLUGIN_SEARCH_PATH"
 
-"$CORDOVA" plugin add org.apache.cordova.engine.crosswalk \
-    --searchpath="$PLUGIN_SEARCH_PATH" \
-    --noregistry
+"$CORDOVA" plugin add "$AH_PATH/node_modules/cca/cordova/cordova-crosswalk-engine"
 
 if [[ -n "$ENABLE_APK_PACKAGER" ]]; then
   "$CORDOVA" plugin add "$AH_PATH/apkpackager"

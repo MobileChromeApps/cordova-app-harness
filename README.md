@@ -55,6 +55,17 @@ Suggestions are always welcome! :)
 
 # Release Notes
 
+## v0.11.0 (November 18, 2014)
+
+* Fix "Unable to bind to port" message when wifi is disabled.
+* Pushing large files is now dramatically faster
+* Fix iOS pushes hanging
+* Add support for toggling between system / crosswalk webviews via manifest.mobile.json's "webview": "system"
+* Fix cordova-android's App plugin not being enabled (e.g. navigator.app.exitApp())
+* Fix /deletefiles not working when deleting more than ~10 files.
+* iOS: Stop destroying webview on every launch so that remote inspector remains open
+* Add a /getfile endpoing to HarnessServer
+
 ## v0.10.0 (October 22, 2014)
 * New plugins:
   * `com.google.payments`
