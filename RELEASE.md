@@ -26,7 +26,7 @@
 - Double check:
   - Signed correctly: `jarsigner -verify -keystore template-overrides/CCAHarness-debug.keystore PATH/android-armv7-debug.apk`
   - Can push from CDE with "Live deploy"
-    - `adb install PATH/android-armv7-debug.apk`
+    - `adb install -r PATH/android-armv7-debug.apk`
   - Can push via `cca push --watch`
 - Commit Changes
   - `git commit -am "Releasing chrome-app-developer-tool v$(npm ls --depth=0 | head -n1 | sed -E 's:.*@| .*::g')"`
