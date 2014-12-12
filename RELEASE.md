@@ -16,14 +16,17 @@
 - Update release notes (bottom of README.md)
   - `git log --pretty=format:'* %s' --no-merges $(git describe --tags --abbrev=0)..HEAD`
   - Trim them down liberally & reword them.
+  - Should also look at MCA logs: `git log --pretty=format:'* %s' --no-merges --since "FOO days ago"
+    - Where FOO is found here: https://github.com/MobileChromeApps/chrome-app-developer-tool/releases
 - Update the version in `package.json` and `app.js`
   - `vim package.json www/cdvah/js/app.js`
 - Build apks with release plugins:
   - `DISABLE_LOCAL_SEARCH_PATH=1 ./createproject.sh ChromeAppDevTool`
   - `(cd ChromeAppDevTool && ./gradle-build.sh)`
 - Double check:
-  - Signed correctly: `jarsigner -verify -keystore CCAHarness-debug.keystore PATH/android-armv7-debug.apk`
+  - Signed correctly: `jarsigner -verify -keystore template-overrides/CCAHarness-debug.keystore PATH/android-armv7-debug.apk`
   - Can push from CDE with "Live deploy"
+    - `adb install PATH/android-armv7-debug.apk`
   - Can push via `cca push --watch`
 - Commit Changes
   - `git commit -am "Releasing chrome-app-developer-tool v$(npm ls --depth=0 | head -n1 | sed -E 's:.*@| .*::g')"`

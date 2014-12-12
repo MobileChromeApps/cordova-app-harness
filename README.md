@@ -57,6 +57,11 @@ Suggestions are always welcome! :)
 
 # Release Notes
 
+## v0.11.1 (December 12, 2014)
+
+* Pushing large files is even faster
+* Updated CCA plugins now work better with Polymer
+
 ## v0.11.0 (November 18, 2014)
 
 * Fix "Unable to bind to port" message when wifi is disabled.
