@@ -88,7 +88,7 @@ if [[ "1" != "$DISABLE_LOCAL_SEARCH_PATH" ]]; then
     fi
 
     # Use cca to find Chrome ones.
-    AddSearchPathIfExists "$AH_PATH/node_modules/cca/chrome-cordova/plugins"
+    AddSearchPathIfExists "$(ResolveSymlinks "$AH_PATH/node_modules/cca")/../mobile-chrome-apps-plugins"
     # And also cca-bundled versions of Cordova ones if they are not checked out.
     AddSearchPathIfExists "$AH_PATH/node_modules/cca/cordova"
     AddSearchPathIfExists "$AH_PATH/node_modules/cca/cordova/cordova-plugins"
