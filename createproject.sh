@@ -204,6 +204,9 @@ set -x
     org.chromium.alarms \
     org.chromium.audiocapture \
     org.chromium.bootstrap \
+    org.chromium.bluetooth \
+    org.chromium.bluetoothlowenergy \
+    org.chromium.bluetoothsocket \
     org.chromium.filesystem \
     org.chromium.gcm \
     org.chromium.i18n \
@@ -224,7 +227,6 @@ set -x
     org.chromium.system.network \
     org.chromium.system.storage \
     org.chromium.videocapture \
-    org.chromium.syncfilesystem \
     org.chromium.filechooser \
     org.chromium.polyfill.blob_constructor \
     org.chromium.polyfill.customevent \
