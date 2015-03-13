@@ -21,8 +21,6 @@
 
     /* global myApp, cordova */
     myApp.factory('Installer', ['$q', 'UrlRemap', 'ResourcesLoader', 'PluginMetadata', 'DirectoryManager', function($q, UrlRemap, ResourcesLoader, PluginMetadata, DirectoryManager) {
-        var platformId = cordova.require('cordova/platform').id;
-
         function Installer() {}
 
         Installer.prototype.init = function(installPath, /* optional */ appId) {
@@ -187,7 +185,7 @@
                 var appWwwUrl = self.getWwwDir();
                 var startLocation = urlutil.makeAbsolute(self.getStartPage()).replace('/cdvah/', '/');
                 var realStartLocation = startLocation.replace(harnessWwwUrl, appWwwUrl);
-                var useRemapper = platformId == 'android';
+                var useRemapper = false; //platformId == 'android';
 
                 if (!/^file:/.exec(startLocation)) {
                     throw new Error('Expected to start with file: ' + startLocation);
