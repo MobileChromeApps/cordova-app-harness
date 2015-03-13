@@ -32,23 +32,11 @@
         '<preference name="StatusBarBackgroundColor" value="#000000" />\n' +
         '<preference name="iosPersistentFileLocation" value="Library" />\n' +
         '<preference name="AndroidPersistentFileLocation" value="Internal" />\n' +
-        '<icon src="__ICON_SRC__" />\n' +
         '</widget>\n';
 
 
     function generateConfigXmlData(manifest) {
-        // TODO Share icon code with CCA.
-        var iconSrc = '';
-        var iconSize = 0;
-        if (typeof manifest.icons == 'object') {
-            for (var size in manifest.icons) {
-                if (+size > iconSize) {
-                    iconSize = +size;
-                    iconSrc = 'www/' + manifest.icons[size];
-                }
-            }
-        }
-        var template = CONFIG_XML_TEMPLATE.replace(/__ICON_SRC__/, iconSrc);
+        var template = CONFIG_XML_TEMPLATE;
         var analyzedManifest = cca.analyseManifest(manifest);
         var configXmlDom = new DOMParser().parseFromString(template, 'text/xml');
         cca.updateConfigXml(manifest, analyzedManifest, configXmlDom);
@@ -139,6 +127,29 @@
                 ret[pluginIds[i]] = harnessPluginMetadata[pluginIds[i]] || '0';
             }
             return $q.when(ret);
+        };
+
+        function injectCsp(htmlPath, cspTag) {
+            return ResourcesLoader.readFileContents(htmlPath)
+            .then(function(html) {
+                html = html.replace(/<meta.*Content-Security.*>/, cspTag);
+                return ResourcesLoader.writeFileContents(htmlPath, html);
+            });
+        }
+
+        CrxInstaller.prototype.launch = function() {
+            var appWwwUrl = this.getWwwDir();
+            var cspContent = cca.analyseManifest.createCspString(this.mergedManifestJson_, cordova.platformId);
+            var cspTag = '<meta http-equiv="Content-Security-Policy" content="' + cspContent + '">';
+            return Installer.prototype.launch.call(this)
+            .then(function(ret) {
+                return injectCsp(appWwwUrl + 'plugins/org.chromium.bootstrap/chromeapp.html', cspTag)
+                .then(function() {
+                    return injectCsp(appWwwUrl + 'plugins/org.chromium.bootstrap/chromebgpage.html', cspTag);
+                }).then(function() {
+                    return ret;
+                });
+            });
         };
 
         return CrxInstaller;
