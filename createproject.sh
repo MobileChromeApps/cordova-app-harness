@@ -89,6 +89,7 @@ if [[ "1" != "$DISABLE_LOCAL_SEARCH_PATH" ]]; then
 
     # Use cca to find Chrome ones.
     AddSearchPathIfExists "$(ResolveSymlinks "$AH_PATH/node_modules/cca")/../mobile-chrome-apps-plugins"
+    AddSearchPathIfExists "$AH_PATH/node_modules/cca/chrome-cordova/plugins"
     # And also cca-bundled versions of Cordova ones if they are not checked out.
     AddSearchPathIfExists "$AH_PATH/node_modules/cca/cordova"
     AddSearchPathIfExists "$AH_PATH/node_modules/cca/cordova/cordova-plugins"
@@ -112,7 +113,7 @@ PLATFORM_ARGS="${PLATFORMS/android/$AH_PATH/node_modules/cca/cordova/cordova-and
 PLATFORM_ARGS="${PLATFORM_ARGS/ios/$AH_PATH/node_modules/cca/cordova/cordova-ios}"
 
 set -x
-$CORDOVA platform add $PLATFORM_ARGS || exit 1
+$CORDOVA platform add $PLATFORM_ARGS --link || exit 1
 set +x
 
 if [[ "$PLATFORMS" = *android* ]]; then
@@ -168,6 +169,7 @@ set -x
     org.chromium.sockets.tcpserver \
     org.chromium.system.network \
     org.chromium.zip \
+    --link \
     --searchpath="$PLUGIN_SEARCH_PATH" \
     $PLUGIN_REGISTRY_FLAG
 
@@ -190,6 +192,8 @@ set -x
     org.apache.cordova.splashscreen \
     org.apache.cordova.statusbar \
     org.apache.cordova.vibration \
+    org.apache.cordova.whitelist \
+    --link \
     --searchpath="$PLUGIN_SEARCH_PATH" \
     $PLUGIN_REGISTRY_FLAG
     # Skipped core plugins:
@@ -234,12 +238,13 @@ set -x
     org.apache.cordova.statusbar \
     org.apache.cordova.network-information \
     com.google.payments \
+    --link \
     --searchpath="$PLUGIN_SEARCH_PATH"
 
-"$CORDOVA" plugin add "$AH_PATH/node_modules/cca/cordova/cordova-crosswalk-engine"
+"$CORDOVA" plugin add --link "$AH_PATH/node_modules/cca/cordova/cordova-crosswalk-engine"
 
 if [[ -n "$ENABLE_APK_PACKAGER" ]]; then
-  "$CORDOVA" plugin add "$AH_PATH/apkpackager"
+  "$CORDOVA" plugin add --link "$AH_PATH/apkpackager"
   mkdir -p merges/android
   ( cd merges/android && ln -s "$AH_PATH/AndroidApkTemplate/apk-template" . )
 fi
