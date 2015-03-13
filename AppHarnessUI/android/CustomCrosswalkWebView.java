@@ -18,33 +18,27 @@
 */
 package org.apache.appharness;
 
-import org.apache.cordova.engine.crosswalk.XWalkCordovaView;
-import org.apache.cordova.engine.crosswalk.XWalkCordovaWebView;
-import org.xwalk.core.XWalkPreferences;
+import org.apache.cordova.CordovaPreferences;
+import org.crosswalk.engine.XWalkCordovaView;
+import org.crosswalk.engine.XWalkWebViewEngine;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
 import android.view.MotionEvent;
 
-class CustomCrosswalkWebView extends XWalkCordovaWebView implements CustomCordovaWebView {
+class CustomCrosswalkWebView extends XWalkWebViewEngine implements CustomCordovaWebView {
     private static final String LOG_TAG = "AppHarnessUI";
-
-    private static boolean didSetXwalkPrefs = false;
 
     private AppHarnessUI parent;
     private boolean stealTapEvents;
+    private TwoFingerDoubleTapGestureDetector twoFingerTapDetector;
 
-    CustomCrosswalkWebView(AppHarnessUI parent, Context context) {
-        super((XWalkCordovaView)null);
+    CustomCrosswalkWebView(AppHarnessUI parent, Context context, CordovaPreferences preferences) {
+        super(new CustomXwalkView(context, preferences));
         this.parent = parent;
-
-        if (!didSetXwalkPrefs) {
-            // Throws an exception if we try to set it multiple times.
-            XWalkPreferences.setValue(XWalkPreferences.ANIMATABLE_XWALK_VIEW, true);
-            didSetXwalkPrefs = true;
-        }
-        webview = new CustomXwalkView(context);
+        ((CustomXwalkView)webView).parent = this;
+        twoFingerTapDetector = new TwoFingerDoubleTapGestureDetector(parent);
     }
 
     @Override
@@ -54,13 +48,13 @@ class CustomCrosswalkWebView extends XWalkCordovaWebView implements CustomCordov
 
     @Override
     public void evaluateJavascript(String script) {
-        getView().evaluateJavascript(script, null);
+        webView.evaluateJavascript(script, null);
     }
     
     @Override
-    public boolean backHistory() {
-        if (getView().getNavigationHistory().canGoBack()) {
-            return super.backHistory();
+    public boolean goBack() {
+        if (webView.getNavigationHistory().canGoBack()) {
+            return super.goBack();
         }
         if (parent.slaveVisible) {
             parent.sendEvent("showMenu");
@@ -71,19 +65,17 @@ class CustomCrosswalkWebView extends XWalkCordovaWebView implements CustomCordov
         return false;
     }
 
-    private class CustomXwalkView extends XWalkCordovaView {
-        TwoFingerDoubleTapGestureDetector twoFingerTapDetector;
-
-        public CustomXwalkView(Context context) {
-            super(context, null);
-            twoFingerTapDetector = new TwoFingerDoubleTapGestureDetector(parent);
+    private static class CustomXwalkView extends XWalkCordovaView {
+        CustomCrosswalkWebView parent;
+        public CustomXwalkView(Context context, CordovaPreferences preferences) {
+            super(context, preferences);
         }
 
         @Override
         public boolean onTouchEvent(MotionEvent e) {
-            if (stealTapEvents) {
+            if (parent.stealTapEvents) {
                 if (e.getAction() == MotionEvent.ACTION_UP) {
-                    parent.sendEvent("hideMenu");
+                    parent.parent.sendEvent("hideMenu");
                 }
                 return true;
             }
@@ -91,13 +83,13 @@ class CustomCrosswalkWebView extends XWalkCordovaWebView implements CustomCordov
         }
         @Override
         public boolean onInterceptTouchEvent(MotionEvent e) {
-            if (stealTapEvents) {
+            if (parent.stealTapEvents) {
                 if (e.getAction() == MotionEvent.ACTION_UP) {
-                    parent.sendEvent("hideMenu");
+                    parent.parent.sendEvent("hideMenu");
                 }
                 return true;
             }
-            twoFingerTapDetector.onTouchEvent(e);
+            parent.twoFingerTapDetector.onTouchEvent(e);
             return super.onInterceptTouchEvent(e);
         }
 

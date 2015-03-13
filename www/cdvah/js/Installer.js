@@ -121,7 +121,7 @@
                 return 'system';
             }
             var pluginsIds = this.plugins.all.map(function(e) { return e.id; });
-            var hasCrosswalk = pluginsIds.indexOf('org.apache.cordova.engine.crosswalk') != -1;
+            var hasCrosswalk = pluginsIds.indexOf('org.crosswalk.engine') != -1;
             return hasCrosswalk ? 'crosswalk' : 'system';
         };
 
