@@ -14,7 +14,7 @@ With CADT running on your mobile device, live deploy can be initiated from your 
 
 1. Enable USB debugging on your device (follow step 2 [here](http://developer.android.com/tools/device.html#setting-up)).
 2. Download an APK from [here](https://github.com/MobileChromeApps/chrome-app-developer-tool/releases).
-3. Run `adb install ChromeAppDeveloperTool-debug.apk` (of course, navigating to the appropriate directory first).
+3. Run `adb install android-armv7-debug.apk` (of course, navigating to the appropriate directory first).
   * **Note:** On Windows, you need [vendor-specific device drivers](http://developer.android.com/tools/extras/oem-usb.html) to connect to certain devices.
   * Alternatively, download the `.apk` using your device's browser.
 
