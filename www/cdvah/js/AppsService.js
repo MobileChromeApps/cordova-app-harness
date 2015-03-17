@@ -187,20 +187,21 @@
                 }).then(function(launchUrl) {
                     return installer.getPluginMetadata()
                     .then(function(pluginMetadata) {
+                        var configXmlUrl = installer.directoryManager.rootURL + 'config.xml';
                         var webViewType = installer.getWebViewType();
                         if (relaunch) {
                             if (webViewType != curWebViewType) {
                                 curWebViewType = webViewType;
                                 return AppHarnessUI.destroy()
                                 .then(function() {
-                                    return AppHarnessUI.create(launchUrl, pluginMetadata, webViewType);
+                                    return AppHarnessUI.create(launchUrl, configXmlUrl, pluginMetadata, webViewType);
                                 });
                             } else {
-                                return AppHarnessUI.reload(launchUrl, pluginMetadata);
+                                return AppHarnessUI.reload(launchUrl, configXmlUrl, pluginMetadata);
                             }
                         } else {
                             curWebViewType = webViewType;
-                            return AppHarnessUI.create(launchUrl, pluginMetadata, webViewType);
+                            return AppHarnessUI.create(launchUrl, configXmlUrl, pluginMetadata, webViewType);
                         }
                     }).then(function() {
                         if (AppsService.onAppListChange) {

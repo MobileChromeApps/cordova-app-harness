@@ -19,6 +19,7 @@
 package org.apache.appharness;
 
 import org.apache.cordova.CordovaPreferences;
+import org.apache.cordova.CordovaWebViewEngine;
 import org.crosswalk.engine.XWalkCordovaView;
 import org.crosswalk.engine.XWalkWebViewEngine;
 
@@ -50,7 +51,12 @@ class CustomCrosswalkWebView extends XWalkWebViewEngine implements CustomCordova
     public void evaluateJavascript(String script) {
         webView.evaluateJavascript(script, null);
     }
-    
+
+    @Override
+    public CordovaWebViewEngine asEngine() {
+        return this;
+    }
+
     @Override
     public boolean goBack() {
         if (webView.getNavigationHistory().canGoBack()) {
