@@ -173,6 +173,10 @@ set -x
     --searchpath="$PLUGIN_SEARCH_PATH" \
     $PLUGIN_REGISTRY_FLAG
 
+if [[ "$PLATFORMS" = *android* ]]; then
+    cp plugins/org.apache.cordova.file/src/android/build-extras.gradle platforms/android/build-extras.gradle
+fi
+
 # Extra plugins
 "$CORDOVA" plugin add \
     org.apache.cordova.battery-status \
@@ -192,7 +196,7 @@ set -x
     org.apache.cordova.splashscreen \
     org.apache.cordova.statusbar \
     org.apache.cordova.vibration \
-    org.apache.cordova.whitelist \
+    cordova-plugin-whitelist \
     --link \
     --searchpath="$PLUGIN_SEARCH_PATH" \
     $PLUGIN_REGISTRY_FLAG
