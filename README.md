@@ -28,8 +28,8 @@ With CADT running on your mobile device, live deploy can be initiated from your 
 
         ./createproject.sh ChromeAppDevTool
         cd ChromeAppDevTool
-        ./gradle-build.sh # For Android
-        cordova build ios # For iOS
+        cordova build android
+        cordova build ios
 
 You can get more info using `./createproject.sh --help`.
 

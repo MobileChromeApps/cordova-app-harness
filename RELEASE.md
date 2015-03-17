@@ -22,7 +22,7 @@
   - `vim package.json www/cdvah/js/app.js`
 - Build apks with release plugins:
   - `DISABLE_LOCAL_SEARCH_PATH=1 ./createproject.sh ChromeAppDevTool`
-  - `(cd ChromeAppDevTool && ./gradle-build.sh)`
+  - `(cd ChromeAppDevTool && cordova build android)`
 - Double check:
   - Signed correctly: `jarsigner -verify -keystore template-overrides/CCAHarness-debug.keystore PATH/android-armv7-debug.apk`
   - Can push from CDE with "Live deploy"

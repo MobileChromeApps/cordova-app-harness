@@ -124,10 +124,8 @@ if [[ "$PLATFORMS" = *android* ]]; then
     cp "$AH_PATH"/template-overrides/icons/android/icon-xdpi.png platforms/android/res/drawable-xhdpi/icon.png
 
     cp "$AH_PATH"/template-overrides/strings.xml platforms/android/res/values/strings.xml
-    cp "$AH_PATH"/template-overrides/android-debug-keys.properties .
-    cp "$AH_PATH"/template-overrides/CCAHarness-debug.keystore .
-    cp "$AH_PATH"/template-overrides/gradle-build.sh .
-    cp "$AH_PATH"/template-overrides/gradle-run.sh .
+    cp "$AH_PATH"/template-overrides/debug-signing.properties platforms/android
+    cp "$AH_PATH"/template-overrides/CCAHarness-debug.keystore platforms/android
 
     echo 'var fs = require("fs");
           var fname = "platforms/android/src/org/chromium/appdevtool/ChromeAppDeveloperTool.java";
