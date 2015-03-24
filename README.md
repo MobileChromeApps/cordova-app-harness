@@ -57,6 +57,14 @@ Suggestions are always welcome! :)
 
 # Release Notes
 
+## v0.12.0 (March 24, 2015)
+
+* Enabled Content-Security-Policy for Chrome Apps
+* Updated to Crosswalk 11
+* Added chrome.bluetooth plugins
+* Made harnessclient compatible with node 0.12 as well as 0.10
+* Updated versions of all bundled plugins
+
 ## v0.11.1 (December 12, 2014)
 
 * Pushing large files is even faster
