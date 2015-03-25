@@ -8,9 +8,7 @@ CADT is an app for your mobile development device that makes it quick and easy t
 
 With CADT running on your mobile device, live deploy can be initiated from your development computer with either [Chrome Dev Editor (CDE)](https://github.com/dart-lang/chromedeveditor) or the [Chrome Apps for Mobile command line tool](https://github.com/MobileChromeApps/mobile-chrome-apps/blob/master/docs/Installation.md#install-the-cca-command-line-tool), allowing you to instantly preview the Chrome App you're editing, running right on Android or iOS. When you make a change to the code in your editor, you're a quick push away from seeing it straight on your device.
 
-## Installation
-
-### Using a Pre-Built Binary (Android only)
+## Installation Using a Pre-Built Binary (Android only)
 
 1. Enable USB debugging on your device (follow step 2 [here](http://developer.android.com/tools/device.html#setting-up)).
 2. Download an APK from [here](https://github.com/MobileChromeApps/chrome-app-developer-tool/releases).
@@ -18,7 +16,22 @@ With CADT running on your mobile device, live deploy can be initiated from your 
   * **Note:** On Windows, you need [vendor-specific device drivers](http://developer.android.com/tools/extras/oem-usb.html) to connect to certain devices.
   * Alternatively, download the `.apk` using your device's browser.
 
-### Building from Source (iOS or Android - instructions for iOS / Linux)
+To start using CADT, follow these instructions for running your Chrome App for Mobile:
+
+[Option A: Live deploy with CADT](https://github.com/MobileChromeApps/mobile-chrome-apps/blob/master/docs/Develop.md#option-a-live-deploy-with-cadt-quick-and-easy)
+
+
+## Things that don't work with CADT
+CADT is amazing for rapid iteration cycles, but not everyting works the same as when deploying directly.
+
+* Support for third party plugins ([Issue #31](https://github.com/MobileChromeApps/chrome-app-developer-tool/issues/31))
+  * Core cordova plugins work fine for non-`cca`-based projects, but for `cca` projects plugins added via `cca plugin add` are not available in CADT.
+* APIs that depend on a Cloud Console project do not work (e.g. `chrome.identity`, `chrome.gcm`, `google.payments`)
+  * `chrome.identity` works for some simple things, but uses a custom project
+* Lifecycle-based APIs (such as `chrome.alarms`) don't work when app is closed
+* `chrome.i18n` works only as of 0.12.0, and only when all locale directories use lowercase and underscores.
+
+## Building from Source (iOS or Android - instructions for iOS / Linux)
 
 1. Clone this repository:
 
@@ -32,28 +45,6 @@ With CADT running on your mobile device, live deploy can be initiated from your 
         cordova build ios
 
 You can get more info using `./createproject.sh --help`.
-
-## Using CADT
-
-To start using CADT, follow these instructions for running your Chrome App for Mobile:
-
-[Option A: Live deploy with CADT](https://github.com/MobileChromeApps/mobile-chrome-apps/blob/master/docs/Develop.md#option-a-live-deploy-with-cadt-quick-and-easy)
-
-## Major Unimplemented Features
-
-Suggestions are always welcome! :)
-
-### General
-* Support for third party plugins
-* Support for all cordova core plugins
-* Applying app settings (DisallowOverscroll, etc)
-* Applying app splashscreen
-* Applying app's whitelist
-
-### In-App Menu
-* Inject a JSConsole script tag
-* Initiate a weinre session
-* Suggestions welcome! :)
 
 # Release Notes
 
