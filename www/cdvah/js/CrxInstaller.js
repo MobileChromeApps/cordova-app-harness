@@ -143,9 +143,9 @@
             var cspTag = '<meta http-equiv="Content-Security-Policy" content="' + cspContent + '">';
             return Installer.prototype.launch.call(this)
             .then(function(ret) {
-                return injectCsp(appWwwUrl + 'plugins/org.chromium.bootstrap/chromeapp.html', cspTag)
+                return injectCsp(appWwwUrl + 'plugins/cordova-plugin-chrome-apps-bootstrap//chromeapp.html', cspTag)
                 .then(function() {
-                    return injectCsp(appWwwUrl + 'plugins/org.chromium.bootstrap/chromebgpage.html', cspTag);
+                    return injectCsp(appWwwUrl + 'plugins/cordova-plugin-chrome-apps-bootstrap//chromebgpage.html', cspTag);
                 }).then(function() {
                     return ret;
                 });

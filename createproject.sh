@@ -159,91 +159,87 @@ set -x
 "$CORDOVA" plugin add\
     "$AH_PATH/UrlRemap" \
     "$AH_PATH/AppHarnessUI" \
-    org.apache.cordova.file \
-    org.apache.cordova.file-transfer \
-    org.apache.cordova.device \
-    org.apache.cordova.network-information \
-    org.chromium.sockets.tcp \
-    org.chromium.sockets.tcpserver \
-    org.chromium.system.network \
-    org.chromium.zip \
+    cordova-plugin-file \
+    cordova-plugin-file-transfer \
+    cordova-plugin-device \
+    cordova-plugin-network-information \
+    cordova-plugin-chrome-apps-sockets-tcp \
+    cordova-plugin-chrome-apps-sockets-tcpserver \
+    cordova-plugin-chrome-apps-system-network \
+    cordova-plugin-zip \
     --link \
     --searchpath="$PLUGIN_SEARCH_PATH" \
     $PLUGIN_REGISTRY_FLAG
 
 if [[ "$PLATFORMS" = *android* ]]; then
-    cp plugins/org.apache.cordova.file/src/android/build-extras.gradle platforms/android/build-extras.gradle
+    if [[ -e plugins/cordova-plugin-file/src/android/build-extras.gradle ]]; then
+        cp plugins/cordova-plugin-file/src/android/build-extras.gradle platforms/android/build-extras.gradle
+    fi
 fi
 
 # Extra plugins
 "$CORDOVA" plugin add \
-    org.apache.cordova.battery-status \
-    org.apache.cordova.camera \
-    org.apache.cordova.contacts \
-    org.apache.cordova.device-motion \
-    org.apache.cordova.device-orientation \
-    org.apache.cordova.device \
-    org.apache.cordova.dialogs \
-    org.apache.cordova.file-transfer \
-    org.apache.cordova.file \
-    org.apache.cordova.geolocation \
-    org.apache.cordova.globalization \
-    org.apache.cordova.inappbrowser \
-    org.apache.cordova.media \
-    org.apache.cordova.media-capture \
-    org.apache.cordova.splashscreen \
-    org.apache.cordova.statusbar \
-    org.apache.cordova.vibration \
+    cordova-plugin-battery-status \
+    cordova-plugin-camera \
+    cordova-plugin-contacts \
+    cordova-plugin-device-motion \
+    cordova-plugin-device-orientation \
+    cordova-plugin-device \
+    cordova-plugin-dialogs \
+    cordova-plugin-file-transfer \
+    cordova-plugin-file \
+    cordova-plugin-geolocation \
+    cordova-plugin-globalization \
+    cordova-plugin-inappbrowser \
+    cordova-plugin-media \
+    cordova-plugin-media-capture \
+    cordova-plugin-splashscreen \
+    cordova-plugin-statusbar \
+    cordova-plugin-vibration \
     cordova-plugin-whitelist \
     --link \
     --searchpath="$PLUGIN_SEARCH_PATH" \
     $PLUGIN_REGISTRY_FLAG
-    # Skipped core plugins:
-    # org.apache.cordova.console
-
-# To enable barcode scanning:
-# $CORDOVA plugin add https://github.com/wildabeast/BarcodeScanner.git # Optional
-
 
 # Using CCA here to get the right search path.
 "$CORDOVA" plugin add \
-    org.chromium.alarms \
-    org.chromium.audiocapture \
-    org.chromium.bootstrap \
-    org.chromium.bluetooth \
-    org.chromium.bluetoothlowenergy \
-    org.chromium.bluetoothsocket \
-    org.chromium.filesystem \
-    org.chromium.gcm \
-    org.chromium.i18n \
-    org.chromium.identity \
-    org.chromium.idle \
-    org.chromium.navigation \
-    org.chromium.notifications \
-    org.chromium.power \
-    org.chromium.pushmessaging \
-    org.chromium.socket \
-    org.chromium.sockets.tcp \
-    org.chromium.sockets.tcpserver \
-    org.chromium.sockets.udp \
-    org.chromium.storage \
-    org.chromium.system.cpu \
-    org.chromium.system.display \
-    org.chromium.system.memory \
-    org.chromium.system.network \
-    org.chromium.system.storage \
-    org.chromium.videocapture \
-    org.chromium.filechooser \
-    org.chromium.polyfill.blob_constructor \
-    org.chromium.polyfill.customevent \
-    org.chromium.polyfill.xhr_features \
-    org.apache.cordova.statusbar \
-    org.apache.cordova.network-information \
-    com.google.payments \
+    cordova-plugin-chrome-apps-alarms \
+    cordova-plugin-chrome-apps-audiocapture \
+    cordova-plugin-chrome-apps-bootstrap \
+    cordova-plugin-chrome-apps-bluetooth \
+    cordova-plugin-chrome-apps-bluetoothlowenergy \
+    cordova-plugin-chrome-apps-bluetoothsocket \
+    cordova-plugin-chrome-apps-filesystem \
+    cordova-plugin-chrome-apps-gcm \
+    cordova-plugin-chrome-apps-i18n \
+    cordova-plugin-chrome-apps-identity \
+    cordova-plugin-chrome-apps-idle \
+    cordova-plugin-chrome-apps-navigation \
+    cordova-plugin-chrome-apps-notifications \
+    cordova-plugin-chrome-apps-power \
+    cordova-plugin-chrome-apps-pushmessaging \
+    cordova-plugin-chrome-apps-socket \
+    cordova-plugin-chrome-apps-sockets-tcp \
+    cordova-plugin-chrome-apps-sockets-tcpserver \
+    cordova-plugin-chrome-apps-sockets-udp \
+    cordova-plugin-chrome-apps-storage \
+    cordova-plugin-chrome-apps-system-cpu \
+    cordova-plugin-chrome-apps-system-display \
+    cordova-plugin-chrome-apps-system-memory \
+    cordova-plugin-chrome-apps-system-network \
+    cordova-plugin-chrome-apps-system-storage \
+    cordova-plugin-chrome-apps-usb \
+    cordova-plugin-chrome-apps-videocapture \
+    cordova-plugin-blob-constructor-polyfill \
+    cordova-plugin-customevent-polyfill \
+    cordova-plugin-xhr-blob-polyfill \
+    cordova-plugin-statusbar \
+    cordova-plugin-network-information \
+    cordova-plugin-google-payments \
     --link \
     --searchpath="$PLUGIN_SEARCH_PATH"
 
-"$CORDOVA" plugin add --link "$AH_PATH/node_modules/cca/cordova/cordova-crosswalk-engine"
+"$CORDOVA" plugin add --link --searchpath "$AH_PATH/node_modules/cca/cordova" cordova-plugin-crosswalk-webview
 
 if [[ -n "$ENABLE_APK_PACKAGER" ]]; then
   "$CORDOVA" plugin add --link "$AH_PATH/apkpackager"
