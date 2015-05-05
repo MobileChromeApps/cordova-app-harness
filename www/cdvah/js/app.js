@@ -20,7 +20,7 @@
 var myApp = angular.module('ChromeAppDeveloperTool', ['ngRoute', 'angularMoment']);
 
 myApp.value('APP_NAME', 'Chrome App Developer Tool');
-myApp.value('APP_VERSION', '0.12.1-dev');
+myApp.value('APP_VERSION', '0.13.0');
 
 myApp.config(['$routeProvider', function($routeProvider){
     $routeProvider.when('/', {

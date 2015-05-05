@@ -48,6 +48,11 @@ You can get more info using `./createproject.sh --help`.
 
 # Release Notes
 
+## v0.13.0 (April 5, 2015)
+* Use plugins from npm rather than plugins.cordova.io
+* Updated crosswalk to v13
+* Updated CCA plugins
+
 ## v0.12.0 (March 24, 2015)
 
 * Enabled Content-Security-Policy for Chrome Apps
