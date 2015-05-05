@@ -104,6 +104,7 @@
             var idMap = {};
             function addAll(arr) {
                 arr.forEach(function(pluginId) {
+                    pluginId = pluginId.replace(/@.*/, '');
                     if (!idMap[pluginId]) {
                         idMap[pluginId] = true;
                         var deps = pluginDepsMap[pluginId];
