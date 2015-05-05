@@ -15,7 +15,7 @@
   "devDependencies": {
     "base64-arraybuffer": "^0.1.2",
     "cca": "latest",
-    "cca-manifest-logic": "^1.0.0",
+    "cca-manifest-logic": "^1.1.0",
     "cordova": "latest",
     "gulp": "latest",
     "gulp-autoprefixer": "^1.0.1",
